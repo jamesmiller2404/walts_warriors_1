@@ -1093,51 +1093,173 @@ export interface HomePage {
    * Add, reorder, and configure text blocks on a 12-column grid. Each block can be positioned independently and styled with font size and color.
    */
   contentBlocks?:
-    | {
-        /**
-         * The text content to display.
-         */
-        text: string;
-        /**
-         * Starting column (1–12) on the 12-column grid.
-         */
-        columnStart?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
-        /**
-         * How many columns this block spans (1–12).
-         */
-        columnSpan?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
-        /**
-         * Starting row (1–10, or Auto for default flow).
-         */
-        rowStart?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10') | null;
-        /**
-         * How many rows this block spans (1–6, or Auto).
-         */
-        rowSpan?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6') | null;
-        /**
-         * Font size using the Tailwind type scale.
-         */
-        fontSize?: ('sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl') | null;
-        /**
-         * Font color from the brand palette.
-         */
-        fontColor?:
-          | (
-              | 'stone-900'
-              | 'stone-800'
-              | 'stone-700'
-              | 'stone-600'
-              | 'brand-900'
-              | 'brand-800'
-              | 'brand-700'
-              | 'brand-600'
-              | 'white'
-            )
-          | null;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'textBlock';
-      }[]
+    | (
+        | {
+            /**
+             * The text content to display.
+             */
+            text: string;
+            /**
+             * Starting column (1–12) on the 12-column grid.
+             */
+            columnStart?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+            /**
+             * How many columns this block spans (1–12).
+             */
+            columnSpan?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+            /**
+             * Starting row (1–10, or Auto for default flow).
+             */
+            rowStart?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10') | null;
+            /**
+             * How many rows this block spans (1–6, or Auto).
+             */
+            rowSpan?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6') | null;
+            /**
+             * Font family from the imported fonts.
+             */
+            fontFamily?:
+              | (
+                  | 'manrope'
+                  | 'manrope-semibold'
+                  | 'manrope-bold'
+                  | 'manrope-extrabold'
+                  | 'archivo-black'
+                  | 'montserrat-bold'
+                  | 'montserrat-extrabold'
+                  | 'eb-garamond-italic'
+                  | 'eb-garamond-medium-italic'
+                  | 'eb-garamond-semibold-italic'
+                )
+              | null;
+            /**
+             * Font size in points (8–128).
+             */
+            fontSize?: string | null;
+            /**
+             * Font color from the brand palette.
+             */
+            fontColor?:
+              | (
+                  | 'stone-900'
+                  | 'stone-800'
+                  | 'stone-700'
+                  | 'stone-600'
+                  | 'brand-900'
+                  | 'brand-800'
+                  | 'brand-700'
+                  | 'brand-600'
+                  | 'white'
+                )
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textBlock';
+          }
+        | {
+            /**
+             * The quote text.
+             */
+            quote: string;
+            /**
+             * Who said the quote (e.g. name, title).
+             */
+            attribution?: string | null;
+            /**
+             * Starting column (1–12) on the 12-column grid.
+             */
+            columnStart?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+            /**
+             * How many columns this block spans (1–12).
+             */
+            columnSpan?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+            /**
+             * Starting row (1–10, or Auto for default flow).
+             */
+            rowStart?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10') | null;
+            /**
+             * How many rows this block spans (1–6, or Auto).
+             */
+            rowSpan?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6') | null;
+            /**
+             * Font family for the quote text.
+             */
+            quoteFontFamily?:
+              | (
+                  | 'manrope'
+                  | 'manrope-semibold'
+                  | 'manrope-bold'
+                  | 'manrope-extrabold'
+                  | 'archivo-black'
+                  | 'montserrat-bold'
+                  | 'montserrat-extrabold'
+                  | 'eb-garamond-italic'
+                  | 'eb-garamond-medium-italic'
+                  | 'eb-garamond-semibold-italic'
+                )
+              | null;
+            /**
+             * Font size in points (8–128).
+             */
+            quoteFontSize?: string | null;
+            /**
+             * Font color for the quote text.
+             */
+            quoteFontColor?:
+              | (
+                  | 'stone-900'
+                  | 'stone-800'
+                  | 'stone-700'
+                  | 'stone-600'
+                  | 'brand-900'
+                  | 'brand-800'
+                  | 'brand-700'
+                  | 'brand-600'
+                  | 'white'
+                )
+              | null;
+            /**
+             * Font family for the attribution text.
+             */
+            attributionFontFamily?:
+              | (
+                  | 'manrope'
+                  | 'manrope-semibold'
+                  | 'manrope-bold'
+                  | 'manrope-extrabold'
+                  | 'archivo-black'
+                  | 'montserrat-bold'
+                  | 'montserrat-extrabold'
+                  | 'eb-garamond-italic'
+                  | 'eb-garamond-medium-italic'
+                  | 'eb-garamond-semibold-italic'
+                )
+              | null;
+            /**
+             * Font size in points (8–128).
+             */
+            attributionFontSize?: string | null;
+            /**
+             * Font color for the attribution text.
+             */
+            attributionFontColor?:
+              | (
+                  | 'stone-900'
+                  | 'stone-800'
+                  | 'stone-700'
+                  | 'stone-600'
+                  | 'brand-900'
+                  | 'brand-800'
+                  | 'brand-700'
+                  | 'brand-600'
+                  | 'white'
+                )
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'quoteBlock';
+          }
+      )[]
     | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1292,8 +1414,27 @@ export interface HomePageSelect<T extends boolean = true> {
               columnSpan?: T;
               rowStart?: T;
               rowSpan?: T;
+              fontFamily?: T;
               fontSize?: T;
               fontColor?: T;
+              id?: T;
+              blockName?: T;
+            };
+        quoteBlock?:
+          | T
+          | {
+              quote?: T;
+              attribution?: T;
+              columnStart?: T;
+              columnSpan?: T;
+              rowStart?: T;
+              rowSpan?: T;
+              quoteFontFamily?: T;
+              quoteFontSize?: T;
+              quoteFontColor?: T;
+              attributionFontFamily?: T;
+              attributionFontSize?: T;
+              attributionFontColor?: T;
               id?: T;
               blockName?: T;
             };

@@ -14,7 +14,7 @@ export function Footer({ settings }: { settings: SiteSetting }) {
     .join(', ')
 
   return (
-    <footer className="mt-auto border-t border-stone-200 bg-stone-900 text-stone-300">
+    <footer className="mt-auto bg-[#000b17] text-stone-300">
       <Container className="grid gap-8 py-12 md:grid-cols-3">
         <div>
           <p className="text-lg font-semibold text-white">{name}</p>
@@ -91,7 +91,7 @@ export function Footer({ settings }: { settings: SiteSetting }) {
         </div>
       </Container>
 
-      <div className="border-t border-stone-800 py-4 text-center text-xs text-stone-500">
+      <div className="py-4 text-center text-xs text-stone-500">
         © {year} {name}. All rights reserved.
       </div>
     </footer>

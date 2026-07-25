@@ -1,5 +1,6 @@
 import { CallToAction } from '@/components/home/CallToAction'
 import { Hero } from '@/components/home/Hero'
+import { NavCards } from '@/components/home/NavCards'
 import { ContentBlocks } from '@/components/blocks/ContentBlocks'
 import { Container } from '@/components/layout/Container'
 import { ProgramCard } from '@/components/programs/ProgramCard'
@@ -46,7 +47,7 @@ export default async function Home() {
             className="absolute inset-0 z-0"
             style={{
               backgroundImage: `url(${bgSrc})`,
-              backgroundSize: 'cover',
+              backgroundSize: 'auto',
               backgroundPosition: 'top center',
               backgroundRepeat: 'no-repeat',
               opacity: bgOpacity / 100,
@@ -79,20 +80,11 @@ export default async function Home() {
                 ))}
               </div>
             </section>
-          ) : (
-            <section className="rounded-xl border border-dashed border-stone-300 bg-white p-10 text-center">
-              <h2 className="text-xl font-semibold text-stone-800">Programs coming soon</h2>
-              <p className="mt-2 text-stone-600">
-                Add programs in the{' '}
-                <a href="/admin" className="font-medium text-emerald-700 underline">
-                  admin panel
-                </a>
-                .
-              </p>
-            </section>
-          )}
+          ) : null}
 
-          <CallToAction cta={home.cta} />
+          <NavCards />
+
+          {/* CallToAction removed per request */}
         </Container>
       </div>
     </>

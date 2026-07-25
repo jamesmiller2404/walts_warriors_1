@@ -1,10 +1,14 @@
-const fontSizeMap: Record<string, string> = {
-  sm: 'text-sm',
-  base: 'text-base',
-  lg: 'text-lg',
-  xl: 'text-xl',
-  '2xl': 'text-2xl',
-  '3xl': 'text-3xl',
+const fontFamilyMap: Record<string, string> = {
+  manrope: 'var(--font-manrope)',
+  'manrope-semibold': 'var(--font-manrope-semibold)',
+  'manrope-bold': 'var(--font-manrope-bold)',
+  'manrope-extrabold': 'var(--font-manrope-extrabold)',
+  'archivo-black': 'var(--font-archivo-black)',
+  'montserrat-bold': 'var(--font-montserrat-bold)',
+  'montserrat-extrabold': 'var(--font-montserrat-extrabold)',
+  'eb-garamond-italic': 'var(--font-eb-garamond-italic)',
+  'eb-garamond-medium-italic': 'var(--font-eb-garamond-medium-italic)',
+  'eb-garamond-semibold-italic': 'var(--font-eb-garamond-semibold-italic)',
 }
 
 const fontColorMap: Record<string, string> = {
@@ -19,18 +23,28 @@ const fontColorMap: Record<string, string> = {
   white: 'text-white',
 }
 
+import { resolvePt } from '@/lib/fontSize'
+
 type Props = {
   text: string
   fontSize?: string | null
   fontColor?: string | null
+  fontFamily?: string | null
 }
 
-export function TextBlock({ text, fontSize, fontColor }: Props) {
-  const sizeClass = fontSize ? fontSizeMap[fontSize] : 'text-base'
+export function TextBlock({ text, fontSize, fontColor, fontFamily }: Props) {
   const colorClass = fontColor ? fontColorMap[fontColor] : 'text-stone-900'
+  const pt = resolvePt(fontSize)
 
   return (
-    <p className={`${sizeClass} ${colorClass}`}>
+    <p
+      className={colorClass}
+      style={{
+        fontFamily: fontFamily ? fontFamilyMap[fontFamily] : undefined,
+        fontSize: pt && !Number.isNaN(pt) ? `${pt}pt` : undefined,
+        whiteSpace: 'pre-wrap',
+      }}
+    >
       {text}
     </p>
   )
