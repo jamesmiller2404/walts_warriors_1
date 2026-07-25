@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 
 import { isAdminOrEditor } from '@/access/isAdminOrEditor'
 import { anyone } from '@/access/anyone'
+import { TextBlock } from '@/blocks/TextBlock'
 
 export const HomePage: GlobalConfig = {
   slug: 'home-page',
@@ -101,6 +102,20 @@ export const HomePage: GlobalConfig = {
           },
         },
       ],
+    },
+    {
+      name: 'contentBlocks',
+      type: 'blocks',
+      label: 'Content Blocks',
+      labels: {
+        singular: 'Content Block',
+        plural: 'Content Blocks',
+      },
+      admin: {
+        description:
+          'Add, reorder, and configure text blocks on a 12-column grid. Each block can be positioned independently and styled with font size and color.',
+      },
+      blocks: [TextBlock],
     },
   ],
 }

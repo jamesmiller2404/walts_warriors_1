@@ -87,11 +87,56 @@ export function Hero({ home, settings }: Props) {
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
           Health · Wellness · Community
         </p>
-        <h1 className="max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
-          {home.headline || "Walt's Warriors"}
-        </h1>
+
+        {/*
+          "Discipline Outlasts Motivation..." headline treatment.
+          Font size scales up to 150pt at the lg breakpoint — 150pt applied
+          uniformly at all screen sizes would overflow/clip on mobile, so
+          smaller steps are used below lg. Adjust the intermediate steps
+          to taste; only the lg value is a hard requirement.
+        */}
+        <div className="flex flex-col items-start select-none relative -left-[20%]">
+
+          {/* DISCIPLINE — orange gradient */}
+          <h1 className="font-black uppercase tracking-tight leading-[0.82] text-[26pt] sm:text-[45pt] lg:text-[75pt] bg-gradient-to-r from-orange-300 via-orange-500 to-orange-600 bg-clip-text text-transparent drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]">
+            Discipline
+          </h1>
+
+          {/* Orange periods — dropping from Discipline down to Outlasts */}
+          <div
+            aria-hidden="true"
+            className="flex flex-col leading-[0.55] font-black text-orange-500 text-[12pt] sm:text-[20pt] lg:text-[32pt] drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+          >
+            <span>.</span>
+            <span>.</span>
+            <span>.</span>
+          </div>
+
+          {/* OUTLASTS — black */}
+          <h1 className="font-black uppercase tracking-tight leading-[0.82] text-[26pt] sm:text-[45pt] lg:text-[75pt] text-black drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]">
+            Outlasts
+          </h1>
+
+          {/* Black periods — dropping from Outlasts down to Motivation */}
+          <div
+            aria-hidden="true"
+            className="flex flex-col leading-[0.55] font-black text-black text-[12pt] sm:text-[20pt] lg:text-[32pt] drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+          >
+            <span>.</span>
+            <span>.</span>
+            <span>.</span>
+          </div>
+
+          {/* MOTIVATION — white, ending in three white periods */}
+          <h1 className="font-black uppercase tracking-tight leading-[0.82] text-[26pt] sm:text-[45pt] lg:text-[75pt] text-white drop-shadow-[0_6px_16px_rgba(0,0,0,.1)]">
+            Motivation
+            <span aria-hidden="true">...</span>
+          </h1>
+            
+        </div>
+
         {home.subheadline ? (
-          <p className="mt-4 max-w-xl text-lg text-stone-200">{home.subheadline}</p>
+          <p className="mt-6 max-w-xl text-lg text-stone-200">{home.subheadline}</p>
         ) : null}
         <div className="mt-8 flex flex-wrap gap-3">
           <Link

@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin, isAdminFieldLevel } from '@/access/isAdmin'
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
+import { canAccessAdmin, isAdminOrEditor } from '@/access/isAdminOrEditor'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -13,7 +13,7 @@ export const Users: CollectionConfig = {
   },
   auth: true,
   access: {
-    admin: isAdminOrEditor,
+    admin: canAccessAdmin,
     create: isAdmin,
     delete: isAdmin,
     read: isAdminOrEditor,

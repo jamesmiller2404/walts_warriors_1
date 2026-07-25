@@ -1,4 +1,5 @@
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import { postgresAdapter } from '@payloadcms/db-postgres'
+//import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -18,6 +19,11 @@ import { SiteSettings } from './globals/SiteSettings'
 import { HomePage } from './globals/HomePage'
 import { AboutWalt } from './globals/AboutWalt'
 import { ContactPage } from './globals/ContactPage'
+import { Members } from './collections/Members'
+import { CheckIns } from './collections/CheckIns'
+import { Badges } from './collections/Badges'
+import { MemberBadges } from './collections/MemberBadges'
+import { CommunityStats } from './globals/CommunityStats'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -44,20 +50,18 @@ export default buildConfig({
     Events,
     Gallery,
     Challenges,
+    Members, 
+    CheckIns, 
+    Badges, 
+    MemberBadges,
   ],
-  globals: [SiteSettings, HomePage, AboutWalt, ContactPage],
+  globals: [SiteSettings, HomePage, AboutWalt, ContactPage, CommunityStats],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URL || 'file:./walts-warriors.db',
-    },
-    // Auto-sync schema in local dev when collections/globals change
-    push: process.env.NODE_ENV !== 'production',
-  }),
+db: postgresAdapter({ pool: { connectionString: process.env.DATABASE_URL }, push: process.env.NODE_ENV !== 'production' }),
   sharp,
   plugins: [
     vercelBlobStorage({

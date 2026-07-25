@@ -64,6 +64,7 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
+    members: MemberAuthOperations;
   };
   blocks: {};
   collections: {
@@ -75,6 +76,10 @@ export interface Config {
     events: Event;
     gallery: Gallery;
     challenges: Challenge;
+    members: Member;
+    'check-ins': CheckIn;
+    badges: Badge;
+    'member-badges': MemberBadge;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -90,6 +95,10 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     gallery: GallerySelect<false> | GallerySelect<true>;
     challenges: ChallengesSelect<false> | ChallengesSelect<true>;
+    members: MembersSelect<false> | MembersSelect<true>;
+    'check-ins': CheckInsSelect<false> | CheckInsSelect<true>;
+    badges: BadgesSelect<false> | BadgesSelect<true>;
+    'member-badges': MemberBadgesSelect<false> | MemberBadgesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -104,24 +113,44 @@ export interface Config {
     'home-page': HomePage;
     'about-walt': AboutWalt;
     'contact-page': ContactPage;
+    'community-stats': CommunityStat;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'about-walt': AboutWaltSelect<false> | AboutWaltSelect<true>;
     'contact-page': ContactPageSelect<false> | ContactPageSelect<true>;
+    'community-stats': CommunityStatsSelect<false> | CommunityStatsSelect<true>;
   };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User;
+  user: User | Member;
   jobs: {
     tasks: unknown;
     workflows: unknown;
   };
 }
 export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface MemberAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -457,6 +486,100 @@ export interface Challenge {
   createdAt: string;
 }
 /**
+ * Community members who sign in on the public site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members".
+ */
+export interface Member {
+  id: number;
+  /**
+   * Shown on the community feed, leaderboard, and badges.
+   */
+  displayName: string;
+  avatar?: (number | null) | Media;
+  bio?: string | null;
+  totalCheckIns?: number | null;
+  currentStreak?: number | null;
+  longestStreak?: number | null;
+  lastCheckInDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'members';
+}
+/**
+ * Member check-ins. Creating one updates member stats and badge progress automatically.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "check-ins".
+ */
+export interface CheckIn {
+  id: number;
+  /**
+   * Defaults to the logged-in member; staff can log check-ins on behalf of a member.
+   */
+  member: number | Member;
+  /**
+   * Optional — link this check-in to a specific challenge.
+   */
+  challenge?: (number | null) | Challenge;
+  note?: string | null;
+  checkInDate: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Badge definitions. Adding a row here creates a new badge — no code change needed.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "badges".
+ */
+export interface Badge {
+  id: number;
+  name: string;
+  description?: string | null;
+  icon?: (number | null) | Media;
+  /**
+   * What member stat this badge is awarded for.
+   */
+  criteriaType: 'checkin_count' | 'streak_length';
+  /**
+   * Threshold the stat must reach, e.g. 7 for a 7-day streak.
+   */
+  criteriaValue: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Records of badges members have earned. Created automatically by the check-in hook.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "member-badges".
+ */
+export interface MemberBadge {
+  id: number;
+  member: number | Member;
+  badge: number | Badge;
+  awardedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -511,12 +634,33 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'challenges';
         value: number | Challenge;
+      } | null)
+    | ({
+        relationTo: 'members';
+        value: number | Member;
+      } | null)
+    | ({
+        relationTo: 'check-ins';
+        value: number | CheckIn;
+      } | null)
+    | ({
+        relationTo: 'badges';
+        value: number | Badge;
+      } | null)
+    | ({
+        relationTo: 'member-badges';
+        value: number | MemberBadge;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'members';
+        value: number | Member;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -526,10 +670,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: number;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'members';
+        value: number | Member;
+      };
   key?: string | null;
   value?:
     | {
@@ -732,6 +881,71 @@ export interface ChallengesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members_select".
+ */
+export interface MembersSelect<T extends boolean = true> {
+  displayName?: T;
+  avatar?: T;
+  bio?: T;
+  totalCheckIns?: T;
+  currentStreak?: T;
+  longestStreak?: T;
+  lastCheckInDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "check-ins_select".
+ */
+export interface CheckInsSelect<T extends boolean = true> {
+  member?: T;
+  challenge?: T;
+  note?: T;
+  checkInDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "badges_select".
+ */
+export interface BadgesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  icon?: T;
+  criteriaType?: T;
+  criteriaValue?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "member-badges_select".
+ */
+export interface MemberBadgesSelect<T extends boolean = true> {
+  member?: T;
+  badge?: T;
+  awardedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -875,6 +1089,56 @@ export interface HomePage {
      */
     buttonLink?: string | null;
   };
+  /**
+   * Add, reorder, and configure text blocks on a 12-column grid. Each block can be positioned independently and styled with font size and color.
+   */
+  contentBlocks?:
+    | {
+        /**
+         * The text content to display.
+         */
+        text: string;
+        /**
+         * Starting column (1–12) on the 12-column grid.
+         */
+        columnStart?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+        /**
+         * How many columns this block spans (1–12).
+         */
+        columnSpan?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+        /**
+         * Starting row (1–10, or Auto for default flow).
+         */
+        rowStart?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10') | null;
+        /**
+         * How many rows this block spans (1–6, or Auto).
+         */
+        rowSpan?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6') | null;
+        /**
+         * Font size using the Tailwind type scale.
+         */
+        fontSize?: ('sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl') | null;
+        /**
+         * Font color from the brand palette.
+         */
+        fontColor?:
+          | (
+              | 'stone-900'
+              | 'stone-800'
+              | 'stone-700'
+              | 'stone-600'
+              | 'brand-900'
+              | 'brand-800'
+              | 'brand-700'
+              | 'brand-600'
+              | 'white'
+            )
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'textBlock';
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -946,6 +1210,21 @@ export interface ContactPage {
   createdAt?: string | null;
 }
 /**
+ * Community-wide totals shown on the home page. Kept in sync by the CheckIns hook — avoid hand-editing.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-stats".
+ */
+export interface CommunityStat {
+  id: number;
+  totalMembers?: number | null;
+  totalCheckIns?: number | null;
+  totalBadgesAwarded?: number | null;
+  lastUpdated?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -1002,6 +1281,23 @@ export interface HomePageSelect<T extends boolean = true> {
         buttonLabel?: T;
         buttonLink?: T;
       };
+  contentBlocks?:
+    | T
+    | {
+        textBlock?:
+          | T
+          | {
+              text?: T;
+              columnStart?: T;
+              columnSpan?: T;
+              rowStart?: T;
+              rowSpan?: T;
+              fontSize?: T;
+              fontColor?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1036,6 +1332,19 @@ export interface ContactPageSelect<T extends boolean = true> {
   headline?: T;
   intro?: T;
   formNote?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-stats_select".
+ */
+export interface CommunityStatsSelect<T extends boolean = true> {
+  totalMembers?: T;
+  totalCheckIns?: T;
+  totalBadgesAwarded?: T;
+  lastUpdated?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

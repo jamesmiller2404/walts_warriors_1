@@ -1,5 +1,6 @@
 import { CallToAction } from '@/components/home/CallToAction'
 import { Hero } from '@/components/home/Hero'
+import { ContentBlocks } from '@/components/blocks/ContentBlocks'
 import { Container } from '@/components/layout/Container'
 import { ProgramCard } from '@/components/programs/ProgramCard'
 import { getPayloadClient } from '@/lib/payload'
@@ -60,6 +61,10 @@ export default async function Home() {
                 className="text-lg leading-relaxed text-stone-700"
               />
             </Container>
+          ) : null}
+
+          {home.contentBlocks ? (
+            <ContentBlocks blocks={home.contentBlocks as any} />
           ) : null}
 
           {programs.length > 0 ? (
