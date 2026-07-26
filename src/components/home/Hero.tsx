@@ -42,8 +42,8 @@ function NavBar() {
 
       <ul
         className={`
-          absolute top-full left-0 right-0 z-30 flex flex-col bg-stone-900/95 backdrop-blur-md
-          md:relative md:flex md:flex-row md:bg-transparent md:backdrop-blur-none
+          absolute top-full left-0 right-0 z-30 flex flex-col items-center bg-stone-900/95 backdrop-blur-md
+          md:relative md:flex md:flex-row md:bg-transparent md:backdrop-blur-none md:justify-center
           ${open ? 'flex' : 'hidden md:flex'}
         `}
       >
@@ -51,7 +51,8 @@ function NavBar() {
           <li key={item.href}>
             <Link
               href={item.href}
-              className="block rounded-md px-3 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+              className="block rounded-md px-5 py-2 text-base font-black text-white transition hover:bg-white/10 md:text-black"
+              style={{ fontFamily: 'var(--font-manrope)' }}
               onClick={() => setOpen(false)}
             >
               {item.label}
@@ -87,7 +88,7 @@ export function Hero({ home, settings }: Props) {
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-stone-900 to-stone-800" />
       )}
 
-      {/* Logo + Nav at very top of hero */}
+      {/* Business title row */}
       <div className="relative z-20 flex items-center justify-between px-6 py-4 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
         <Link href="/" className="flex items-center gap-3" style={{ marginLeft: '-3rem' }}>
           {logoSrc ? (
@@ -109,10 +110,11 @@ export function Hero({ home, settings }: Props) {
             ) : null}
           </span>
         </Link>
+      </div>
 
-        <div className="relative">
-          <NavBar />
-        </div>
+      {/* Navbar row — centered, independently positioned */}
+      <div className="relative z-20 flex justify-center px-6 py-2">
+        <NavBar />
       </div>
 
       {/* CTA content — left-aligned headline, pushed down */}
