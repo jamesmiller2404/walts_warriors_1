@@ -130,8 +130,8 @@ export function Hero({ home, settings }: Props) {
 
           {/* DISCIPLINE — orange gradient, clamp() sizing */}
           <h1
-            className="font-black uppercase tracking-tight leading-[0.82] bg-gradient-to-r from-orange-300 via-orange-500 to-orange-600 bg-clip-text text-transparent drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)' }}
+            className="font-black uppercase tracking-tight leading-[0.82] bg-gradient-to-r from-orange-300 via-orange-500 to-orange-600 bg-clip-text text-transparent"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)', filter: 'drop-shadow(-5px 6px 3px rgba(0,0,0,0.9))' }}
           >
             Discipline
           </h1>
@@ -139,8 +139,8 @@ export function Hero({ home, settings }: Props) {
           {/* Orange periods */}
           <div
             aria-hidden="true"
-            className="flex flex-col leading-[0.55] font-black text-orange-500 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
-            style={{ fontSize: 'clamp(0.75rem, 2.5vw, 2.67rem)' }}
+            className="flex flex-col leading-[0.55] font-black text-orange-500"
+            style={{ fontSize: 'clamp(0.75rem, 2.5vw, 2.67rem)', filter: 'drop-shadow(-3px 3px 3px rgba(0,0,0,0.9))' }}
           >
             <span>.</span>
             <span>.</span>
@@ -149,8 +149,8 @@ export function Hero({ home, settings }: Props) {
 
           {/* OUTLASTS — black */}
           <h1
-            className="font-black uppercase tracking-tight leading-[0.82] text-black drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)' }}
+            className="font-black uppercase tracking-tight leading-[0.82] text-black"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)', filter: 'drop-shadow(-5px 6px 3px rgba(0,0,0,0.9))' }}
           >
             Outlasts
           </h1>
@@ -158,8 +158,8 @@ export function Hero({ home, settings }: Props) {
           {/* Black periods */}
           <div
             aria-hidden="true"
-            className="flex flex-col leading-[0.55] font-black text-black drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
-            style={{ fontSize: 'clamp(0.75rem, 2.5vw, 2.67rem)' }}
+            className="flex flex-col leading-[0.55] font-black text-black"
+            style={{ fontSize: 'clamp(0.75rem, 2.5vw, 2.67rem)', filter: 'drop-shadow(-3px 3px 3px rgba(0,0,0,0.9))' }}
           >
             <span>.</span>
             <span>.</span>
@@ -168,8 +168,8 @@ export function Hero({ home, settings }: Props) {
 
           {/* MOTIVATION — white */}
           <h1
-            className="font-black uppercase tracking-tight leading-[0.82] text-white drop-shadow-[0_6px_16px_rgba(0,0,0,.1)]"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)' }}
+            className="font-black uppercase tracking-tight leading-[0.82] text-white"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)', filter: 'drop-shadow(-5px 6px 3px rgba(0,0,0,0.9))' }}
           >
             Motivation
             <span aria-hidden="true">...</span>

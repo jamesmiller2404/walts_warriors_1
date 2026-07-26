@@ -61,7 +61,7 @@ function NavCard({ card }: { card: NavCardData }) {
         focus-visible:outline-none
       `}
       style={{
-        boxShadow: '0 10px 15px -5px rgba(0,0,0,0.9)',
+        boxShadow: '0 10px 15px 2px rgba(0,0,0,0.9)',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.boxShadow = '0 15px 15px -5px rgba(0,0,0,0.9), 0 0 30px rgba(255, 153, 0, 0.9)'
