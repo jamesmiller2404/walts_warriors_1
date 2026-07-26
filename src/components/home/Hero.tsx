@@ -89,7 +89,7 @@ export function Hero({ home, settings }: Props) {
       )}
 
       {/* Business title row */}
-      <div className="relative z-20 flex items-center justify-between px-6 py-4 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
+      <div className="relative z-20 flex items-start justify-between px-6 pt-4 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
         <Link href="/" className="flex items-center gap-3" style={{ marginLeft: '-3rem' }}>
           {logoSrc ? (
             <Image
@@ -110,6 +110,20 @@ export function Hero({ home, settings }: Props) {
             ) : null}
           </span>
         </Link>
+
+        {/* Top-right icons column */}
+        <div className="flex flex-col items-end gap-1">
+          <div className="flex items-center gap-3">
+            <Image src="/icons/bell-solid-full.svg" alt="Notifications" width={28} height={28} className="h-7 w-7 text-white" />
+            <Image src="/icons/circle-user-solid-full.svg" alt="Account" width={28} height={28} className="h-7 w-7 text-white" />
+          </div>
+          <div className="flex flex-col items-end gap-2 mt-8">
+            <Image src="/icons/facebook-brands-solid-full.svg" alt="Facebook" width={28} height={28} className="h-7 w-7 text-white" />
+            <Image src="/icons/square-instagram-brands-solid-full.svg" alt="Instagram" width={28} height={28} className="h-7 w-7 text-white" />
+            <Image src="/icons/square-x-twitter-brands-solid-full.svg" alt="X (Twitter)" width={28} height={28} className="h-7 w-7 text-white" />
+            <Image src="/icons/tiktok-brands-solid-full.svg" alt="TikTok" width={28} height={28} className="h-7 w-7 text-white" />
+          </div>
+        </div>
       </div>
 
       {/* Navbar row — centered, independently positioned */}
@@ -118,8 +132,8 @@ export function Hero({ home, settings }: Props) {
       </div>
 
       {/* CTA content — left-aligned headline, pushed down */}
-      <div className="relative z-10 flex flex-col items-start justify-start px-6 sm:px-12 md:pl-32 lg:pl-48 pt-32 lg:pt-54 flex-1">
-        <div className="flex flex-col items-start select-none">
+      <div className="relative z-10 flex flex-col items-center justify-center px-6 sm:px-12 md:px-32 lg:px-48 pt-20 lg:pt-[10.5rem] flex-1">
+        <div className="flex flex-col items-start select-none w-full mb-36">
 
           {/* DISCIPLINE — orange gradient, clamp() sizing */}
           <h1
@@ -172,19 +186,20 @@ export function Hero({ home, settings }: Props) {
         {home.subheadline ? (
           <p className="mt-6 max-w-xl text-base sm:text-lg text-stone-200">{home.subheadline}</p>
         ) : null}
-        <div className="mt-8 flex flex-col sm:flex-row gap-3">
+        <div className="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-center w-full mb-32">
           <Link
-            href="/contact"
-            className="w-full sm:w-auto text-center rounded-lg bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500"
+            href={home.cta?.buttonLink || '/contact'}
+            className="w-full sm:w-auto text-center rounded-[999px] bg-[#5b90c6] px-5 py-3 text-sm font-semibold text-black transition hover:brightness-110"
+            style={{ fontFamily: "'Inter-BoldItalic', sans-serif", fontWeight: 700 }}
           >
-            Get in touch
+            {home.cta?.buttonLabel || 'Get in touch'}
           </Link>
-          <Link
-            href="/programs"
-            className="w-full sm:w-auto text-center rounded-lg border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+          <p
+            className="w-full sm:w-auto text-center text-sm text-stone-300 self-center"
+            style={{ fontFamily: 'var(--font-manrope)', fontWeight: 400 }}
           >
-            View programs
-          </Link>
+            {home.cta?.secondaryText || 'Building discipline, one day at a time.'}
+          </p>
         </div>
       </div>
     </section>

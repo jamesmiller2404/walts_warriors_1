@@ -1088,6 +1088,10 @@ export interface HomePage {
      * Internal path (e.g. /contact) or full URL.
      */
     buttonLink?: string | null;
+    /**
+     * Secondary text displayed next to the CTA button.
+     */
+    secondaryText?: string | null;
   };
   /**
    * Add, reorder, and configure text blocks on a 12-column grid. Each block can be positioned independently and styled with font size and color.
@@ -1443,6 +1447,7 @@ export interface HomePageSelect<T extends boolean = true> {
         text?: T;
         buttonLabel?: T;
         buttonLink?: T;
+        secondaryText?: T;
       };
   contentBlocks?:
     | T

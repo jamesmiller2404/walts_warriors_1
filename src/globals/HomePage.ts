@@ -103,6 +103,14 @@ export const HomePage: GlobalConfig = {
             description: 'Internal path (e.g. /contact) or full URL.',
           },
         },
+        {
+          name: 'secondaryText',
+          type: 'text',
+          defaultValue: 'Building discipline, one day at a time.',
+          admin: {
+            description: 'Secondary text displayed next to the CTA button.',
+          },
+        },
       ],
     },
     {

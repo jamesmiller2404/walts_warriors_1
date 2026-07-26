@@ -1,6 +1,14 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+@font-face {
+  font-family: 'Inter-BoldItalic';
+  src: url('/fonts/Inter-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 @theme {
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     sans-serif;
