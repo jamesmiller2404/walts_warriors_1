@@ -14,9 +14,6 @@ type Props = {
 
 const nav = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About Walt' },
-  { href: '/programs', label: 'Programs' },
-  { href: '/resources', label: 'Resources' },
   { href: '/challenges', label: 'Challenges' },
   { href: '/events', label: 'Events' },
   { href: '/gallery', label: 'Gallery' },
@@ -73,9 +70,9 @@ export function Hero({ home, settings }: Props) {
   const name = settings.businessName || "Walt's Warriors"
 
   return (
-    <section className="relative mx-auto w-full max-w-[1920px] overflow-hidden bg-stone-900 text-white">
+    <section className="relative mx-auto w-full max-w-[1920px] min-h-[90vh] bg-stone-900 text-white flex flex-col">
       {src ? (
-        <div className="relative w-full aspect-[1920/1440]">
+        <div className="absolute inset-0">
           <Image
             src={src}
             alt={image?.alt || home.headline || 'Hero'}
@@ -87,14 +84,12 @@ export function Hero({ home, settings }: Props) {
           <div className="absolute inset-0 bg-black/40" />
         </div>
       ) : (
-        <div className="relative w-full aspect-[1920/1440]">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-stone-900 to-stone-800" />
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-stone-900 to-stone-800" />
       )}
 
       {/* Logo + Nav at very top of hero */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 py-4 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
-        <Link href="/" className="flex items-center gap-3">
+      <div className="relative z-20 flex items-center justify-between px-6 py-4 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
+        <Link href="/" className="flex items-center gap-3" style={{ marginLeft: '-3rem' }}>
           {logoSrc ? (
             <Image
               src={logoSrc}
@@ -103,13 +98,12 @@ export function Hero({ home, settings }: Props) {
               height={48}
               className="h-12 w-12 rounded-full object-cover"
             />
-          ) : (
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-700 text-sm font-bold text-white">
-              WW
+          ) : null}
+          <span className="-ml-4">
+            <span className="block" style={{ fontFamily: 'var(--font-archivo-black)', fontSize: '2.5rem', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.9))' }}>
+              <span className="text-white">Walt&apos;s</span>{' '}
+              <span className="text-black" style={{ WebkitTextStroke: '0.5px rgba(190,190,190,0.7)' }}>WARRIORS</span>
             </span>
-          )}
-          <span>
-            <span className="block text-lg font-semibold tracking-tight text-white">{name}</span>
             {settings.tagline ? (
               <span className="block text-sm text-stone-300">{settings.tagline}</span>
             ) : null}
@@ -121,12 +115,9 @@ export function Hero({ home, settings }: Props) {
         </div>
       </div>
 
-      <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 pt-20 pb-16 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
-          Health · Wellness · Community
-        </p>
-
-        <div className="flex flex-col items-start select-none relative -left-[20%]">
+      {/* CTA content — left-aligned headline, pushed down */}
+      <div className="relative z-10 flex flex-col items-start justify-start px-6 sm:px-12 md:pl-32 lg:pl-48 pt-32 lg:pt-54 flex-1">
+        <div className="flex flex-col items-start select-none">
 
           {/* DISCIPLINE — orange gradient, clamp() sizing */}
           <h1
