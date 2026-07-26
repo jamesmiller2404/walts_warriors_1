@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 import { Container } from '@/components/layout/Container'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -22,7 +23,7 @@ export default async function ProgramsPage() {
   const programs = result.docs as Program[]
 
   return (
-    <Container className="py-12">
+    <Container className="py-6 sm:py-8 lg:py-12">
       <PageHeader
         title="Programs & Services"
         subtitle="Practical support for nutrition, fitness, mindset, and healthy lifestyle habits."
@@ -37,9 +38,9 @@ export default async function ProgramsPage() {
       ) : (
         <div className="rounded-xl border border-dashed border-stone-300 bg-white p-10 text-center text-stone-600">
           No programs published yet. Add them in{' '}
-          <a href="/admin/collections/programs" className="font-medium text-emerald-700 underline">
+          <Link href="/admin/collections/programs" className="font-medium text-emerald-700 underline">
             Admin → Programs / Services
-          </a>
+          </Link>
           .
         </div>
       )}

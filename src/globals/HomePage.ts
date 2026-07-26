@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 
 import { isAdminOrEditor } from '@/access/isAdminOrEditor'
 import { anyone } from '@/access/anyone'
+import { ImageBlock } from '@/blocks/ImageBlock'
 import { QuoteBlock } from '@/blocks/QuoteBlock'
 import { TextBlock } from '@/blocks/TextBlock'
 
@@ -116,7 +117,7 @@ export const HomePage: GlobalConfig = {
         description:
           'Add, reorder, and configure text blocks on a 12-column grid. Each block can be positioned independently and styled with font size and color.',
       },
-      blocks: [TextBlock, QuoteBlock],
+      blocks: [TextBlock, QuoteBlock, ImageBlock],
     },
   ],
 }

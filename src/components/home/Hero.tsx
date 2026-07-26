@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -20,9 +23,52 @@ const nav = [
   { href: '/contact', label: 'Contact' },
 ]
 
+function NavBar() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <nav className="flex items-center">
+      <button
+        className="md:hidden rounded-md p-2 text-white hover:bg-white/10 transition"
+        onClick={() => setOpen(!open)}
+        aria-label={open ? 'Close menu' : 'Open menu'}
+        aria-expanded={open}
+      >
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          {open ? (
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          )}
+        </svg>
+      </button>
+
+      <ul
+        className={`
+          absolute top-full left-0 right-0 z-30 flex flex-col bg-stone-900/95 backdrop-blur-md
+          md:relative md:flex md:flex-row md:bg-transparent md:backdrop-blur-none
+          ${open ? 'flex' : 'hidden md:flex'}
+        `}
+      >
+        {nav.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className="block rounded-md px-3 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
 export function Hero({ home, settings }: Props) {
   const image = home.heroImage as Media | null | undefined
-  const src = mediaUrl(image)
+  const src = mediaUrl(image, 'hero')
   const logoSrc = mediaUrl(settings.logo)
   const name = settings.businessName || "Walt's Warriors"
 
@@ -35,7 +81,7 @@ export function Hero({ home, settings }: Props) {
             alt={image?.alt || home.headline || 'Hero'}
             fill
             priority
-            className="object-contain object-center"
+            className="object-cover object-center"
             sizes="(max-width: 1920px) 100vw, 1920px"
           />
           <div className="absolute inset-0 bg-black/40" />
@@ -70,17 +116,9 @@ export function Hero({ home, settings }: Props) {
           </span>
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-1 text-sm font-medium text-white">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-md px-3 py-2 transition hover:bg-white/10"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="relative">
+          <NavBar />
+        </div>
       </div>
 
       <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 pt-20 pb-16 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
@@ -88,24 +126,21 @@ export function Hero({ home, settings }: Props) {
           Health · Wellness · Community
         </p>
 
-        {/*
-          "Discipline Outlasts Motivation..." headline treatment.
-          Font size scales up to 150pt at the lg breakpoint — 150pt applied
-          uniformly at all screen sizes would overflow/clip on mobile, so
-          smaller steps are used below lg. Adjust the intermediate steps
-          to taste; only the lg value is a hard requirement.
-        */}
         <div className="flex flex-col items-start select-none relative -left-[20%]">
 
-          {/* DISCIPLINE — orange gradient */}
-          <h1 className="font-black uppercase tracking-tight leading-[0.82] text-[26pt] sm:text-[45pt] lg:text-[75pt] bg-gradient-to-r from-orange-300 via-orange-500 to-orange-600 bg-clip-text text-transparent drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]">
+          {/* DISCIPLINE — orange gradient, clamp() sizing */}
+          <h1
+            className="font-black uppercase tracking-tight leading-[0.82] bg-gradient-to-r from-orange-300 via-orange-500 to-orange-600 bg-clip-text text-transparent drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)' }}
+          >
             Discipline
           </h1>
 
-          {/* Orange periods — dropping from Discipline down to Outlasts */}
+          {/* Orange periods */}
           <div
             aria-hidden="true"
-            className="flex flex-col leading-[0.55] font-black text-orange-500 text-[12pt] sm:text-[20pt] lg:text-[32pt] drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+            className="flex flex-col leading-[0.55] font-black text-orange-500 drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+            style={{ fontSize: 'clamp(0.75rem, 2.5vw, 2.67rem)' }}
           >
             <span>.</span>
             <span>.</span>
@@ -113,41 +148,47 @@ export function Hero({ home, settings }: Props) {
           </div>
 
           {/* OUTLASTS — black */}
-          <h1 className="font-black uppercase tracking-tight leading-[0.82] text-[26pt] sm:text-[45pt] lg:text-[75pt] text-black drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]">
+          <h1
+            className="font-black uppercase tracking-tight leading-[0.82] text-black drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)' }}
+          >
             Outlasts
           </h1>
 
-          {/* Black periods — dropping from Outlasts down to Motivation */}
+          {/* Black periods */}
           <div
             aria-hidden="true"
-            className="flex flex-col leading-[0.55] font-black text-black text-[12pt] sm:text-[20pt] lg:text-[32pt] drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+            className="flex flex-col leading-[0.55] font-black text-black drop-shadow-[0_6px_16px_rgba(0,0,0,0.9)]"
+            style={{ fontSize: 'clamp(0.75rem, 2.5vw, 2.67rem)' }}
           >
             <span>.</span>
             <span>.</span>
             <span>.</span>
           </div>
 
-          {/* MOTIVATION — white, ending in three white periods */}
-          <h1 className="font-black uppercase tracking-tight leading-[0.82] text-[26pt] sm:text-[45pt] lg:text-[75pt] text-white drop-shadow-[0_6px_16px_rgba(0,0,0,.1)]">
+          {/* MOTIVATION — white */}
+          <h1
+            className="font-black uppercase tracking-tight leading-[0.82] text-white drop-shadow-[0_6px_16px_rgba(0,0,0,.1)]"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)' }}
+          >
             Motivation
             <span aria-hidden="true">...</span>
           </h1>
-            
         </div>
 
         {home.subheadline ? (
-          <p className="mt-6 max-w-xl text-lg text-stone-200">{home.subheadline}</p>
+          <p className="mt-6 max-w-xl text-base sm:text-lg text-stone-200">{home.subheadline}</p>
         ) : null}
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-col sm:flex-row gap-3">
           <Link
             href="/contact"
-            className="rounded-lg bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500"
+            className="w-full sm:w-auto text-center rounded-lg bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500"
           >
             Get in touch
           </Link>
           <Link
             href="/programs"
-            className="rounded-lg border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+            className="w-full sm:w-auto text-center rounded-lg border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
           >
             View programs
           </Link>

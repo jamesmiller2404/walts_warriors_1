@@ -6,10 +6,10 @@ import { mediaUrl } from '@/lib/utils'
 
 export function ProgramCard({ program }: { program: Program }) {
   const image = program.image as Media | null | undefined
-  const src = mediaUrl(image)
+  const src = mediaUrl(image, 'card')
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:shadow-md">
+    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:shadow-md min-w-0">
       <div className="relative aspect-[16/10] bg-stone-100">
         {src ? (
           <Image

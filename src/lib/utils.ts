@@ -6,9 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function mediaUrl(
-  media: { url?: string | null } | number | string | null | undefined,
+  media: { url?: string | null; sizes?: Record<string, { url?: string | null } | null> | null } | number | string | null | undefined,
+  size?: string | null,
 ): string | null {
   if (!media || typeof media === 'number' || typeof media === 'string') return null
+  if (size && media.sizes?.[size]?.url) return media.sizes[size]!.url!
   return media.url ?? null
 }
 

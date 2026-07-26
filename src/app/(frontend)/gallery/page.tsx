@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { Container } from '@/components/layout/Container'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -22,7 +23,7 @@ export default async function GalleryPage() {
   const items = result.docs as Gallery[]
 
   return (
-    <Container className="py-12">
+    <Container className="py-6 sm:py-8 lg:py-12">
       <PageHeader
         title="Gallery"
         subtitle="Moments from the community, events, challenges, and everyday wins."
@@ -32,7 +33,7 @@ export default async function GalleryPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => {
             const image = item.image as Media | null | undefined
-            const src = mediaUrl(image)
+            const src = mediaUrl(image, 'card')
             if (!src) return null
             return (
               <figure
@@ -58,9 +59,9 @@ export default async function GalleryPage() {
       ) : (
         <div className="rounded-xl border border-dashed border-stone-300 bg-white p-10 text-center text-stone-600">
           No gallery images yet. Upload them in{' '}
-          <a href="/admin/collections/gallery" className="font-medium text-emerald-700 underline">
+          <Link href="/admin/collections/gallery" className="font-medium text-emerald-700 underline">
             Admin → Gallery
-          </a>
+          </Link>
           .
         </div>
       )}

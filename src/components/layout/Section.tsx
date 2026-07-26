@@ -9,5 +9,5 @@ type SectionProps = {
 }
 
 export function Section({ children, className, as: Comp = 'section' }: SectionProps) {
-  return <Comp className={cn('py-12', className)}>{children}</Comp>
+  return <Comp className={cn('py-6 sm:py-8 lg:py-12', className)}>{children}</Comp>
 }

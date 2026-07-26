@@ -39,7 +39,7 @@ export default async function EventDetailPage({ params }: Props) {
   if (!event) notFound()
 
   const image = event.image as Media | null | undefined
-  const src = mediaUrl(image)
+  const src = mediaUrl(image, 'hero')
   const start = event.startDate
     ? new Date(event.startDate).toLocaleString(undefined, {
         year: 'numeric',
@@ -51,11 +51,11 @@ export default async function EventDetailPage({ params }: Props) {
     : null
 
   return (
-    <Container size="narrow" className="py-12">
+    <Container size="narrow" className="py-6 sm:py-8 lg:py-12">
       <Link href="/events" className="text-sm font-medium text-emerald-700 hover:text-emerald-900">
         ← All events
       </Link>
-      <h1 className="mt-4 text-4xl font-bold tracking-tight text-stone-900">{event.title}</h1>
+      <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">{event.title}</h1>
       {start ? <p className="mt-3 text-sm font-medium text-emerald-700">{start}</p> : null}
       {event.location ? <p className="mt-1 text-stone-600">{event.location}</p> : null}
       {event.summary ? <p className="mt-4 text-lg text-stone-600">{event.summary}</p> : null}
@@ -74,7 +74,7 @@ export default async function EventDetailPage({ params }: Props) {
       ) : null}
 
       {event.description ? (
-        <div className="prose prose-stone mt-10 max-w-none">
+        <div className="prose prose-stone prose-sm md:prose-base mt-10 max-w-none">
           <RichText data={event.description as Parameters<typeof RichText>[0]['data']} />
         </div>
       ) : null}
@@ -85,7 +85,7 @@ export default async function EventDetailPage({ params }: Props) {
             href={event.registrationUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
+            className="inline-block w-full sm:w-auto text-center rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
           >
             Register
           </a>

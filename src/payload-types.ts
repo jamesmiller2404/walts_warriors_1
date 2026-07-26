@@ -1259,6 +1259,47 @@ export interface HomePage {
             blockName?: string | null;
             blockType: 'quoteBlock';
           }
+        | {
+            /**
+             * The image to display.
+             */
+            image: number | Media;
+            /**
+             * Starting column (1–12) on the 12-column grid.
+             */
+            columnStart?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+            /**
+             * How many columns this block spans (1–12).
+             */
+            columnSpan?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+            /**
+             * Starting row (1–10, or Auto for default flow).
+             */
+            rowStart?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10') | null;
+            /**
+             * How many rows this block spans (1–6, or Auto).
+             */
+            rowSpan?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6') | null;
+            /**
+             * How the image fills its container.
+             */
+            objectFit?: ('cover' | 'contain' | 'fill' | 'none' | 'scale-down') | null;
+            /**
+             * CSS object-position value (e.g. center, top, 50% 20%). Use % values to keep the soldier's head/torso visible.
+             */
+            objectPosition?: string | null;
+            /**
+             * Override the media's alt text for accessibility. Leave empty to use the media default.
+             */
+            alt?: string | null;
+            /**
+             * Optional caption displayed below the image.
+             */
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'imageBlock';
+          }
       )[]
     | null;
   updatedAt?: string | null;
@@ -1435,6 +1476,21 @@ export interface HomePageSelect<T extends boolean = true> {
               attributionFontFamily?: T;
               attributionFontSize?: T;
               attributionFontColor?: T;
+              id?: T;
+              blockName?: T;
+            };
+        imageBlock?:
+          | T
+          | {
+              image?: T;
+              columnStart?: T;
+              columnSpan?: T;
+              rowStart?: T;
+              rowSpan?: T;
+              objectFit?: T;
+              objectPosition?: T;
+              alt?: T;
+              caption?: T;
               id?: T;
               blockName?: T;
             };

@@ -34,7 +34,7 @@ export default async function ChallengesPage() {
   const challenges = result.docs as Challenge[]
 
   return (
-    <Container className="py-12">
+    <Container className="py-6 sm:py-8 lg:py-12">
       <PageHeader
         title="Challenges"
         subtitle="Community challenges that inspire lasting positive change."
@@ -44,7 +44,7 @@ export default async function ChallengesPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {challenges.map((challenge) => {
             const image = challenge.image as Media | null | undefined
-            const src = mediaUrl(image)
+            const src = mediaUrl(image, 'card')
             const label = statusLabel[challenge.status] || challenge.status
 
             return (
@@ -98,12 +98,12 @@ export default async function ChallengesPage() {
       ) : (
         <div className="rounded-xl border border-dashed border-stone-300 bg-white p-10 text-center text-stone-600">
           No challenges yet. Add them in{' '}
-          <a
+          <Link
             href="/admin/collections/challenges"
             className="font-medium text-emerald-700 underline"
           >
             Admin → Challenges
-          </a>
+          </Link>
           .
         </div>
       )}

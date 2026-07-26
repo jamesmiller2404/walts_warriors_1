@@ -45,7 +45,7 @@ export default async function EventsPage() {
   const events = result.docs as Event[]
 
   return (
-    <Container className="py-12">
+    <Container className="py-6 sm:py-8 lg:py-12">
       <PageHeader
         title="Events"
         subtitle="Community gatherings, workshops, and wellness meetups."
@@ -55,7 +55,7 @@ export default async function EventsPage() {
         <div className="grid gap-6 sm:grid-cols-2">
           {events.map((event) => {
             const image = event.image as Media | null | undefined
-            const src = mediaUrl(image)
+            const src = mediaUrl(image, 'card')
             const when = formatEventDate(event.startDate, event.endDate)
 
             return (
@@ -105,9 +105,9 @@ export default async function EventsPage() {
       ) : (
         <div className="rounded-xl border border-dashed border-stone-300 bg-white p-10 text-center text-stone-600">
           No events yet. Add them in{' '}
-          <a href="/admin/collections/events" className="font-medium text-emerald-700 underline">
+          <Link href="/admin/collections/events" className="font-medium text-emerald-700 underline">
             Admin → Events
-          </a>
+          </Link>
           .
         </div>
       )}

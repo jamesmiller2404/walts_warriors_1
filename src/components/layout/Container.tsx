@@ -23,7 +23,7 @@ export function Container({
   as: Comp = 'div',
 }: ContainerProps) {
   return (
-    <Comp className={cn('mx-auto px-4 sm:px-6', sizes[size], className)}>
+    <Comp className={cn('mx-auto px-4 sm:px-6 lg:px-8', sizes[size], className)}>
       {children}
     </Comp>
   )

@@ -15,7 +15,7 @@ export function Footer({ settings }: { settings: SiteSetting }) {
 
   return (
     <footer className="mt-auto bg-[#000b17] text-stone-300">
-      <Container className="grid gap-8 py-12 md:grid-cols-3">
+      <Container className="grid gap-8 md:gap-12 py-12 md:grid-cols-3">
         <div>
           <p className="text-lg font-semibold text-white">{name}</p>
           {settings.tagline ? <p className="mt-2 text-sm text-stone-400">{settings.tagline}</p> : null}
@@ -91,7 +91,7 @@ export function Footer({ settings }: { settings: SiteSetting }) {
         </div>
       </Container>
 
-      <div className="py-4 text-center text-xs text-stone-500">
+      <div className="py-4 px-4 text-center text-xs text-stone-500">
         © {year} {name}. All rights reserved.
       </div>
     </footer>

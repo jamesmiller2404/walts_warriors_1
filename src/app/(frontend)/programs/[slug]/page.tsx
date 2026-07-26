@@ -42,15 +42,15 @@ export default async function ProgramDetailPage({ params }: Props) {
   if (!program) notFound()
 
   const image = program.image as Media | null | undefined
-  const src = mediaUrl(image)
+  const src = mediaUrl(image, 'hero')
 
   return (
-    <Container size="wide" className="py-12">
+    <Container size="wide" className="py-6 sm:py-8 lg:py-12">
       <Link href="/programs" className="text-sm font-medium text-emerald-700 hover:text-emerald-900">
         ← All programs
       </Link>
 
-      <h1 className="mt-4 text-4xl font-bold tracking-tight text-stone-900">{program.name}</h1>
+      <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">{program.name}</h1>
       {program.summary ? <p className="mt-3 text-lg text-stone-600">{program.summary}</p> : null}
 
       {src ? (
@@ -76,14 +76,14 @@ export default async function ProgramDetailPage({ params }: Props) {
         </div>
       ) : null}
 
-      <div className="prose prose-stone mt-10 max-w-none">
+      <div className="prose prose-stone prose-sm md:prose-base mt-10 max-w-none">
         <RichText data={program.description as Parameters<typeof RichText>[0]['data']} />
       </div>
 
       <div className="mt-12">
         <Link
           href="/contact"
-          className="inline-block rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
+          className="inline-block w-full sm:w-auto text-center rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
         >
           Learn more
         </Link>

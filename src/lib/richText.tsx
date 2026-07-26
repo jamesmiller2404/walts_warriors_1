@@ -40,33 +40,25 @@ function renderNodes(nodes: LexicalNode[] = [], keyPrefix = 'n'): React.ReactNod
         return renderText(node, key)
       case 'paragraph':
         return (
-          <p key={key} className="mb-4 last:mb-0">
+          <p key={key}>
             {renderNodes(node.children, key)}
           </p>
         )
       case 'heading': {
         const tag = (node.tag || 'h2') as keyof React.JSX.IntrinsicElements
-        const className =
-          tag === 'h1'
-            ? 'mb-4 text-3xl font-bold'
-            : tag === 'h2'
-              ? 'mb-3 text-2xl font-semibold'
-              : 'mb-2 text-xl font-semibold'
-        return React.createElement(tag, { key, className }, renderNodes(node.children, key))
+        return React.createElement(tag, { key }, renderNodes(node.children, key))
       }
       case 'list': {
         const ListTag = node.listType === 'number' ? 'ol' : 'ul'
-        const listClass =
-          node.listType === 'number' ? 'mb-4 list-decimal pl-6' : 'mb-4 list-disc pl-6'
         return (
-          <ListTag key={key} className={listClass}>
+          <ListTag key={key}>
             {renderNodes(node.children, key)}
           </ListTag>
         )
       }
       case 'listitem':
         return (
-          <li key={key} className="mb-1">
+          <li key={key}>
             {renderNodes(node.children, key)}
           </li>
         )

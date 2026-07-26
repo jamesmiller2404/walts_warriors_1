@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 import { Container } from '@/components/layout/Container'
 import { getPayloadClient } from '@/lib/payload'
@@ -23,7 +24,7 @@ export default async function ContactRoute() {
     .join(', ')
 
   return (
-    <Container size="narrow" className="py-12">
+    <Container size="narrow" className="py-6 sm:py-8 lg:py-12">
       <h1 className="text-4xl font-bold tracking-tight text-stone-900">
         {page.headline || 'Contact'}
       </h1>
@@ -69,7 +70,7 @@ export default async function ContactRoute() {
         {settings.hours && settings.hours.length > 0 ? (
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">Hours</p>
-            <ul className="mt-2 space-y-1 text-stone-800">
+            <ul className="mt-2 space-y-1 text-stone-800 overflow-x-auto">
               {settings.hours.map((row, i) => (
                 <li
                   key={i}
@@ -88,12 +89,12 @@ export default async function ContactRoute() {
         {!settings.phone && !settings.email && !addressLine ? (
           <p className="text-stone-600">
             Contact details are not set yet. Add them in{' '}
-            <a
+          <Link
               href="/admin/globals/site-settings"
               className="font-medium text-emerald-700 underline"
             >
               Admin → Site Settings
-            </a>
+            </Link>
             .
           </p>
         ) : null}

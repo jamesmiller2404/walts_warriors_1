@@ -24,7 +24,7 @@ export default async function ResourcesPage() {
   const resources = result.docs as Resource[]
 
   return (
-    <Container className="py-12">
+    <Container className="py-6 sm:py-8 lg:py-12">
       <PageHeader
         title="Resources & Articles"
         subtitle="Practical strategies and encouragement for lasting positive change."
@@ -34,7 +34,7 @@ export default async function ResourcesPage() {
         <div className="grid gap-6 sm:grid-cols-2">
           {resources.map((resource) => {
             const image = resource.featuredImage as Media | null | undefined
-            const src = mediaUrl(image)
+            const src = mediaUrl(image, 'card')
             const date = resource.publishedAt
               ? new Date(resource.publishedAt).toLocaleDateString(undefined, {
                   year: 'numeric',
@@ -87,9 +87,9 @@ export default async function ResourcesPage() {
       ) : (
         <div className="rounded-xl border border-dashed border-stone-300 bg-white p-10 text-center text-stone-600">
           No articles yet. Create one in{' '}
-          <a href="/admin/collections/resources" className="font-medium text-emerald-700 underline">
+          <Link href="/admin/collections/resources" className="font-medium text-emerald-700 underline">
             Admin → Resources / Articles
-          </a>
+          </Link>
           .
         </div>
       )}

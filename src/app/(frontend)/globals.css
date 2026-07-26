@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
@@ -17,6 +18,8 @@ html {
 
 body {
   @apply bg-stone-50 font-sans text-stone-900 antialiased;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 a {

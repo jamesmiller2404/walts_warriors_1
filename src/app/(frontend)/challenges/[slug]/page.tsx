@@ -42,7 +42,7 @@ export default async function ChallengeDetailPage({ params }: Props) {
   if (!challenge) notFound()
 
   const image = challenge.image as Media | null | undefined
-  const src = mediaUrl(image)
+  const src = mediaUrl(image, 'hero')
   const range =
     challenge.startDate || challenge.endDate
       ? [
@@ -66,14 +66,14 @@ export default async function ChallengeDetailPage({ params }: Props) {
       : null
 
   return (
-    <Container as="article" size="narrow" className="py-12">
+    <Container as="article" size="narrow" className="py-6 sm:py-8 lg:py-12">
       <Link
         href="/challenges"
         className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
       >
         ← All challenges
       </Link>
-      <h1 className="mt-4 text-4xl font-bold tracking-tight text-stone-900">{challenge.title}</h1>
+      <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">{challenge.title}</h1>
       {range ? <p className="mt-3 text-sm font-medium text-emerald-700">{range}</p> : null}
       {challenge.summary ? <p className="mt-4 text-lg text-stone-600">{challenge.summary}</p> : null}
 
@@ -90,7 +90,7 @@ export default async function ChallengeDetailPage({ params }: Props) {
         </div>
       ) : null}
 
-      <div className="prose prose-stone mt-10 max-w-none">
+      <div className="prose prose-stone prose-sm md:prose-base mt-10 max-w-none">
         <RichText data={challenge.description as Parameters<typeof RichText>[0]['data']} />
       </div>
 
@@ -100,7 +100,7 @@ export default async function ChallengeDetailPage({ params }: Props) {
             href={challenge.joinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
+            className="inline-block w-full sm:w-auto text-center rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
           >
             Join this challenge
           </a>
@@ -109,7 +109,7 @@ export default async function ChallengeDetailPage({ params }: Props) {
         <div className="mt-10">
           <Link
             href="/contact"
-            className="inline-block rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
+            className="inline-block w-full sm:w-auto text-center rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
           >
             Get involved
           </Link>

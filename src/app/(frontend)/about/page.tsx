@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { Container } from '@/components/layout/Container'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -21,11 +22,11 @@ export default async function AboutPage() {
 
   const hero = about.heroImage as Media | null | undefined
   const portrait = about.portrait as Media | null | undefined
-  const heroSrc = mediaUrl(hero)
-  const portraitSrc = mediaUrl(portrait)
+  const heroSrc = mediaUrl(hero, 'hero')
+  const portraitSrc = mediaUrl(portrait, 'thumbnail')
 
   return (
-    <Container className="py-12">
+    <Container className="py-6 sm:py-8 lg:py-12">
       <PageHeader
         title={about.headline || "About Walt's Warriors"}
         subtitle={about.subheadline}
@@ -60,7 +61,7 @@ export default async function AboutPage() {
           )}
 
           {about.philosophy ? (
-            <blockquote className="mt-10 rounded-2xl border border-emerald-100 bg-emerald-50 px-6 py-5 text-xl font-medium italic text-emerald-950">
+            <blockquote className="mt-10 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 sm:px-6 py-5 text-xl font-medium italic text-emerald-950">
               &ldquo;{about.philosophy}&rdquo;
             </blockquote>
           ) : null}
@@ -105,9 +106,9 @@ export default async function AboutPage() {
       {!about.introduction && !about.philosophy ? (
         <p className="mt-10 text-sm text-stone-500">
           Edit this page in{' '}
-          <a href="/admin/globals/about-walt" className="font-medium text-emerald-700 underline">
+          <Link href="/admin/globals/about-walt" className="font-medium text-emerald-700 underline">
             Admin → About Walt
-          </a>
+          </Link>
           .
         </p>
       ) : null}
