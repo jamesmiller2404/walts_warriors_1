@@ -113,7 +113,7 @@ export function NavCards() {
   const secondRow = navCards.slice(3)
 
   return (
-    <section className="space-y-6 mt-32 lg:mt-[500px]">
+    <section className="space-y-6 mt-32 lg:mt-[200px]">
       <style>{`
 @media (prefers-reduced-motion: reduce) {
   .nav-card { transition: none !important; transform: none !important; }
