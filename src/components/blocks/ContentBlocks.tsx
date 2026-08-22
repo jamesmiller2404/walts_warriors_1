@@ -1,6 +1,8 @@
 import { ImageBlock as ImageBlockComponent } from '@/components/blocks/ImageBlock'
+import { DynamicQuote } from '@/components/blocks/DynamicQuote'
 import { QuoteBlock } from '@/components/blocks/QuoteBlock'
 import { TextBlock } from '@/components/blocks/TextBlock'
+import type { RotationMode } from '@/components/blocks/DynamicQuote'
 
 type ContentBlockItem = {
   id?: string | null
@@ -28,11 +30,19 @@ type ContentBlockItem = {
   caption?: string | null
 }
 
-type Props = {
-  blocks: ContentBlockItem[]
+type QuoteItem = {
+  id: number
+  quote: string
+  attribution?: string | null
 }
 
-export function ContentBlocks({ blocks }: Props) {
+type Props = {
+  blocks: ContentBlockItem[]
+  quotes?: QuoteItem[]
+  rotationMode?: RotationMode | null
+}
+
+export function ContentBlocks({ blocks, quotes, rotationMode }: Props) {
   if (!blocks?.length) return null
 
   return (
@@ -72,6 +82,29 @@ export function ContentBlocks({ blocks }: Props) {
                 <QuoteBlock
                   quote={block.quote ?? ''}
                   attribution={block.attribution}
+                  quoteFontSize={block.quoteFontSize}
+                  quoteFontColor={block.quoteFontColor}
+                  quoteFontFamily={block.quoteFontFamily}
+                  attributionFontSize={block.attributionFontSize}
+                  attributionFontColor={block.attributionFontColor}
+                  attributionFontFamily={block.attributionFontFamily}
+                />
+              </div>
+            )
+          case 'dynamicQuote':
+            return (
+              <div
+                key={block.id}
+                style={{
+                  gridColumn: `${block.columnStart ?? '1'} / span ${block.columnSpan ?? '6'}`,
+                  gridRow: block.rowStart && block.rowStart !== 'auto'
+                    ? `${block.rowStart} / span ${block.rowSpan !== 'auto' ? (block.rowSpan ?? '1') : '1'}`
+                    : undefined,
+                }}
+              >
+                <DynamicQuote
+                  quotes={quotes ?? []}
+                  rotationMode={rotationMode}
                   quoteFontSize={block.quoteFontSize}
                   quoteFontColor={block.quoteFontColor}
                   quoteFontFamily={block.quoteFontFamily}

@@ -12,6 +12,7 @@ import { Media } from './collections/Media'
 import { Programs } from './collections/Programs'
 import { Resources } from './collections/Resources'
 import { Testimonials } from './collections/Testimonials'
+import { Quotes } from './collections/Quotes'
 import { Events } from './collections/Events'
 import { Gallery } from './collections/Gallery'
 import { Challenges } from './collections/Challenges'
@@ -24,6 +25,7 @@ import { CheckIns } from './collections/CheckIns'
 import { Badges } from './collections/Badges'
 import { MemberBadges } from './collections/MemberBadges'
 import { CommunityStats } from './globals/CommunityStats'
+import { QuoteSettings } from './globals/QuoteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -47,6 +49,7 @@ export default buildConfig({
     Programs,
     Resources,
     Testimonials,
+    Quotes,
     Events,
     Gallery,
     Challenges,
@@ -55,7 +58,7 @@ export default buildConfig({
     Badges, 
     MemberBadges,
   ],
-  globals: [SiteSettings, HomePage, AboutWalt, ContactPage, CommunityStats],
+  globals: [SiteSettings, HomePage, AboutWalt, ContactPage, CommunityStats, QuoteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

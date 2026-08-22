@@ -73,6 +73,7 @@ export interface Config {
     programs: Program;
     resources: Resource;
     testimonials: Testimonial;
+    quotes: Quote;
     events: Event;
     gallery: Gallery;
     challenges: Challenge;
@@ -92,6 +93,7 @@ export interface Config {
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     resources: ResourcesSelect<false> | ResourcesSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    quotes: QuotesSelect<false> | QuotesSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     gallery: GallerySelect<false> | GallerySelect<true>;
     challenges: ChallengesSelect<false> | ChallengesSelect<true>;
@@ -114,6 +116,7 @@ export interface Config {
     'about-walt': AboutWalt;
     'contact-page': ContactPage;
     'community-stats': CommunityStat;
+    'quote-settings': QuoteSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
@@ -121,6 +124,7 @@ export interface Config {
     'about-walt': AboutWaltSelect<false> | AboutWaltSelect<true>;
     'contact-page': ContactPageSelect<false> | ContactPageSelect<true>;
     'community-stats': CommunityStatsSelect<false> | CommunityStatsSelect<true>;
+    'quote-settings': QuoteSettingsSelect<false> | QuoteSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -370,6 +374,30 @@ export interface Testimonial {
    * Featured testimonials may appear on the home page.
    */
   featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Quotes shown on the front page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quotes".
+ */
+export interface Quote {
+  id: number;
+  quote: string;
+  /**
+   * Who said the quote (e.g. Marcus Aurelius).
+   */
+  attribution?: string | null;
+  /**
+   * Include this quote in the front-page rotation.
+   */
+  active?: boolean | null;
+  /**
+   * Lower numbers appear first (used for deterministic day/week rotation).
+   */
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -624,6 +652,10 @@ export interface PayloadLockedDocument {
         value: number | Testimonial;
       } | null)
     | ({
+        relationTo: 'quotes';
+        value: number | Quote;
+      } | null)
+    | ({
         relationTo: 'events';
         value: number | Event;
       } | null)
@@ -828,6 +860,18 @@ export interface TestimonialsSelect<T extends boolean = true> {
   role?: T;
   photo?: T;
   featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quotes_select".
+ */
+export interface QuotesSelect<T extends boolean = true> {
+  quote?: T;
+  attribution?: T;
+  active?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1265,6 +1309,101 @@ export interface HomePage {
           }
         | {
             /**
+             * Starting column (1–12) on the 12-column grid.
+             */
+            columnStart?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+            /**
+             * How many columns this block spans (1–12).
+             */
+            columnSpan?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12') | null;
+            /**
+             * Starting row (1–10, or Auto for default flow).
+             */
+            rowStart?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10') | null;
+            /**
+             * How many rows this block spans (1–6, or Auto).
+             */
+            rowSpan?: ('auto' | '1' | '2' | '3' | '4' | '5' | '6') | null;
+            /**
+             * Font family for the quote text.
+             */
+            quoteFontFamily?:
+              | (
+                  | 'manrope'
+                  | 'manrope-semibold'
+                  | 'manrope-bold'
+                  | 'manrope-extrabold'
+                  | 'archivo-black'
+                  | 'montserrat-bold'
+                  | 'montserrat-extrabold'
+                  | 'eb-garamond-italic'
+                  | 'eb-garamond-medium-italic'
+                  | 'eb-garamond-semibold-italic'
+                )
+              | null;
+            /**
+             * Font size in points (8–128).
+             */
+            quoteFontSize?: string | null;
+            /**
+             * Font color for the quote text.
+             */
+            quoteFontColor?:
+              | (
+                  | 'stone-900'
+                  | 'stone-800'
+                  | 'stone-700'
+                  | 'stone-600'
+                  | 'brand-900'
+                  | 'brand-800'
+                  | 'brand-700'
+                  | 'brand-600'
+                  | 'white'
+                )
+              | null;
+            /**
+             * Font family for the attribution text.
+             */
+            attributionFontFamily?:
+              | (
+                  | 'manrope'
+                  | 'manrope-semibold'
+                  | 'manrope-bold'
+                  | 'manrope-extrabold'
+                  | 'archivo-black'
+                  | 'montserrat-bold'
+                  | 'montserrat-extrabold'
+                  | 'eb-garamond-italic'
+                  | 'eb-garamond-medium-italic'
+                  | 'eb-garamond-semibold-italic'
+                )
+              | null;
+            /**
+             * Font size in points (8–128).
+             */
+            attributionFontSize?: string | null;
+            /**
+             * Font color for the attribution text.
+             */
+            attributionFontColor?:
+              | (
+                  | 'stone-900'
+                  | 'stone-800'
+                  | 'stone-700'
+                  | 'stone-600'
+                  | 'brand-900'
+                  | 'brand-800'
+                  | 'brand-700'
+                  | 'brand-600'
+                  | 'white'
+                )
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'dynamicQuote';
+          }
+        | {
+            /**
              * The image to display.
              */
             image: number | Media;
@@ -1392,6 +1531,21 @@ export interface CommunityStat {
   createdAt?: string | null;
 }
 /**
+ * Controls how the front-page quote is chosen.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quote-settings".
+ */
+export interface QuoteSetting {
+  id: number;
+  /**
+   * How often a new quote appears.
+   */
+  rotationMode?: ('page-load' | 'session' | 'day' | 'week') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -1484,6 +1638,22 @@ export interface HomePageSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        dynamicQuote?:
+          | T
+          | {
+              columnStart?: T;
+              columnSpan?: T;
+              rowStart?: T;
+              rowSpan?: T;
+              quoteFontFamily?: T;
+              quoteFontSize?: T;
+              quoteFontColor?: T;
+              attributionFontFamily?: T;
+              attributionFontSize?: T;
+              attributionFontColor?: T;
+              id?: T;
+              blockName?: T;
+            };
         imageBlock?:
           | T
           | {
@@ -1547,6 +1717,16 @@ export interface CommunityStatsSelect<T extends boolean = true> {
   totalCheckIns?: T;
   totalBadgesAwarded?: T;
   lastUpdated?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quote-settings_select".
+ */
+export interface QuoteSettingsSelect<T extends boolean = true> {
+  rotationMode?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

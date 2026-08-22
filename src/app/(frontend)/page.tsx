@@ -7,15 +7,30 @@ import { ProgramCard } from '@/components/programs/ProgramCard'
 import { getPayloadClient } from '@/lib/payload'
 import { RichText } from '@/lib/richText'
 import { mediaUrl } from '@/lib/utils'
-import type { HomePage, Media, Program, SiteSetting } from '@/payload-types'
+import type { HomePage, Media, Program, Quote, SiteSetting } from '@/payload-types'
 
 export default async function Home() {
   const payload = await getPayloadClient()
 
-  const [home, settings] = await Promise.all([
+  const [home, settings, quoteSettings] = await Promise.all([
     payload.findGlobal({ slug: 'home-page', depth: 2 }) as Promise<HomePage>,
     payload.findGlobal({ slug: 'site-settings', depth: 1 }) as Promise<SiteSetting>,
+    payload.findGlobal({ slug: 'quote-settings', depth: 0 }),
   ])
+
+  const quotesResult = await payload.find({
+    collection: 'quotes',
+    where: { active: { equals: true } },
+    sort: 'order',
+    limit: 100,
+    depth: 0,
+  })
+  const quotes = (quotesResult.docs as Quote[]).map((q) => ({
+    id: q.id,
+    quote: q.quote,
+    attribution: q.attribution,
+  }))
+  const rotationMode = quoteSettings?.rotationMode || 'day'
 
   let programs: Program[] = []
 
@@ -65,7 +80,11 @@ export default async function Home() {
           ) : null}
 
           {home.contentBlocks ? (
-            <ContentBlocks blocks={home.contentBlocks as any} />
+            <ContentBlocks
+              blocks={home.contentBlocks as any}
+              quotes={quotes}
+              rotationMode={rotationMode}
+            />
           ) : null}
 
           {programs.length > 0 ? (
