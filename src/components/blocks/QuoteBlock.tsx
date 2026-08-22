@@ -23,7 +23,7 @@ const fontColorMap: Record<string, string> = {
   white: 'text-white',
 }
 
-import { resolvePt } from '@/lib/fontSize'
+import { fluidFontSize, resolvePt } from '@/lib/fontSize'
 
 type Props = {
   quote: string
@@ -50,6 +50,8 @@ export function QuoteBlock({
   const attrColor = attributionFontColor ? fontColorMap[attributionFontColor] : 'text-stone-600'
   const quotePt = resolvePt(quoteFontSize)
   const attrPt = resolvePt(attributionFontSize)
+  const quoteSize = quotePt && !Number.isNaN(quotePt) ? fluidFontSize(quotePt) : undefined
+  const attrSize = attrPt && !Number.isNaN(attrPt) ? fluidFontSize(attrPt) : undefined
 
   return (
     <figure className="space-y-3">
@@ -57,7 +59,7 @@ export function QuoteBlock({
         className={`${quoteColor} leading-relaxed`}
         style={{
           fontFamily: quoteFontFamily ? fontFamilyMap[quoteFontFamily] : 'var(--font-eb-garamond-italic)',
-          fontSize: quotePt && !Number.isNaN(quotePt) ? `${quotePt}pt` : undefined,
+          fontSize: quoteSize,
           whiteSpace: 'pre-wrap',
         }}
       >
@@ -68,7 +70,7 @@ export function QuoteBlock({
           className={`${attrColor} not-italic`}
           style={{
             fontFamily: attributionFontFamily ? fontFamilyMap[attributionFontFamily] : 'var(--font-manrope-semibold)',
-            fontSize: attrPt && !Number.isNaN(attrPt) ? `${attrPt}pt` : undefined,
+            fontSize: attrSize,
             whiteSpace: 'pre-wrap',
           }}
         >

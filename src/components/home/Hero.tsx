@@ -90,18 +90,18 @@ export function Hero({ home, settings }: Props) {
 
       {/* Business title row */}
       <div className="relative z-20 flex items-start justify-between px-6 pt-4 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
-        <Link href="/" className="flex items-center gap-3" style={{ marginLeft: '-3rem' }}>
+        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3 md:-ml-12">
           {logoSrc ? (
             <Image
               src={logoSrc}
               alt={name}
               width={48}
               height={48}
-              className="h-12 w-12 rounded-full object-cover"
+              className="h-10 w-10 shrink-0 rounded-full object-cover sm:h-12 sm:w-12"
             />
           ) : null}
           <span className="-ml-4">
-            <span className="block" style={{ fontFamily: 'var(--font-archivo-black)', fontSize: '2.5rem', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.9))' }}>
+            <span className="block" style={{ fontFamily: 'var(--font-archivo-black)', fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.9))' }}>
               <span className="text-white">Walt&apos;s</span>{' '}
               <span className="text-black" style={{ WebkitTextStroke: '0.5px rgba(190,190,190,0.7)' }}>WARRIORS</span>
             </span>
@@ -111,8 +111,8 @@ export function Hero({ home, settings }: Props) {
           </span>
         </Link>
 
-        {/* Top-right icons column */}
-        <div className="flex flex-col items-end gap-1">
+        {/* Top-right icons column — absolute on mobile (below hamburger), in-flow on desktop */}
+        <div className="absolute right-6 top-16 z-20 flex flex-col items-end gap-1 md:static md:z-auto">
           <div className="flex items-center gap-3">
             <Image src="/icons/bell-solid-full.svg" alt="Notifications" width={28} height={28} className="h-7 w-7 text-white" />
             <Image src="/icons/circle-user-solid-full.svg" alt="Account" width={28} height={28} className="h-7 w-7 text-white" />
@@ -126,14 +126,14 @@ export function Hero({ home, settings }: Props) {
         </div>
       </div>
 
-      {/* Navbar row — centered, independently positioned */}
-      <div className="relative z-20 flex justify-center px-6 py-2">
+      {/* Navbar row — top-right hamburger on mobile (out of flow), centered row on desktop */}
+      <div className="absolute left-0 right-0 top-0 z-30 flex justify-end px-6 pt-4 md:static md:z-auto md:justify-center md:py-2">
         <NavBar />
       </div>
 
       {/* CTA content — left-aligned headline, pushed down */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-6 sm:px-12 md:px-32 lg:px-48 pt-20 lg:pt-[10.5rem] flex-1">
-        <div className="flex flex-col items-start select-none w-full mb-36">
+      <div className="relative z-10 flex flex-col items-center justify-between px-6 sm:px-12 md:px-32 lg:px-48 pt-2 lg:pt-[10.5rem] lg:justify-center flex-1">
+        <div className="flex flex-col items-start select-none w-full mb-16 lg:mb-36">
 
           {/* DISCIPLINE — orange gradient, clamp() sizing */}
           <h1
@@ -186,7 +186,7 @@ export function Hero({ home, settings }: Props) {
         {home.subheadline ? (
           <p className="mt-6 max-w-xl text-base sm:text-lg text-stone-200">{home.subheadline}</p>
         ) : null}
-        <div className="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-center w-full mb-32">
+        <div className="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-center w-full mb-12 lg:mb-32">
           <Link
             href={home.cta?.buttonLink || '/contact'}
             className="w-full sm:w-auto text-center rounded-[999px] bg-[#5b90c6] px-5 py-3 text-sm font-semibold text-black transition hover:brightness-110"

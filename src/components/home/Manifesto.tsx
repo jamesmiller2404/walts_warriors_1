@@ -13,12 +13,12 @@ export function Manifesto({
         <img
           src={imageUrl}
           alt=""
-          className="absolute inset-y-0 right-0 z-0 h-full w-2/3 object-cover"
+          className="absolute inset-y-0 right-0 z-0 hidden h-full w-1/2 object-cover md:block"
         />
       )}
 
       <div className="relative z-10 flex min-h-[280px] w-full items-center px-6 sm:px-12">
-        <div className="w-1/2">
+        <div className="w-full md:w-1/2">
           <blockquote className="text-2xl font-medium italic leading-tight text-stone-900 sm:text-3xl">
             &ldquo;{quote}&rdquo;
           </blockquote>

@@ -52,7 +52,7 @@ function NavCard({ card }: { card: NavCardData }) {
     <Link
       href={card.href}
       className={`
-        nav-card relative flex flex-col rounded-xl border-1 p-6
+        nav-card relative flex flex-col rounded-xl border p-6
         transition-all duration-200 ease-out
         ${isMaroon
           ? 'text-red-50 border-white/10'

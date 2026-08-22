@@ -8,7 +8,7 @@ export const QuoteSettings: GlobalConfig = {
   label: 'Quote Settings',
   admin: {
     description: 'Controls how the front-page quote is chosen.',
-    group: 'Content',
+    group: 'Quotes',
   },
   access: {
     read: anyone,

@@ -9,7 +9,7 @@ export const Quotes: CollectionConfig = {
     useAsTitle: 'quote',
     defaultColumns: ['quote', 'attribution', 'active', 'order', 'updatedAt'],
     description: 'Quotes shown on the front page.',
-    group: 'Content',
+    group: 'Quotes',
   },
   access: {
     create: isAdminOrEditor,

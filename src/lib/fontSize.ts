@@ -13,3 +13,9 @@ export function resolvePt(value: string | null | undefined): number | undefined 
   const n = Number(value)
   return !Number.isNaN(n) ? n : undefined
 }
+
+export function fluidFontSize(pt: number): string {
+  const px = (pt * 4) / 3
+  const round = (n: number) => Math.round(n * 100) / 100
+  return `clamp(${round(px * 0.6)}px, calc(100vw / 960 * ${round(px)}), ${round(px)}px)`
+}

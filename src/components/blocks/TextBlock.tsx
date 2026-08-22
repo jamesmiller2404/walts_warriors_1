@@ -23,7 +23,7 @@ const fontColorMap: Record<string, string> = {
   white: 'text-white',
 }
 
-import { resolvePt } from '@/lib/fontSize'
+import { fluidFontSize, resolvePt } from '@/lib/fontSize'
 
 type Props = {
   text: string
@@ -35,13 +35,14 @@ type Props = {
 export function TextBlock({ text, fontSize, fontColor, fontFamily }: Props) {
   const colorClass = fontColor ? fontColorMap[fontColor] : 'text-stone-900'
   const pt = resolvePt(fontSize)
+  const fluidSize = pt && !Number.isNaN(pt) ? fluidFontSize(pt) : undefined
 
   return (
     <p
       className={colorClass}
       style={{
         fontFamily: fontFamily ? fontFamilyMap[fontFamily] : undefined,
-        fontSize: pt && !Number.isNaN(pt) ? `${pt}pt` : undefined,
+        fontSize: fluidSize,
         whiteSpace: 'pre-wrap',
       }}
     >
