@@ -59,12 +59,9 @@ export default async function Home() {
       <div className="relative">
         {bgSrc && (
           <div
-            className="absolute inset-0 z-0"
+            className="absolute inset-0 z-0 bg-contain bg-top bg-no-repeat md:bg-auto"
             style={{
               backgroundImage: `url(${bgSrc})`,
-              backgroundSize: 'auto',
-              backgroundPosition: 'top center',
-              backgroundRepeat: 'no-repeat',
               opacity: bgOpacity / 100,
             }}
           />

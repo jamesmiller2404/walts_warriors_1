@@ -89,8 +89,8 @@ export function Hero({ home, settings }: Props) {
       )}
 
       {/* Business title row */}
-      <div className="relative z-20 flex items-start justify-between px-6 pt-4 sm:px-12 md:pl-[calc((100%-1152px)/2)] md:pr-[calc((100%-1152px)/2)]">
-        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3 md:-ml-12">
+      <div className="relative z-20 flex items-start justify-between px-6 pt-4 sm:px-12 md:pl-[max(calc((100%_-_1152px)/2),3rem)] md:pr-[max(calc((100%_-_1152px)/2),3rem)]">
+        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3 xl:-ml-12">
           {logoSrc ? (
             <Image
               src={logoSrc}
@@ -111,8 +111,8 @@ export function Hero({ home, settings }: Props) {
           </span>
         </Link>
 
-        {/* Top-right icons column — absolute on mobile (below hamburger), in-flow on desktop */}
-        <div className="absolute right-6 top-16 z-20 flex flex-col items-end gap-1 md:static md:z-auto">
+        {/* Top-right icons column — absolute at all sizes (below hamburger on mobile, aligned with title on md+) */}
+        <div className="absolute right-6 top-16 z-20 flex flex-col items-end gap-1 md:top-4">
           <div className="flex items-center gap-3">
             <Image src="/icons/bell-solid-full.svg" alt="Notifications" width={28} height={28} className="h-7 w-7 text-white" />
             <Image src="/icons/circle-user-solid-full.svg" alt="Account" width={28} height={28} className="h-7 w-7 text-white" />
@@ -127,13 +127,13 @@ export function Hero({ home, settings }: Props) {
       </div>
 
       {/* Navbar row — top-right hamburger on mobile (out of flow), centered row on desktop */}
-      <div className="absolute left-0 right-0 top-0 z-30 flex justify-end px-6 pt-4 md:static md:z-auto md:justify-center md:py-2">
+      <div className="absolute left-0 right-0 top-0 z-30 flex justify-end px-6 pt-4 md:static md:z-auto md:justify-center md:py-10">
         <NavBar />
       </div>
 
       {/* CTA content — left-aligned headline, pushed down */}
-      <div className="relative z-10 flex flex-col items-center justify-between px-6 sm:px-12 md:px-32 lg:px-48 pt-2 lg:pt-[10.5rem] lg:justify-center flex-1">
-        <div className="flex flex-col items-start select-none w-full mb-16 lg:mb-36">
+      <div className="relative z-10 flex flex-col items-center justify-between px-6 sm:px-12 md:px-32 lg:px-48 pt-2 md:pt-2 lg:pt-10 flex-1">
+        <div className="flex flex-col items-start select-none w-full mb-8 lg:mb-12">
 
           {/* DISCIPLINE — orange gradient, clamp() sizing */}
           <h1
@@ -186,7 +186,7 @@ export function Hero({ home, settings }: Props) {
         {home.subheadline ? (
           <p className="mt-6 max-w-xl text-base sm:text-lg text-stone-200">{home.subheadline}</p>
         ) : null}
-        <div className="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-center w-full mb-12 lg:mb-32">
+        <div className="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-center w-full mb-12">
           <Link
             href={home.cta?.buttonLink || '/contact'}
             className="w-full sm:w-auto text-center rounded-[999px] bg-[#5b90c6] px-5 py-3 text-sm font-semibold text-black transition hover:brightness-110"
