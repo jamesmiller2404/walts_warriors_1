@@ -7,6 +7,7 @@ import { ProgramCard } from '@/components/programs/ProgramCard'
 import { getPayloadClient } from '@/lib/payload'
 import { RichText } from '@/lib/richText'
 import { mediaUrl } from '@/lib/utils'
+import Image from 'next/image'
 import type { HomePage, Media, Program, Quote, SiteSetting } from '@/payload-types'
 
 export default async function Home() {
@@ -58,13 +59,17 @@ export default async function Home() {
 
       <div className="relative">
         {bgSrc && (
-          <div
-            className="absolute inset-0 z-0 bg-contain bg-top bg-no-repeat md:bg-auto"
-            style={{
-              backgroundImage: `url(${bgSrc})`,
-              opacity: bgOpacity / 100,
-            }}
-          />
+          <div className="absolute inset-0 z-0 bg-[#0b0c0f]">
+            <Image
+              src={bgSrc}
+              alt=""
+              fill
+              priority
+              className="object-contain object-top"
+              sizes="100vw"
+              style={{ opacity: bgOpacity / 100 }}
+            />
+          </div>
         )}
         <Container className="relative z-10 space-y-16 py-10">
           {home.introduction ? (
