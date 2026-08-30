@@ -527,6 +527,10 @@ export interface Member {
   displayName: string;
   avatar?: (number | null) | Media;
   bio?: string | null;
+  /**
+   * Staff-managed account status. Members cannot change this.
+   */
+  status: 'active' | 'pending' | 'suspended';
   totalCheckIns?: number | null;
   currentStreak?: number | null;
   longestStreak?: number | null;
@@ -568,6 +572,14 @@ export interface CheckIn {
   challenge?: (number | null) | Challenge;
   note?: string | null;
   checkInDate: string;
+  /**
+   * UTC day of the check-in. Set automatically.
+   */
+  checkInDay?: string | null;
+  /**
+   * `{memberId}:{YYYY-MM-DD}` — enforces one check-in per member per day.
+   */
+  checkInKey?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -604,6 +616,10 @@ export interface MemberBadge {
   member: number | Member;
   badge: number | Badge;
   awardedAt: string;
+  /**
+   * `{memberId}:{badgeId}` — prevents duplicate badge awards.
+   */
+  awardKey?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -931,6 +947,7 @@ export interface MembersSelect<T extends boolean = true> {
   displayName?: T;
   avatar?: T;
   bio?: T;
+  status?: T;
   totalCheckIns?: T;
   currentStreak?: T;
   longestStreak?: T;
@@ -961,6 +978,8 @@ export interface CheckInsSelect<T extends boolean = true> {
   challenge?: T;
   note?: T;
   checkInDate?: T;
+  checkInDay?: T;
+  checkInKey?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -985,6 +1004,7 @@ export interface MemberBadgesSelect<T extends boolean = true> {
   member?: T;
   badge?: T;
   awardedAt?: T;
+  awardKey?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -1,7 +1,35 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionAfterDeleteHook, CollectionBeforeChangeHook, CollectionConfig } from 'payload'
 
 import { isAdminOrEditor } from '@/access/isAdminOrEditor'
 import { anyone } from '@/access/anyone'
+
+// `{memberId}:{badgeId}` unique key — DB-level guard against duplicate awards
+// (the CheckIns hook also de-dupes, but a concurrent check-in race would
+// otherwise violate the unique constraint).
+const beforeAwardChange: CollectionBeforeChangeHook = ({ data }) => {
+  if (!data) return data
+  const memberId = typeof data.member === 'object' ? data.member.id : data.member
+  const badgeId = typeof data.badge === 'object' ? data.badge.id : data.badge
+  if (memberId && badgeId) {
+    data.awardKey = `${memberId}:${badgeId}`
+  }
+  return data
+}
+
+// Staff can delete badge awards directly; keep the community counter in sync.
+const afterAwardDelete: CollectionAfterDeleteHook = async ({ req }) => {
+  const { payload } = req
+  const stats = await payload.findGlobal({ slug: 'community-stats', overrideAccess: true })
+  await payload.updateGlobal({
+    slug: 'community-stats',
+    data: {
+      totalBadgesAwarded: Math.max(0, (stats.totalBadgesAwarded || 0) - 1),
+      lastUpdated: new Date().toISOString(),
+    },
+    overrideAccess: true,
+  })
+  return {}
+}
 
 export const MemberBadges: CollectionConfig = {
   slug: 'member-badges',
@@ -24,6 +52,10 @@ export const MemberBadges: CollectionConfig = {
     read: anyone,
     update: isAdminOrEditor,
   },
+  hooks: {
+    beforeChange: [beforeAwardChange],
+    afterDelete: [afterAwardDelete],
+  },
   fields: [
     {
       name: 'member',
@@ -44,6 +76,15 @@ export const MemberBadges: CollectionConfig = {
       type: 'date',
       required: true,
       defaultValue: () => new Date().toISOString(),
+    },
+    {
+      name: 'awardKey',
+      type: 'text',
+      unique: true,
+      admin: {
+        hidden: true,
+        description: '`{memberId}:{badgeId}` — prevents duplicate badge awards.',
+      },
     },
   ],
 }
