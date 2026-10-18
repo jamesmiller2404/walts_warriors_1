@@ -39,6 +39,7 @@ next-env.d.ts
 
 # uploads & local db
 /media
+/design
 *.db
 *.db-*
 
@@ -47,3 +48,5 @@ next-env.d.ts
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+.kilo/

@@ -2,6 +2,14 @@
 
 Next.js + Payload CMS site for a non-technical business owner. Content is managed at `/admin`.
 
+> **Working on this repo with an AI agent or as a new developer?** Start with
+> [`AGENTS.md`](./AGENTS.md) — it explains the nature and scope of the app, the architecture,
+> the conventions, and the current roadmap. Other docs: [`RESPONSIVE.md`](./RESPONSIVE.md)
+> (UI guardrails), [`MEMBER_SYSTEM_AUDIT.md`](./MEMBER_SYSTEM_AUDIT.md) (member system audit + phases).
+>
+> ⚠️ Sections below describing **SQLite** and the "Services / Staff / Blog-News" collections are
+> outdated — the app currently runs on **Postgres** (`@payloadcms/db-postgres`). See `AGENTS.md` §8.
+
 ## Stack
 
 - **Next.js 15** (App Router) + React + TypeScript

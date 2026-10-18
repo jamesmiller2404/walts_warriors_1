@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -10,6 +11,7 @@ import { mediaUrl } from '@/lib/utils'
 type Props = {
   home: HomePage
   settings: SiteSetting
+  authSlot?: ReactNode
 }
 
 const nav = [
@@ -64,7 +66,7 @@ function NavBar() {
   )
 }
 
-export function Hero({ home, settings }: Props) {
+export function Hero({ home, settings, authSlot }: Props) {
   const image = home.heroImage as Media | null | undefined
   const src = mediaUrl(image, 'hero')
   const logoSrc = mediaUrl(settings.logo)
@@ -115,7 +117,9 @@ export function Hero({ home, settings }: Props) {
         <div className="absolute right-6 top-16 z-20 flex flex-col items-end gap-1 md:top-4">
           <div className="flex items-center gap-3">
             <Image src="/icons/bell-solid-full.svg" alt="Notifications" width={28} height={28} className="h-7 w-7 text-white" />
-            <Image src="/icons/circle-user-solid-full.svg" alt="Account" width={28} height={28} className="h-7 w-7 text-white" />
+            {authSlot ?? (
+              <Image src="/icons/circle-user-solid-full.svg" alt="Account" width={28} height={28} className="h-7 w-7 text-white" />
+            )}
           </div>
           <div className="flex flex-col items-end gap-2 mt-8">
             <Image src="/icons/facebook-brands-solid-full.svg" alt="Facebook" width={28} height={28} className="h-7 w-7 text-white" />

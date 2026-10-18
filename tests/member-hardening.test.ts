@@ -449,6 +449,77 @@ describe('public registration', () => {
   })
 })
 
+describe('member auth', () => {
+  it('creates a member unverified and blocks login until verified', async () => {
+    const a = await createMember('Member A', 'a@test.local')
+
+    const hidden = (await payload.findByID({
+      collection: 'members',
+      id: a.id,
+      overrideAccess: true,
+      showHiddenFields: true,
+    })) as unknown as Member & { _verified: boolean }
+
+    expect(hidden._verified).toBe(false)
+
+    await expect(
+      payload.login({
+        collection: 'members',
+        data: { email: 'a@test.local', password: 'sup3rSecret!' },
+      }),
+    ).rejects.toThrow()
+  })
+
+  it('allows login after email verification', async () => {
+    const a = await createMember('Member A', 'a@test.local')
+
+    const hidden = (await payload.findByID({
+      collection: 'members',
+      id: a.id,
+      overrideAccess: true,
+      showHiddenFields: true,
+    })) as unknown as Member & { _verificationToken: string }
+
+    await payload.verifyEmail({ collection: 'members', token: hidden._verificationToken })
+
+    const result = await payload.login({
+      collection: 'members',
+      data: { email: 'a@test.local', password: 'sup3rSecret!' },
+    })
+
+    expect(result.user).toBeTruthy()
+    expect(result.token).toBeTruthy()
+  })
+
+  it('blocks login for suspended members even when verified', async () => {
+    const admin = await createAdmin()
+    const a = await createMember('Member A', 'a@test.local')
+
+    const hidden = (await payload.findByID({
+      collection: 'members',
+      id: a.id,
+      overrideAccess: true,
+      showHiddenFields: true,
+    })) as unknown as Member & { _verificationToken: string }
+    await payload.verifyEmail({ collection: 'members', token: hidden._verificationToken })
+
+    await payload.update({
+      collection: 'members',
+      id: a.id,
+      data: { status: 'suspended' },
+      user: admin as any,
+      overrideAccess: false,
+    })
+
+    await expect(
+      payload.login({
+        collection: 'members',
+        data: { email: 'a@test.local', password: 'sup3rSecret!' },
+      }),
+    ).rejects.toThrow()
+  })
+})
+
 describe('member deletion', () => {
   it('deletes dependent check-ins and badge awards when a member is deleted', async () => {
     const admin = await createAdmin()

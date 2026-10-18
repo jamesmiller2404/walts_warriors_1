@@ -1,4 +1,4 @@
-import { CallToAction } from '@/components/home/CallToAction'
+import { AuthArea } from '@/components/auth/AuthArea'
 import { Hero } from '@/components/home/Hero'
 import { NavCards } from '@/components/home/NavCards'
 import { ContentBlocks } from '@/components/blocks/ContentBlocks'
@@ -55,7 +55,7 @@ export default async function Home() {
 
   return (
     <>
-      <Hero home={home} settings={settings} />
+      <Hero home={home} settings={settings} authSlot={<AuthArea />} />
 
       <div className="relative">
         {bgSrc && (

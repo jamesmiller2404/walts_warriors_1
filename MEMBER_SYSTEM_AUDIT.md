@@ -7,6 +7,8 @@
 > **Update 2026-08-27 — Phase 0 implemented.** Security hardening shipped: check-in ownership forced server-side, rollup/status field-level staff-only access, `checkInDay` + unique `checkInKey` (one check-in per member per day), unique `awardKey` (no duplicate badges), `beforeDelete` member cleanup, collection-aware admin checks, and a baseline migration (`src/migrations/20260827_054735_phase0_member_hardening.ts`). Verified by `tests/member-hardening.test.ts` (16 tests, SQLite hermetic DB via `src/payload.test.config.ts`; run with `npm test`). UI, auth UX, and community features remain unimplemented.
 >
 > **Update 2026-08-29 — Phase 0 review fixes applied.** Resolved the local-review warnings: the badge-award `catch` now only swallows the concurrent-duplicate race and rethrows real failures (CheckIns.ts), duplicate check-ins throw a `400 APIError` instead of a generic 500, the once-per-day key and `computeStreak` both count UTC days (boundary test added), suspended members are blocked from login (`beforeLogin`) and from creating check-ins, `afterDelete` hooks on check-ins/member-badges keep `community-stats` counters in sync, `isAdminOrEditor` strictly requires `collection === 'users'`, the unused `testDbPath` export was dropped, and a deploy-safe incremental migration (`src/migrations/20260829_120000_phase0_existing_db.ts`) was added for the existing push-managed DB (baseline `down()` no longer drops `payload_migrations`). Test suite now 21 tests; `tsc` and `eslint` clean (warnings only).
+>
+> **Update 2026-08-30 — Phase 1 (auth foundation) complete.** Email adapter (nodemailer with SMTP env or console fallback), `verify: true` + custom templates, `/login` `/register` `/logout` pages + forgot/reset/verify flows, session bootstrap (`payload.auth` + `payload-token` cookie), password reset + verification, rate limiting on register/login. Added dedicated `/logout` page, fixed duplicate-email pre-check, improved error messages and rate limiting (email + IP), deduped `getCurrentMember`, consolidated email templates. Tests: 24 green, tsc clean. (Note: production email delivery requires real SMTP creds; rate limiting is best-effort in-memory; CAPTCHA remains future hardening per risk §9.)
 
 ---
 
@@ -30,11 +32,11 @@ The member system is **backend scaffolding only**. The data model, auth plumbing
 | `member-badges` awards | Exists (`src/collections/MemberBadges.ts`) |
 | `community-stats` global (denormalized counters) | Exists (`src/globals/CommunityStats.ts`) |
 | `challenges` (content) | Exists (`src/collections/Challenges.ts`) |
-| Member login / register / logout pages | **Missing** |
-| Member dashboard / check-in UI | **Missing** |
-| Community / leaderboard pages | **Missing** |
-| API route handlers / server actions | **Missing** (relies on Payload REST only) |
-| Email (verification, password reset) | **Missing** (no email adapter installed) |
+| Member login / register / logout pages | Exists (`/login`, `/register`, `/logout`, plus forgot-password/reset-password/verify flows) |
+| Member dashboard / check-in UI | **Missing** (Phase 2) |
+| Community / leaderboard pages | **Missing** (Phase 3) |
+| API route handlers / server actions | Exists (server actions for auth; relies on Payload REST for core) |
+| Email (verification, password reset) | Installed (nodemailer adapter + console fallback in dev) |
 
 ### Key structural observations
 1. **Frontend is purely marketing.** Server components call `getPayloadClient()` with no auth context, so all pages are anonymous/public reads. The Hero's bell/account icons (`src/components/home/Hero.tsx:115-119`) are decorative `<Image>` tags, not links.

@@ -8,6 +8,7 @@ import type {
 import { APIError } from 'payload'
 
 import { isStaff, isStaffFieldLevel } from '@/access/isStaff'
+import { resetPasswordEmailHTML, verifyEmailHTML } from '@/lib/emailTemplates'
 
 type AuthedUser = {
   id: number | string
@@ -94,8 +95,17 @@ export const Members: CollectionConfig = {
     group: 'Community',
   },
   auth: {
-    // Keep verification off to start; turn on once you have transactional email wired up.
-    verify: false,
+    // Require email verification before members can log in. Emails are
+    // delivered (or logged in full to console in dev) through the configured
+    // email adapter and link to the public verify/reset pages.
+    verify: {
+      generateEmailHTML: ({ token }) => verifyEmailHTML(token),
+      generateEmailSubject: () => "Walt's Warriors — Verify your email",
+    },
+    forgotPassword: {
+      generateEmailHTML: (args) => (args?.token ? resetPasswordEmailHTML(args.token) : ''),
+      generateEmailSubject: () => "Walt's Warriors — Reset your password",
+    },
   },
   hooks: {
     afterChange: [afterMemberChange],
