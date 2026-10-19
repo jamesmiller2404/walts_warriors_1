@@ -5,7 +5,7 @@ import type { ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import type { HomePage, Media, SiteSetting } from '@/payload-types'
+import type { HomePage, SiteSetting } from '@/payload-types'
 import { mediaUrl } from '@/lib/utils'
 
 type Props = {
@@ -14,21 +14,25 @@ type Props = {
   authSlot?: ReactNode
 }
 
+// Placeholder header-menu links (wire real routes later).
 const nav = [
   { href: '/', label: 'Home' },
-  { href: '/challenges', label: 'Challenges' },
-  { href: '/events', label: 'Events' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/contact', label: 'Contact' },
+  { href: '#', label: 'Dashboard' },
+  { href: '#', label: 'Challenges' },
+  { href: '#', label: 'Community' },
+  { href: '#', label: 'Library' },
 ]
 
-function NavBar() {
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const headlineShadow = { textShadow: '3px 4px 8px rgba(0, 0, 0, 0.35)' }
+
+function MobileMenu() {
   const [open, setOpen] = useState(false)
 
   return (
-    <nav className="flex items-center">
+    <div className="relative md:hidden">
       <button
-        className="md:hidden rounded-md p-2 text-white hover:bg-white/10 transition"
+        className="rounded-md p-2 text-[#13233a] transition hover:bg-white/10"
         onClick={() => setOpen(!open)}
         aria-label={open ? 'Close menu' : 'Open menu'}
         aria-expanded={open}
@@ -42,57 +46,48 @@ function NavBar() {
         </svg>
       </button>
 
-      <ul
-        className={`
-          absolute top-full left-0 right-0 z-30 flex flex-col items-center bg-stone-900/95 backdrop-blur-md
-          md:relative md:flex md:flex-row md:bg-transparent md:backdrop-blur-none md:justify-center
-          ${open ? 'flex' : 'hidden md:flex'}
-        `}
-      >
-        {nav.map((item) => (
-          <li key={item.href}>
-            <Link
-              href={item.href}
-              className="block rounded-md px-5 py-2 text-base font-black text-white transition hover:bg-white/10 md:text-black"
-              style={{ fontFamily: 'var(--font-manrope)' }}
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+      {open ? (
+        <ul className="absolute top-full right-0 z-30 mt-2 flex w-56 flex-col items-stretch rounded-lg bg-[#13233a]/95 py-2 shadow-xl backdrop-blur-md">
+          {nav.map((item) => (
+            <li key={item.label}>
+              <Link
+                href={item.href}
+                className="block px-5 py-2 text-lg font-semibold text-[#c5d7e2] transition hover:bg-white/10"
+                style={fontSans3}
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
   )
 }
 
 export function Hero({ home, settings, authSlot }: Props) {
-  const image = home.heroImage as Media | null | undefined
-  const src = mediaUrl(image, 'hero')
   const logoSrc = mediaUrl(settings.logo)
   const name = settings.businessName || "Walt's Warriors"
 
   return (
-    <section className="relative mx-auto w-full max-w-[1920px] min-h-[90vh] bg-stone-900 text-white flex flex-col">
-      {src ? (
-        <div className="absolute inset-0">
-          <Image
-            src={src}
-            alt={image?.alt || home.headline || 'Hero'}
-            fill
-            priority
-            className="object-cover object-center"
-            sizes="(max-width: 1920px) 100vw, 1920px"
-          />
-          <div className="absolute inset-0 bg-black/40" />
-        </div>
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-stone-900 to-stone-800" />
-      )}
+    <section className="relative mx-auto flex min-h-[520px] w-full max-w-[1440px] flex-col overflow-hidden">
+      {/* Static hero background image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/images/heroBGimage_opt.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="(max-width: 1440px) 100vw, 1440px"
+        />
+      </div>
 
-      {/* Business title row */}
-      <div className="relative z-20 flex items-start justify-between px-6 pt-4 sm:px-12 md:pl-[max(calc((100%_-_1152px)/2),3rem)] md:pr-[max(calc((100%_-_1152px)/2),3rem)]">
-        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3 xl:-ml-12">
+      {/* Header row — site title left, bell/account icons right */}
+      <div className="relative z-20 flex items-start justify-between px-6 pt-5 sm:px-10 lg:px-14">
+        {/* Site title (existing element, reused) */}
+        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
           {logoSrc ? (
             <Image
               src={logoSrc}
@@ -103,9 +98,18 @@ export function Hero({ home, settings, authSlot }: Props) {
             />
           ) : null}
           <span className="-ml-4">
-            <span className="block" style={{ fontFamily: 'var(--font-archivo-black)', fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.9))' }}>
+            <span
+              className="block"
+              style={{
+                fontFamily: 'var(--font-archivo-black)',
+                fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
+                filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.9))',
+              }}
+            >
               <span className="text-white">Walt&apos;s</span>{' '}
-              <span className="text-black" style={{ WebkitTextStroke: '0.5px rgba(190,190,190,0.7)' }}>WARRIORS</span>
+              <span className="text-black" style={{ WebkitTextStroke: '0.5px rgba(190,190,190,0.7)' }}>
+                WARRIORS
+              </span>
             </span>
             {settings.tagline ? (
               <span className="block text-sm text-stone-300">{settings.tagline}</span>
@@ -113,99 +117,54 @@ export function Hero({ home, settings, authSlot }: Props) {
           </span>
         </Link>
 
-        {/* Top-right icons column — absolute at all sizes (below hamburger on mobile, aligned with title on md+) */}
-        <div className="absolute right-6 top-16 z-20 flex flex-col items-end gap-1 md:top-4">
-          <div className="flex items-center gap-3">
-            <Image src="/icons/bell-solid-full.svg" alt="Notifications" width={28} height={28} className="h-7 w-7 text-white" />
-            {authSlot ?? (
-              <Image src="/icons/circle-user-solid-full.svg" alt="Account" width={28} height={28} className="h-7 w-7 text-white" />
-            )}
-          </div>
-          <div className="flex flex-col items-end gap-2 mt-8">
-            <Image src="/icons/facebook-brands-solid-full.svg" alt="Facebook" width={28} height={28} className="h-7 w-7 text-white" />
-            <Image src="/icons/square-instagram-brands-solid-full.svg" alt="Instagram" width={28} height={28} className="h-7 w-7 text-white" />
-            <Image src="/icons/square-x-twitter-brands-solid-full.svg" alt="X (Twitter)" width={28} height={28} className="h-7 w-7 text-white" />
-            <Image src="/icons/tiktok-brands-solid-full.svg" alt="TikTok" width={28} height={28} className="h-7 w-7 text-white" />
-          </div>
+        {/* Bell + account placeholder links (upper right) */}
+        <div className="flex items-center gap-3 pt-1 sm:gap-4">
+          <MobileMenu />
+          <a href="#" aria-label="Notifications" className="transition hover:opacity-70">
+            <Image src="/icons/bell-solid-full.svg" alt="" width={28} height={28} className="h-7 w-7" />
+          </a>
+          {authSlot ?? (
+            <a href="#" aria-label="Account" className="transition hover:opacity-70">
+              <Image src="/icons/circle-user-solid-full.svg" alt="" width={28} height={28} className="h-7 w-7" />
+            </a>
+          )}
         </div>
       </div>
 
-      {/* Navbar row — top-right hamburger on mobile (out of flow), centered row on desktop */}
-      <div className="absolute left-0 right-0 top-0 z-30 flex justify-end px-6 pt-4 md:static md:z-auto md:justify-center md:py-10">
-        <NavBar />
+      {/* Header menu row — vertically centered between title and headline on desktop */}
+      <div className="relative z-10 mt-8 hidden justify-center md:flex">
+        <ul className="flex items-center gap-10">
+          {nav.map((item) => (
+            <li key={item.label}>
+              <Link
+                href={item.href}
+                className="text-xl font-semibold text-[#13233a] transition hover:opacity-70"
+                style={fontSans3}
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* CTA content — left-aligned headline, pushed down */}
-      <div className="relative z-10 flex flex-col items-center justify-between px-6 sm:px-12 md:px-32 lg:px-48 pt-2 md:pt-2 lg:pt-10 flex-1">
-        <div className="flex flex-col items-start select-none w-full mb-8 lg:mb-12">
+      {/* Headline block — stepped, left-aligned */}
+      <h1
+        className="relative z-10 mt-6 flex flex-col items-start pl-6 font-bold uppercase leading-[0.95] tracking-tight sm:mt-8 sm:pl-10 lg:pl-14"
+        style={{ ...fontSans3, fontSize: 'clamp(2.75rem, 6.25vw, 5.625rem)', ...headlineShadow }}
+      >
+        <span className="text-[#e3a64e]">Discipline</span>
+        <span className="pl-6 text-[#00d80a] sm:pl-10">Outlasts</span>
+        <span className="pl-12 text-[#c5d7e2] sm:pl-20">Motivation</span>
+      </h1>
 
-          {/* DISCIPLINE — orange gradient, clamp() sizing */}
-          <h1
-            className="font-black uppercase tracking-tight leading-[0.82] bg-gradient-to-r from-orange-300 via-orange-500 to-orange-600 bg-clip-text text-transparent"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)', filter: 'drop-shadow(-5px 6px 3px rgba(0,0,0,0.9))' }}
-          >
-            Discipline
-          </h1>
-
-          {/* Orange periods */}
-          <div
-            aria-hidden="true"
-            className="flex flex-col leading-[0.55] font-black text-orange-500"
-            style={{ fontSize: 'clamp(0.75rem, 2.5vw, 2.67rem)', filter: 'drop-shadow(-3px 3px 3px rgba(0,0,0,0.9))' }}
-          >
-            <span>.</span>
-            <span>.</span>
-            <span>.</span>
-          </div>
-
-          {/* OUTLASTS — black */}
-          <h1
-            className="font-black uppercase tracking-tight leading-[0.82] text-black"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)', filter: 'drop-shadow(-5px 6px 3px rgba(0,0,0,0.9))' }}
-          >
-            Outlasts
-          </h1>
-
-          {/* Black periods */}
-          <div
-            aria-hidden="true"
-            className="flex flex-col leading-[0.55] font-black text-black"
-            style={{ fontSize: 'clamp(0.75rem, 2.5vw, 2.67rem)', filter: 'drop-shadow(-3px 3px 3px rgba(0,0,0,0.9))' }}
-          >
-            <span>.</span>
-            <span>.</span>
-            <span>.</span>
-          </div>
-
-          {/* MOTIVATION — white */}
-          <h1
-            className="font-black uppercase tracking-tight leading-[0.82] text-white"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 6.25rem)', filter: 'drop-shadow(-5px 6px 3px rgba(0,0,0,0.9))' }}
-          >
-            Motivation
-            <span aria-hidden="true">...</span>
-          </h1>
-        </div>
-
-        {home.subheadline ? (
-          <p className="mt-6 max-w-xl text-base sm:text-lg text-stone-200">{home.subheadline}</p>
-        ) : null}
-        <div className="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-center w-full mb-12">
-          <Link
-            href={home.cta?.buttonLink || '/contact'}
-            className="w-full sm:w-auto text-center rounded-[999px] bg-[#5b90c6] px-5 py-3 text-sm font-semibold text-black transition hover:brightness-110"
-            style={{ fontFamily: "'Inter-BoldItalic', sans-serif", fontWeight: 700 }}
-          >
-            {home.cta?.buttonLabel || 'Get in touch'}
-          </Link>
-          <p
-            className="w-full sm:w-auto text-center text-sm text-stone-300 self-center"
-            style={{ fontFamily: 'var(--font-manrope)', fontWeight: 400 }}
-          >
-            {home.cta?.secondaryText || 'Building discipline, one day at a time.'}
-          </p>
-        </div>
-      </div>
+      {/* Tagline — bottom left */}
+      <p
+        className="relative z-10 mb-10 mt-auto max-w-xl pl-6 text-xl font-semibold whitespace-pre-line text-white sm:pl-10 sm:text-2xl lg:pl-14"
+        style={{ ...fontSans3, ...headlineShadow }}
+      >
+        {home.subheadline || 'Build lasting habits.\nGrow stronger together.'}
+      </p>
     </section>
   )
 }

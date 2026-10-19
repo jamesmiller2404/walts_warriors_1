@@ -13,6 +13,7 @@ import {
   manropeSemiBold,
   montserratBold,
   montserratExtraBold,
+  sourceSans3,
 } from '@/lib/fonts'
 import { getPayloadClient } from '@/lib/payload'
 import type { SiteSetting } from '@/payload-types'
@@ -75,6 +76,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           ${manropeExtraBold.variable}
           ${montserratBold.variable}
           ${montserratExtraBold.variable}
+          ${sourceSans3.variable}
           m-0 flex min-h-screen flex-col font-sans antialiased text-stone-900 bg-stone-50
         `}
       >

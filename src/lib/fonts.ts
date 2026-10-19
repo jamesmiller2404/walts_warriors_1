@@ -1,5 +1,10 @@
 import localFont from 'next/font/local'
 
+export const sourceSans3 = localFont({
+  src: '../../public/fonts/SourceSans3-Variable.ttf',
+  variable: '--font-source-sans-3',
+  weight: '200 900',
+})
 export const archivoBlack = localFont({
   src: '../../public/fonts/ArchivoBlack-Regular.ttf',
   variable: '--font-archivo-black',
