@@ -1,5 +1,6 @@
 import { AuthArea } from '@/components/auth/AuthArea'
 import { Hero } from '@/components/home/Hero'
+import { CheckInStrip } from '@/components/home/CheckInStrip'
 import { NavCards } from '@/components/home/NavCards'
 import { ContentBlocks } from '@/components/blocks/ContentBlocks'
 import { Container } from '@/components/layout/Container'
@@ -56,6 +57,8 @@ export default async function Home() {
   return (
     <>
       <Hero home={home} settings={settings} authSlot={<AuthArea />} />
+
+      <CheckInStrip />
 
       <div className="relative">
         {bgSrc && (
