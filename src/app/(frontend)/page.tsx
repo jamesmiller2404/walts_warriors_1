@@ -5,38 +5,21 @@ import { NoteFromWalt } from '@/components/home/NoteFromWalt'
 import { ChallengeGroupToday } from '@/components/home/ChallengeGroupToday'
 import { ComingUp } from '@/components/home/ComingUp'
 import { ThisWeekInLibrary } from '@/components/home/ThisWeekInLibrary'
-import { NavCards } from '@/components/home/NavCards'
-import { ContentBlocks } from '@/components/blocks/ContentBlocks'
-import { Container } from '@/components/layout/Container'
-import { ProgramCard } from '@/components/programs/ProgramCard'
+import { AskWalt } from '@/components/home/AskWalt'
+import { NextChallenge } from '@/components/home/NextChallenge'
+import { WinsFromChallengeGroup } from '@/components/home/WinsFromChallengeGroup'
 import { getPayloadClient } from '@/lib/payload'
-import { RichText } from '@/lib/richText'
 import { mediaUrl } from '@/lib/utils'
 import Image from 'next/image'
-import type { HomePage, Media, Program, Quote, SiteSetting } from '@/payload-types'
+import type { HomePage, Media, Program, SiteSetting } from '@/payload-types'
 
 export default async function Home() {
   const payload = await getPayloadClient()
 
-  const [home, settings, quoteSettings] = await Promise.all([
+  const [home, settings] = await Promise.all([
     payload.findGlobal({ slug: 'home-page', depth: 2 }) as Promise<HomePage>,
     payload.findGlobal({ slug: 'site-settings', depth: 1 }) as Promise<SiteSetting>,
-    payload.findGlobal({ slug: 'quote-settings', depth: 0 }),
   ])
-
-  const quotesResult = await payload.find({
-    collection: 'quotes',
-    where: { active: { equals: true } },
-    sort: 'order',
-    limit: 100,
-    depth: 0,
-  })
-  const quotes = (quotesResult.docs as Quote[]).map((q) => ({
-    id: q.id,
-    quote: q.quote,
-    attribution: q.attribution,
-  }))
-  const rotationMode = quoteSettings?.rotationMode || 'day'
 
   let programs: Program[] = []
 
@@ -65,7 +48,7 @@ export default async function Home() {
       <CheckInStrip />
 
       <div
-        className="relative"
+        className="relative pb-10"
         style={{ backgroundImage: 'linear-gradient(45deg, #0f1d2e, #182e49)' }}
       >
         <NoteFromWalt
@@ -73,9 +56,16 @@ export default async function Home() {
             <div className="flex w-full flex-col gap-6 lg:w-[340px] lg:shrink-0">
               <ComingUp />
               <ThisWeekInLibrary />
+              <AskWalt />
+              <NextChallenge />
             </div>
           }
-          below={<ChallengeGroupToday />}
+          below={
+            <>
+              <ChallengeGroupToday />
+              <WinsFromChallengeGroup />
+            </>
+          }
         />
 
         {/* Soldier background image disabled per request — kept for possible later use
@@ -93,16 +83,9 @@ export default async function Home() {
           </div>
         )}
         */}
-        <Container className="relative z-10 space-y-16 py-10">
-          {home.introduction ? (
-            <Container size="narrow" className="text-center">
-              <RichText
-                data={home.introduction as Parameters<typeof RichText>[0]['data']}
-                className="text-lg leading-relaxed text-stone-700"
-              />
-            </Container>
-          ) : null}
 
+        {/* Content blocks, program cards, and navigation cards disabled per request — kept for possible later use
+        <Container className="relative z-10 space-y-16 py-10">
           {home.contentBlocks ? (
             <ContentBlocks
               blocks={home.contentBlocks as any}
@@ -111,7 +94,6 @@ export default async function Home() {
             />
           ) : null}
 
-          {/* Program cards disabled per request — kept for possible later use
           {programs.length > 0 ? (
             <section>
               <div className="mb-8 text-center">
@@ -125,14 +107,10 @@ export default async function Home() {
               </div>
             </section>
           ) : null}
-          */}
 
-          {/* Navigation cards disabled per request — kept for possible later use
           <NavCards />
-          */}
-
-          {/* CallToAction removed per request */}
         </Container>
+        */}
       </div>
     </>
   )
