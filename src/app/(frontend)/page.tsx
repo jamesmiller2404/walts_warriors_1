@@ -2,6 +2,8 @@ import { AuthArea } from '@/components/auth/AuthArea'
 import { Hero } from '@/components/home/Hero'
 import { CheckInStrip } from '@/components/home/CheckInStrip'
 import { NoteFromWalt } from '@/components/home/NoteFromWalt'
+import { ChallengeGroupToday } from '@/components/home/ChallengeGroupToday'
+import { ComingUp } from '@/components/home/ComingUp'
 import { NavCards } from '@/components/home/NavCards'
 import { ContentBlocks } from '@/components/blocks/ContentBlocks'
 import { Container } from '@/components/layout/Container'
@@ -65,7 +67,7 @@ export default async function Home() {
         className="relative"
         style={{ backgroundImage: 'linear-gradient(45deg, #0f1d2e, #182e49)' }}
       >
-        <NoteFromWalt />
+        <NoteFromWalt left={<ComingUp />} below={<ChallengeGroupToday />} />
 
         {/* Soldier background image disabled per request — kept for possible later use
         {bgSrc && (

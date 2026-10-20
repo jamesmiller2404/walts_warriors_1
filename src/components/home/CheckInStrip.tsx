@@ -37,7 +37,7 @@ function StreakLabel({ children }: { children: ReactNode }) {
 
 function StreakCount({ children }: { children: ReactNode }) {
   return (
-    <p className="mt-2 text-4xl font-bold text-white" style={fontSans3}>
+    <p className="mt-2 text-4xl font-bold text-[#c5d7e2]" style={fontSans3}>
       {children}
     </p>
   )
@@ -76,7 +76,7 @@ export function CheckInStrip() {
           )}
 
           <p className="text-2xl font-bold text-[#c5d7e2]" style={fontSans3}>
-            Leader position: <span className="text-white">{LEADER_POSITION}</span>
+            Leader position: <span className="text-[#c5d7e2]">{LEADER_POSITION}</span>
           </p>
         </div>
       </div>

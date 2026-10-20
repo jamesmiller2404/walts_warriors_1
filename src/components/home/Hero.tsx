@@ -132,7 +132,7 @@ export function Hero({ home, settings, authSlot }: Props) {
                 textShadow: titleShadowCss,
               }}
             >
-              <span className="text-white">Walt&apos;s</span>{' '}
+              <span className="text-[#c5d7e2]">Walt&apos;s</span>{' '}
               <span className="text-black" style={{ WebkitTextStroke: '0.5px rgba(190,190,190,0.7)' }}>
                 WARRIORS
               </span>
@@ -186,7 +186,7 @@ export function Hero({ home, settings, authSlot }: Props) {
 
       {/* Tagline — bottom left */}
       <p
-        className="relative z-10 mb-8 mt-auto max-w-[27rem] pl-6 text-xl font-semibold whitespace-pre-line text-white sm:pl-8 sm:text-[22.5px] lg:pl-10"
+        className="relative z-10 mb-8 mt-auto max-w-[27rem] pl-6 text-xl font-semibold whitespace-pre-line text-[#c5d7e2] sm:pl-8 sm:text-[22.5px] lg:pl-10"
         style={{ ...fontSans3, ...taglineShadow }}
       >
         {home.subheadline || 'Build lasting habits.\nGrow stronger together.'}
