@@ -71,15 +71,23 @@ export function Hero({ home, settings, authSlot }: Props) {
   const name = settings.businessName || "Walt's Warriors"
 
   return (
-    <section className="relative mx-auto flex min-h-[520px] w-full max-w-[1440px] flex-col overflow-hidden">
-      {/* Static hero background image */}
+    <section className="relative mx-auto flex aspect-square min-h-[520px] w-full max-w-[1440px] flex-col overflow-hidden md:aspect-[3840/1430] md:min-h-[400px]">
+      {/* Static hero background image — art-directed: 1:1 composition on mobile, panoramic on desktop */}
       <div className="absolute inset-0">
+        <Image
+          src="/images/Header_mobile_1-1_opt.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center md:hidden"
+          sizes="100vw"
+        />
         <Image
           src="/images/heroBGimage_opt.jpg"
           alt=""
           fill
           priority
-          className="object-cover object-center"
+          className="hidden object-cover object-center md:block"
           sizes="(max-width: 1440px) 100vw, 1440px"
         />
       </div>

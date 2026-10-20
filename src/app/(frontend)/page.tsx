@@ -61,6 +61,7 @@ export default async function Home() {
       <CheckInStrip />
 
       <div className="relative">
+        {/* Soldier background image disabled per request — kept for possible later use
         {bgSrc && (
           <div className="absolute inset-0 z-0 bg-[#0b0c0f]">
             <Image
@@ -74,6 +75,7 @@ export default async function Home() {
             />
           </div>
         )}
+        */}
         <Container className="relative z-10 space-y-16 py-10">
           {home.introduction ? (
             <Container size="narrow" className="text-center">
@@ -92,6 +94,7 @@ export default async function Home() {
             />
           ) : null}
 
+          {/* Program cards disabled per request — kept for possible later use
           {programs.length > 0 ? (
             <section>
               <div className="mb-8 text-center">
@@ -105,8 +108,11 @@ export default async function Home() {
               </div>
             </section>
           ) : null}
+          */}
 
+          {/* Navigation cards disabled per request — kept for possible later use
           <NavCards />
+          */}
 
           {/* CallToAction removed per request */}
         </Container>

@@ -69,51 +69,11 @@ export function ContentBlocks({ blocks, quotes, rotationMode }: Props) {
               </div>
             )
           case 'quoteBlock':
-            return (
-              <div
-                key={block.id}
-                style={{
-                  gridColumn: `${block.columnStart ?? '1'} / span ${block.columnSpan ?? '6'}`,
-                  gridRow: block.rowStart && block.rowStart !== 'auto'
-                    ? `${block.rowStart} / span ${block.rowSpan !== 'auto' ? (block.rowSpan ?? '1') : '1'}`
-                    : undefined,
-                }}
-              >
-                <QuoteBlock
-                  quote={block.quote ?? ''}
-                  attribution={block.attribution}
-                  quoteFontSize={block.quoteFontSize}
-                  quoteFontColor={block.quoteFontColor}
-                  quoteFontFamily={block.quoteFontFamily}
-                  attributionFontSize={block.attributionFontSize}
-                  attributionFontColor={block.attributionFontColor}
-                  attributionFontFamily={block.attributionFontFamily}
-                />
-              </div>
-            )
+            // Quote disabled per request — kept for possible later use
+            return null
           case 'dynamicQuote':
-            return (
-              <div
-                key={block.id}
-                style={{
-                  gridColumn: `${block.columnStart ?? '1'} / span ${block.columnSpan ?? '6'}`,
-                  gridRow: block.rowStart && block.rowStart !== 'auto'
-                    ? `${block.rowStart} / span ${block.rowSpan !== 'auto' ? (block.rowSpan ?? '1') : '1'}`
-                    : undefined,
-                }}
-              >
-                <DynamicQuote
-                  quotes={quotes ?? []}
-                  rotationMode={rotationMode}
-                  quoteFontSize={block.quoteFontSize}
-                  quoteFontColor={block.quoteFontColor}
-                  quoteFontFamily={block.quoteFontFamily}
-                  attributionFontSize={block.attributionFontSize}
-                  attributionFontColor={block.attributionFontColor}
-                  attributionFontFamily={block.attributionFontFamily}
-                />
-              </div>
-            )
+            // Dynamic quote disabled per request — kept for possible later use
+            return null
           case 'imageBlock':
             return (
               <div
