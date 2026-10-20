@@ -1,6 +1,7 @@
 import { AuthArea } from '@/components/auth/AuthArea'
 import { Hero } from '@/components/home/Hero'
 import { CheckInStrip } from '@/components/home/CheckInStrip'
+import { NoteFromWalt } from '@/components/home/NoteFromWalt'
 import { NavCards } from '@/components/home/NavCards'
 import { ContentBlocks } from '@/components/blocks/ContentBlocks'
 import { Container } from '@/components/layout/Container'
@@ -60,7 +61,12 @@ export default async function Home() {
 
       <CheckInStrip />
 
-      <div className="relative">
+      <div
+        className="relative"
+        style={{ backgroundImage: 'linear-gradient(45deg, #0f1d2e, #182e49)' }}
+      >
+        <NoteFromWalt />
+
         {/* Soldier background image disabled per request — kept for possible later use
         {bgSrc && (
           <div className="absolute inset-0 z-0 bg-[#0b0c0f]">

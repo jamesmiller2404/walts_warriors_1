@@ -27,7 +27,7 @@ const statusConfig: Record<
 function StreakLabel({ children }: { children: ReactNode }) {
   return (
     <p
-      className="text-xl font-semibold tracking-[0.08em] text-[#dbe7ee] uppercase"
+      className="text-xl font-semibold tracking-[0.08em] text-[#c5d7e2] uppercase"
       style={fontSans3}
     >
       {children}
@@ -37,7 +37,7 @@ function StreakLabel({ children }: { children: ReactNode }) {
 
 function StreakCount({ children }: { children: ReactNode }) {
   return (
-    <p className="text-3xl font-bold text-white" style={fontSans3}>
+    <p className="mt-2 text-4xl font-bold text-white" style={fontSans3}>
       {children}
     </p>
   )
@@ -57,25 +57,25 @@ export function CheckInStrip() {
         </div>
 
         {/* Right — check-in button + leader position */}
-        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-8">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
           {interactive ? (
             <button
               type="button"
-              className="rounded-lg px-8 py-3 text-2xl font-semibold text-[#13233a] transition hover:opacity-90 sm:text-3xl"
+              className="rounded-lg px-6 py-4 text-3xl font-semibold text-[#13233a] transition hover:opacity-90 sm:text-4xl"
               style={{ ...fontSans3, backgroundColor: buttonColor }}
             >
               {label}
             </button>
           ) : (
             <span
-              className="inline-block rounded-lg px-8 py-3 text-2xl font-semibold text-[#13233a] sm:text-3xl"
+              className="inline-block rounded-lg px-6 py-4 text-3xl font-semibold text-[#13233a] sm:text-4xl"
               style={{ ...fontSans3, backgroundColor: buttonColor }}
             >
               {label}
             </span>
           )}
 
-          <p className="text-2xl font-bold text-[#dbe7ee]" style={fontSans3}>
+          <p className="text-2xl font-bold text-[#c5d7e2]" style={fontSans3}>
             Leader position: <span className="text-white">{LEADER_POSITION}</span>
           </p>
         </div>

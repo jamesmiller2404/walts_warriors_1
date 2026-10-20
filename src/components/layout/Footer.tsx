@@ -61,7 +61,7 @@ function LinkColumn({ title, links }: { title: string; links: FooterLink[] }) {
       >
         {title}
       </h3>
-      <ul className="mt-7 space-y-4" style={{ ...fontSans3, fontSize: fluidFontSize(24) }}>
+      <ul className="mt-5 space-y-3" style={{ ...fontSans3, fontSize: fluidFontSize(24) }}>
         {links.map((link) => (
           <li key={link.label}>
             <FooterLinkItem link={link} />
@@ -81,8 +81,8 @@ export function Footer({ settings }: { settings: SiteSetting }) {
   return (
     <footer className="mt-auto border-t-2 border-[#e3a64e]">
       <div className="bg-[#0b1424] text-[#c5d7e2]">
-        <Container className="max-w-[1600px] py-10 sm:py-12">
-          <div className="grid gap-10 md:grid-cols-12 md:gap-8">
+        <Container className="max-w-[1440px] py-7 sm:py-9">
+          <div className="grid gap-8 md:grid-cols-12 md:gap-6">
             <div className="md:col-span-5">
               <div className="flex items-start gap-3 sm:gap-4">
                 <Image
@@ -91,17 +91,17 @@ export function Footer({ settings }: { settings: SiteSetting }) {
                   width={88}
                   height={186}
                   sizes="112px"
-                  className="h-24 w-auto md:h-[108px]"
+                  className="h-[72px] w-auto md:h-20"
                 />
                 <div>
                   <h2
-                    className="max-w-[16rem] font-semibold uppercase leading-[1.2]"
+                    className="max-w-[12rem] font-semibold uppercase leading-[1.2]"
                     style={{ ...fontSans3, fontSize: fluidFontSize(36) }}
                   >
                     {name}
                   </h2>
                   <p
-                    className="mt-7 max-w-[24rem] font-medium leading-snug"
+                    className="mt-5 max-w-[18rem] font-medium leading-snug"
                     style={{ ...fontSans3, fontSize: fluidFontSize(24) }}
                   >
                     {tagline}
@@ -122,7 +122,7 @@ export function Footer({ settings }: { settings: SiteSetting }) {
       </div>
 
       <div className="bg-[#040912] text-[#606060]">
-        <Container className="max-w-[1600px] py-7 sm:py-8">
+        <Container className="max-w-[1440px] py-5 sm:py-6">
           <div
             className="grid items-center gap-4 text-center md:grid-cols-3 md:text-left"
             style={{ ...fontArial, fontSize: fluidFontSize(13.5) }}
@@ -148,7 +148,7 @@ export function Footer({ settings }: { settings: SiteSetting }) {
                 width={200}
                 height={119}
                 sizes="76px"
-                className="h-auto w-[72px]"
+                className="h-auto w-14"
               />
             </div>
           </div>

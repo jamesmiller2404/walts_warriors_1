@@ -24,7 +24,18 @@ const nav = [
 ]
 
 const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
-const headlineShadow = { textShadow: '3px 4px 8px rgba(0, 0, 0, 0.35)' }
+// Drop shadow cast from a light positioned at a 225° bearing (down-left), so the
+// shadow falls toward 45° (up-right). CSS takes x/y offsets, not angles, so the
+// bearing is pre-converted: x = +sin(45°) * d, y = -cos(45°) * d — d = 7px
+// distance, 6px blur, 0.6 opacity. Used by the headline (text-shadow).
+const dropShadowCss = '4.95px -4.95px 6px rgba(0, 0, 0, 0.6)'
+const headlineShadow = { textShadow: dropShadowCss }
+// Site title — same offset and opacity as the headline, but the offset is pulled
+// back 2px (5px distance vs the headline's 7px) and the blur is 2px tighter
+// (4px vs 6px), compensating for the smaller glyphs.
+const titleShadowCss = '2.54px -2px 3px rgba(0, 0, 0, 0.6)'
+// Softer shadow kept for the tagline.
+const taglineShadow = { textShadow: '3px 4px 8px rgba(0, 0, 0, 0.35)' }
 
 function MobileMenu() {
   const [open, setOpen] = useState(false)
@@ -32,7 +43,7 @@ function MobileMenu() {
   return (
     <div className="relative md:hidden">
       <button
-        className="rounded-md p-2 text-[#13233a] transition hover:bg-white/10"
+        className="rounded-md p-1.5 text-[#13233a] transition hover:bg-white/10 sm:p-2"
         onClick={() => setOpen(!open)}
         aria-label={open ? 'Close menu' : 'Open menu'}
         aria-expanded={open}
@@ -52,7 +63,7 @@ function MobileMenu() {
             <li key={item.label}>
               <Link
                 href={item.href}
-                className="block px-5 py-2 text-lg font-semibold text-[#c5d7e2] transition hover:bg-white/10"
+                className="block px-5 py-2 text-2xl font-bold text-[#c5d7e2] transition hover:bg-white/10"
                 style={fontSans3}
                 onClick={() => setOpen(false)}
               >
@@ -71,7 +82,7 @@ export function Hero({ home, settings, authSlot }: Props) {
   const name = settings.businessName || "Walt's Warriors"
 
   return (
-    <section className="relative mx-auto flex aspect-square min-h-[520px] w-full max-w-[1440px] flex-col overflow-hidden md:aspect-[3840/1430] md:min-h-[400px]">
+    <section className="relative flex aspect-square min-h-[390px] w-full flex-col overflow-hidden md:aspect-[3840/1430] md:min-h-[300px] md:max-h-[715px]">
       {/* Static hero background image — art-directed: 1:1 composition on mobile, panoramic on desktop */}
       <div className="absolute inset-0">
         <Image
@@ -88,21 +99,24 @@ export function Hero({ home, settings, authSlot }: Props) {
           fill
           priority
           className="hidden object-cover object-center md:block"
-          sizes="(max-width: 1440px) 100vw, 1440px"
+          sizes="100vw"
         />
       </div>
 
+      {/* Content wrapper — keeps the composition on the 1440px canvas while the
+      background image runs full-bleed behind it */}
+      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 flex-col">
       {/* Header row — site title left, bell/account icons right */}
-      <div className="relative z-20 flex items-start justify-between px-6 pt-5 sm:px-10 lg:px-14">
+      <div className="relative z-20 flex items-start justify-between px-4 pt-4 sm:px-8 lg:px-10">
         {/* Site title (existing element, reused) */}
-        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
+        <Link href="/" className="flex min-w-0 items-center gap-2 pl-2 sm:gap-3 sm:pl-0">
           {logoSrc ? (
             <Image
               src={logoSrc}
               alt={name}
               width={48}
               height={48}
-              className="h-10 w-10 shrink-0 rounded-full object-cover sm:h-12 sm:w-12"
+              className="h-[30px] w-[30px] shrink-0 rounded-full object-cover sm:h-9 sm:w-9"
             />
           ) : null}
           <span className="-ml-4">
@@ -110,8 +124,12 @@ export function Hero({ home, settings, authSlot }: Props) {
               className="block"
               style={{
                 fontFamily: 'var(--font-archivo-black)',
-                fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
-                filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.9))',
+                fontSize: 'clamp(1rem, 3vw, 1.875rem)',
+                // text-shadow (not a drop-shadow filter) so the shadow renders
+                // like the headline — drop-shadow() blurs the element's whole
+                // alpha channel (anti-aliasing + text-stroke edges), which reads
+                // more diffuse at the same blur value.
+                textShadow: titleShadowCss,
               }}
             >
               <span className="text-white">Walt&apos;s</span>{' '}
@@ -120,33 +138,33 @@ export function Hero({ home, settings, authSlot }: Props) {
               </span>
             </span>
             {settings.tagline ? (
-              <span className="block text-sm text-stone-300">{settings.tagline}</span>
+              <span className="hidden text-sm text-stone-300 sm:block">{settings.tagline}</span>
             ) : null}
           </span>
         </Link>
 
         {/* Bell + account placeholder links (upper right) */}
-        <div className="flex items-center gap-3 pt-1 sm:gap-4">
+        <div className="flex items-center gap-2 pt-1 sm:gap-4">
           <MobileMenu />
           <a href="#" aria-label="Notifications" className="transition hover:opacity-70">
-            <Image src="/icons/bell-solid-full.svg" alt="" width={28} height={28} className="h-7 w-7" />
+            <Image src="/icons/bell-solid-full.svg" alt="" width={20} height={20} className="h-5 w-5" />
           </a>
           {authSlot ?? (
             <a href="#" aria-label="Account" className="transition hover:opacity-70">
-              <Image src="/icons/circle-user-solid-full.svg" alt="" width={28} height={28} className="h-7 w-7" />
+              <Image src="/icons/circle-user-solid-full.svg" alt="" width={20} height={20} className="h-5 w-5" />
             </a>
           )}
         </div>
       </div>
 
       {/* Header menu row — vertically centered between title and headline on desktop */}
-      <div className="relative z-10 mt-8 hidden justify-center md:flex">
-        <ul className="flex items-center gap-10">
+      <div className="relative z-10 mt-6 hidden justify-center md:flex">
+        <ul className="flex items-center gap-7">
           {nav.map((item) => (
             <li key={item.label}>
               <Link
                 href={item.href}
-                className="text-xl font-semibold text-[#13233a] transition hover:opacity-70"
+                className="text-[21.3px] font-bold text-[#13233a] transition hover:opacity-70"
                 style={fontSans3}
               >
                 {item.label}
@@ -158,8 +176,8 @@ export function Hero({ home, settings, authSlot }: Props) {
 
       {/* Headline block — stepped, left-aligned */}
       <h1
-        className="relative z-10 mt-6 flex flex-col items-start pl-6 font-bold uppercase leading-[0.95] tracking-tight sm:mt-8 sm:pl-10 lg:pl-14"
-        style={{ ...fontSans3, fontSize: 'clamp(2.75rem, 6.25vw, 5.625rem)', ...headlineShadow }}
+        className="relative z-10 mt-5 flex flex-col items-start pl-6 font-bold uppercase leading-[0.95] tracking-tight sm:mt-6 sm:pl-8 lg:pl-10"
+        style={{ ...fontSans3, fontSize: 'clamp(2.75rem, 5.8594vw, 5.2734rem)', ...headlineShadow }}
       >
         <span className="text-[#e3a64e]">Discipline</span>
         <span className="pl-6 text-[#00d80a] sm:pl-10">Outlasts</span>
@@ -168,11 +186,12 @@ export function Hero({ home, settings, authSlot }: Props) {
 
       {/* Tagline — bottom left */}
       <p
-        className="relative z-10 mb-10 mt-auto max-w-xl pl-6 text-xl font-semibold whitespace-pre-line text-white sm:pl-10 sm:text-2xl lg:pl-14"
-        style={{ ...fontSans3, ...headlineShadow }}
+        className="relative z-10 mb-8 mt-auto max-w-[27rem] pl-6 text-xl font-semibold whitespace-pre-line text-white sm:pl-8 sm:text-[22.5px] lg:pl-10"
+        style={{ ...fontSans3, ...taglineShadow }}
       >
         {home.subheadline || 'Build lasting habits.\nGrow stronger together.'}
       </p>
+      </div>
     </section>
   )
 }
