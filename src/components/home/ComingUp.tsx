@@ -16,7 +16,7 @@ const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
 
 export function ComingUp() {
   return (
-    <div className="w-full rounded-lg bg-[#3a3c4e]/50 px-6 py-6 lg:w-[340px] lg:shrink-0" aria-label="Coming up events">
+    <div className="w-full rounded-lg bg-[#3a3c4e]/50 px-6 py-6" aria-label="Coming up events">
       <p
         className="text-lg font-semibold uppercase tracking-[0.08em] text-[#c5d7e2]"
         style={fontSans3}
