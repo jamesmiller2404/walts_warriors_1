@@ -83,24 +83,28 @@ export function Hero({ home, settings, authSlot }: Props) {
 
   return (
     <section className="relative flex aspect-square min-h-[390px] w-full flex-col overflow-hidden md:aspect-[3840/1430] md:min-h-[300px] md:max-h-[715px]">
-      {/* Static hero background image — art-directed: 1:1 composition on mobile, panoramic on desktop */}
+      {/* Static hero background image — art-directed: 1:1 composition on mobile,
+      panoramic on desktop. Plain <img> inside <picture> (not next/image) so the
+      hand-optimized WebP variants are served byte-for-byte with no re-encoding.
+      The media query matches Tailwind's md: breakpoint (768px), so the browser
+      downloads only the correct crop, and the 1x/2x descriptors let it pick the
+      right resolution by device pixel ratio. Preload hints mirror this markup
+      in src/app/(frontend)/page.tsx. */}
       <div className="absolute inset-0">
-        <Image
-          src="/images/Header_mobile_1-1_opt.jpg"
-          alt=""
-          fill
-          priority
-          className="object-cover object-center md:hidden"
-          sizes="100vw"
-        />
-        <Image
-          src="/images/heroBGimage_opt.jpg"
-          alt=""
-          fill
-          priority
-          className="hidden object-cover object-center md:block"
-          sizes="100vw"
-        />
+        <picture>
+          <source
+            media="(max-width: 767px)"
+            srcSet="/images/hero/hero-mobile_1x.webp 1x, /images/hero/hero-mobile_2x.webp 2x"
+          />
+          <img
+            src="/images/hero/hero_1x.webp"
+            srcSet="/images/hero/hero_1x.webp 1x, /images/hero/hero_2x.webp 2x"
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+        </picture>
       </div>
 
       {/* Content wrapper — keeps the composition on the 1440px canvas while the

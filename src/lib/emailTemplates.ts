@@ -42,7 +42,7 @@ export function verifyEmailHTML(token: string): string {
 }
 
 export function resetPasswordEmailHTML(token: string): string {
-  const url = `${publicSiteUrl()}/reset-password?token=${token}`
+  const url = `${publicSiteUrl()}/reset-password/link?token=${token}`
   const body = `
     <p>We received a request to reset your password. Click the button below to choose a new one. If this wasn't you, you can safely ignore this email.</p>
     <p style="margin:24px 0;"><a href="${url}" style="background-color:#15803d;color:#ffffff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold;display:inline-block;">Reset my password</a></p>

@@ -1,7 +1,7 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 //import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -30,9 +30,6 @@ import { QuoteSettings } from './globals/QuoteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-
-// v1 local disk; Vercel Blob when BLOB_READ_WRITE_TOKEN is set (production)
-const useVercelBlob = Boolean(process.env.BLOB_READ_WRITE_TOKEN)
 
 // Email adapter for auth emails (verification, password reset).
 // Real SMTP if envs set. Otherwise a dev adapter that logs the *full* generated
@@ -67,12 +64,16 @@ const emailAdapter = process.env.SMTP_HOST && process.env.SMTP_FROM_ADDRESS
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT || 587),
         secure: process.env.SMTP_SECURE === 'true',
+        requireTLS: process.env.SMTP_SECURE !== 'true', // enforce STARTTLS on port 587
         auth: process.env.SMTP_USER || process.env.SMTP_PASS ? { user: process.env.SMTP_USER || '', pass: process.env.SMTP_PASS || '' } : undefined,
       },
     })
   : devEmailAdapter
 
 export default buildConfig({
+  // Ensures Payload builds correct request origins for CORS/CSRF (e.g. the
+  // "Request origin not in the CORS/CSRF allowlist" warning in dev).
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
   admin: {
     user: Users.slug,
     importMap: {
@@ -107,13 +108,24 @@ export default buildConfig({
 db: postgresAdapter({ pool: { connectionString: process.env.DATABASE_URL }, push: process.env.NODE_ENV !== 'production' }),
   sharp,
   plugins: [
-    vercelBlobStorage({
-      enabled: useVercelBlob,
+    // Cloudflare R2 via its S3-compatible API (self-hosted on Render, no Vercel).
+    // Bucket stays private: Payload keeps /media/... URLs and proxies bytes
+    // through the app, preserving upload access control. See README for setup.
+    s3Storage({
       collections: {
         media: true,
       },
-      token: process.env.BLOB_READ_WRITE_TOKEN || '',
-      clientUploads: true,
+      bucket: process.env.R2_BUCKET || '',
+      acl: 'private', // R2 ignores S3 ACLs; 'private' avoids API errors
+      config: {
+        endpoint: process.env.R2_ENDPOINT || '', // must include https://
+        region: 'auto', // R2 always uses 'auto'
+        forcePathStyle: true, // required for R2
+        credentials: {
+          accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+        },
+      },
     }),
   ],
 })

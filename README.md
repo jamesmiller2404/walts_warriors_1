@@ -16,7 +16,7 @@ Next.js + Payload CMS site for a non-technical business owner. Content is manage
 - **Tailwind CSS 4**
 - **Payload CMS 3** (admin at `/admin`)
 - **SQLite** for local development (`file:./walts-warriors.db`)
-- **Local file storage** (`/media`) for v1; **Vercel Blob** when `BLOB_READ_WRITE_TOKEN` is set
+- **Local file storage** (`/media`) for v1; **Cloudflare R2** via `@payloadcms/storage-s3` when R2 env vars are set (self-hosted, e.g. Render)
 - Portable to **PostgreSQL** later for production
 
 ## Quick start
@@ -42,7 +42,10 @@ Copy `.env.example` to `.env`:
 | `DATABASE_URL` | SQLite: `file:./walts-warriors.db` |
 | `PAYLOAD_SECRET` | Long random secret for auth tokens |
 | `NEXT_PUBLIC_SERVER_URL` | Public URL (e.g. `http://localhost:3000`) |
-| `BLOB_READ_WRITE_TOKEN` | Optional. Unset = local `/media`. Set on Vercel for Blob uploads |
+| `R2_BUCKET` | Optional. Unset = local `/media`. R2 bucket name for uploads |
+| `R2_ENDPOINT` | R2 S3 endpoint, incl. `https://` (e.g. `https://<ACCOUNT_ID>.r2.cloudflarestorage.com`) |
+| `R2_ACCESS_KEY_ID` | From Cloudflare → R2 → API tokens (Object Read & Write) |
+| `R2_SECRET_ACCESS_KEY` | From Cloudflare → R2 → API tokens |
 
 ## Roles
 
@@ -77,13 +80,13 @@ Copy `.env.example` to `.env`:
 | Environment | Behavior |
 |-------------|----------|
 | **v1 / local** | Files saved under `/media` (gitignored). No extra config. |
-| **Vercel** | Add **Blob** to the project. `BLOB_READ_WRITE_TOKEN` enables `@payloadcms/storage-vercel-blob` for the `media` collection (`clientUploads` on to avoid the 4.5MB server limit). |
+| **R2 (prod)** | Set `R2_BUCKET`, `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` to enable `@payloadcms/storage-s3` for the `media` collection, pointed at Cloudflare R2's S3-compatible endpoint. The bucket stays **private**: Payload keeps `/media/...` URLs and proxies bytes through the app, preserving upload access control. `sharp`-generated sizes (thumbnail/card/hero) upload to R2 alongside originals. |
 
 ## Production notes
 
 1. Set a strong unique `PAYLOAD_SECRET`.
 2. Prefer **PostgreSQL** in production (`@payloadcms/db-postgres`) when ready.
-3. On Vercel: external Postgres + Blob (`BLOB_READ_WRITE_TOKEN`).
+3. Self-hosted (e.g. Render): external Postgres + Cloudflare R2 (`R2_*` env vars, see File storage above).
 4. Create an **editor** account for the business owner; keep admin credentials private.
 
 ## Switching to PostgreSQL later

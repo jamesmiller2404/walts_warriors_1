@@ -20,14 +20,6 @@ export const HomePage: GlobalConfig = {
   },
   fields: [
     {
-      name: 'heroImage',
-      type: 'upload',
-      relationTo: 'media',
-      admin: {
-        description: 'Large image at the top of the homepage.',
-      },
-    },
-    {
       name: 'backgroundImage',
       type: 'upload',
       relationTo: 'media',

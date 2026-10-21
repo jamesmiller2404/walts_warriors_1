@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm'
 import { Container } from '@/components/layout/Container'
@@ -9,29 +8,13 @@ export const metadata: Metadata = {
   title: 'Reset password',
 }
 
-export default async function ResetPasswordPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ token?: string }>
-}) {
-  const params = await searchParams
-  let token = params.token || ''
-
+export default async function ResetPasswordPage() {
+  // The token arrives via the /reset-password/link Route Handler, which
+  // exchanges the URL token for a short-lived httpOnly cookie. Server
+  // Components cannot set cookies during render, so the exchange must not
+  // happen here — we only read the cookie.
   const cookieStore = await cookies()
-
-  if (token) {
-    // Exchange URL token for httpOnly cookie (avoids leaving token in address bar / app URLs after first load)
-    cookieStore.set('pw-reset-token', token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      maxAge: 60 * 10, // 10 minutes
-    })
-    redirect('/reset-password')
-  }
-
-  token = cookieStore.get('pw-reset-token')?.value || ''
+  const token = cookieStore.get('pw-reset-token')?.value || ''
 
   return (
     <Container size="narrow" className="py-12 sm:py-16">

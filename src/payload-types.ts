@@ -1113,10 +1113,6 @@ export interface SiteSetting {
 export interface HomePage {
   id: number;
   /**
-   * Large image at the top of the homepage.
-   */
-  heroImage?: (number | null) | Media;
-  /**
    * Background image that starts immediately below the hero image (top of this image aligns to bottom of hero).
    */
   backgroundImage?: (number | null) | Media;
@@ -1611,7 +1607,6 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  * via the `definition` "home-page_select".
  */
 export interface HomePageSelect<T extends boolean = true> {
-  heroImage?: T;
   backgroundImage?: T;
   backgroundOpacity?: T;
   headline?: T;

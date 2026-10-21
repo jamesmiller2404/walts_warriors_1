@@ -21,7 +21,7 @@
     "@payloadcms/email-nodemailer": "^3.86.0",
     "@payloadcms/next": "3.86.0",
     "@payloadcms/richtext-lexical": "3.86.0",
-    "@payloadcms/storage-vercel-blob": "^3.86.0",
+    "@payloadcms/storage-s3": "^3.86.0",
     "@payloadcms/ui": "3.86.0",
     "@tailwindcss/typography": "^0.5.20",
     "clsx": "^2.1.1",
@@ -42,11 +42,21 @@
     "@types/react-dom": "19.2.3",
     "eslint": "^9.16.0",
     "eslint-config-next": "15.5.20",
+    "supabase": "^2.121.0",
     "tailwindcss": "^4.1.11",
     "typescript": "5.7.3",
     "vitest": "^3.2.7"
   },
   "engines": {
     "node": "^18.20.2 || >=20.9.0"
+  },
+  "allowScripts": {
+    "esbuild@0.18.20": true,
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.1": true,
+    "esbuild@0.28.2": true,
+    "sharp@0.34.5": true,
+    "sharp@0.34.2": true,
+    "unrs-resolver@1.12.2": true
   }
 }

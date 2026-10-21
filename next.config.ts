@@ -20,10 +20,10 @@ const nextConfig: NextConfig = {
       },
     ],
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '*.public.blob.vercel-storage.com',
-      },
+      // Media is served through Payload's same-origin /media/... static handler
+      // (bytes proxied from R2), so no remote host is needed. If you later move
+      // to direct R2 serving via a custom domain, add it here:
+      // { protocol: 'https', hostname: 'media.example.com' },
     ],
   },
   webpack: (webpackConfig) => {

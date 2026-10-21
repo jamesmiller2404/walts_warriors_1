@@ -43,6 +43,23 @@ export default async function Home() {
 
   return (
     <>
+      {/* Preload the LCP hero image so the browser starts fetching before the
+      Hero component renders. The media queries mirror the <picture> markup in
+      Hero.tsx, so only the correct crop + resolution variant is fetched. */}
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet="/images/hero/hero-mobile_1x.webp 1x, /images/hero/hero-mobile_2x.webp 2x"
+        imageSizes="100vw"
+      />
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet="/images/hero/hero_1x.webp 1x, /images/hero/hero_2x.webp 2x"
+        imageSizes="100vw"
+      />
       <Hero home={home} settings={settings} authSlot={<AuthArea />} />
 
       <CheckInStrip />

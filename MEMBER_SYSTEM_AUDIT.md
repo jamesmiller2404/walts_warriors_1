@@ -18,7 +18,7 @@
 - Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4
 - Payload CMS 3.86 (self-hosted; admin UI at `/admin` via `@payloadcms/next`)
 - Postgres (Supabase) via `@payloadcms/db-postgres`; schema auto-pushed in dev (`db.push: true`, `src/payload.config.ts:67`)
-- Vercel Blob storage in production, local disk in dev
+- Cloudflare R2 storage (via `@payloadcms/storage-s3`) in production, local disk in dev
 - Lexical rich text; all frontend reads go through the local Payload API (`src/lib/payload.ts`)
 
 ### What exists today
@@ -388,10 +388,10 @@ Publish **aggregates and display names**; never publish **contact details or exa
 2. **Single-row `community-stats` write contention.** Every check-in (and member create) writes the same global row — a serialization point and a lost-update source. → Derive counters from indexed `COUNT`/`MAX` queries, or cache with periodic refresh. Small scale: keep, but stop writing it in hooks.
 3. **Leaderboard queries.** Sorting all members by streak/check-in count is fine with indexes at low thousands; at tens of thousands, materialize or cache ranks, and always query with `depth: 0`.
 4. **Rollup drift.** Incremental rollups are O(1) per write but drift silently if anything is edited directly or a hook fails mid-way. → Add a nightly recompute job (full rescan of check-ins) as a reconciliation backstop.
-5. **Serverless + connection pooling.** Every server-rendered page opens the Payload local API against Postgres. On Vercel serverless with Supabase, use the pooled connection string (`pooler.supabase.com`, transaction mode) to avoid connection exhaustion under concurrency.
+5. **Connection pooling.** Every server-rendered page opens the Payload local API against Postgres. Self-hosted (e.g. Render) with Supabase, use the pooled connection string (`pooler.supabase.com`, transaction mode) to avoid connection exhaustion under concurrency.
 6. **Session table growth.** Payload sessions accumulate; add a cleanup job (or short expiry) if member count grows.
 7. **No queue/worker today.** Emails, badge evaluation, notifications, recompute all assume synchronous hook execution. Plan the queue before adding transactional email or notifications at scale.
-8. **File storage** (Vercel Blob) is horizontally fine; only the DB is the constraint.
+8. **File storage** (Cloudflare R2) is horizontally fine; only the DB is the constraint.
 
 ---
 
@@ -439,7 +439,7 @@ Authenticated `/dashboard`: profile editing (displayName/avatar/bio), check-in b
 Member management list/views (status, suspend/reactivate), badge definition previews, stats reconciliation tool; restrict editor perms per §7 decisions.
 
 **Phase 5 — Scale & ops**
-Move badge evaluation + notifications to a job queue, replace `community-stats` hook writes with derived/cached counters, add rollup recompute job, session cleanup, pooling review for Vercel + Supabase.
+Move badge evaluation + notifications to a job queue, replace `community-stats` hook writes with derived/cached counters, add rollup recompute job, session cleanup, pooling review for Render + Supabase.
 
 Each phase is independently shippable and testable; Phases 0–1 gate public launch.
 
