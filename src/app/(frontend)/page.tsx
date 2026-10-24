@@ -82,8 +82,8 @@ export default async function Home() {
 
               {/* Right column — smaller cards (narrow) */}
               <div className="flex w-full flex-col gap-6 lg:w-[340px] lg:shrink-0">
-                <ComingUp />
                 <ThisWeekInLibrary />
+                <ComingUp />
                 <AskWalt />
                 <NextChallenge />
               </div>

@@ -22,8 +22,8 @@ export function ThisWeekInLibrary() {
       </p>
 
       {/* Feature banner */}
-      <div className="mt-4 flex h-40 items-center justify-center rounded-lg bg-[#13233a]">
-        <Image src={LIBRARY_FEATURE.icon} alt="" width={80} height={80} className="h-20 w-20" />
+      <div className="mt-4 flex h-60 items-center justify-center rounded-lg bg-[#13233a]">
+        <Image src={LIBRARY_FEATURE.icon} alt="" width={240} height={240} className="h-60 w-60" />
       </div>
 
       <p className="mt-4 text-xl text-[#c5d7e2]" style={fontSans3}>
