@@ -5,13 +5,17 @@ type CheckInStatus = 'not-checked-in' | 'partial' | 'complete'
 // Hard-coded for now — wire up real check-in state later.
 // 'not-checked-in' → CHECK IN button (gold)
 // 'partial'        → CONTINUE CHECK IN button (gold)
-// 'complete'       → CHECK IN COMPLETE button (green)
-const CHECK_IN_STATUS: CheckInStatus = 'complete'
+// 'complete'       → CHECK-IN COMPLETE button (green)
+const CHECK_IN_STATUS: CheckInStatus = 'partial'
 
 // Placeholder values — wire up real data later.
+const CURRENT_DAY = 4
+const COMPLETED_DAY = 5
+const CHALLENGE_LENGTH = 30
 const STREAK_DAYS = 4
-const COMPLETED_STREAK_DAYS = 5
-const LEADER_POSITION = '4th'
+const TARGET_STREAK_DAYS = 5
+const TASKS_COMPLETED = 1
+const TASKS_TOTAL = 3
 
 const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
 
@@ -21,64 +25,78 @@ const statusConfig: Record<
 > = {
   'not-checked-in': { label: 'Check In', buttonColor: '#e3a64e', interactive: true },
   partial: { label: 'Continue Check In', buttonColor: '#e3a64e', interactive: true },
-  complete: { label: 'Check In Complete', buttonColor: '#00d80a', interactive: false },
+  complete: { label: 'Check-In Complete', buttonColor: '#8dbf21', interactive: false },
 }
 
-function StreakLabel({ children }: { children: ReactNode }) {
+function StreakLabel({ day }: { day: number }) {
   return (
     <p
-      className="text-xl font-semibold tracking-[0.08em] text-[#c5d7e2] uppercase"
+      className="text-2xl font-semibold tracking-[0.08em] text-[#c5d7e2] uppercase"
       style={fontSans3}
     >
-      {children}
+      Today, Day {day} of {CHALLENGE_LENGTH}
     </p>
   )
 }
 
-function StreakCount({ children }: { children: ReactNode }) {
-  return (
-    <p className="mt-2 text-4xl font-bold text-[#c5d7e2]" style={fontSans3}>
-      {children}
-    </p>
-  )
+function Bold({ children }: { children: ReactNode }) {
+  return <span className="font-bold">{children}</span>
 }
 
 export function CheckInStrip() {
   const { label, buttonColor, interactive } = statusConfig[CHECK_IN_STATUS]
-  const streakDays = CHECK_IN_STATUS === 'complete' ? COMPLETED_STREAK_DAYS : STREAK_DAYS
+  const day = CHECK_IN_STATUS === 'complete' ? COMPLETED_DAY : CURRENT_DAY
 
   return (
     <section className="w-full bg-[#5c5678]" aria-label="Daily check-in">
-      <div className="mx-auto flex max-w-[1100px] flex-wrap justify-center gap-x-16 gap-y-5 px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-10">
+      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-16 gap-y-5 px-4 py-9 sm:px-8 lg:px-10">
         {/* Left — daily summary */}
         <div>
-          <StreakLabel>Current Daily Summary</StreakLabel>
-          <StreakCount>{streakDays}-day streak!</StreakCount>
-        </div>
+          <StreakLabel day={day} />
 
-        {/* Right — check-in button + leader position */}
-        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
-          {interactive ? (
-            <button
-              type="button"
-              className="rounded-lg px-6 py-4 text-3xl font-semibold text-[#13233a] transition hover:opacity-90 sm:text-4xl"
-              style={{ ...fontSans3, backgroundColor: buttonColor }}
-            >
-              {label}
-            </button>
-          ) : (
-            <span
-              className="inline-block rounded-lg px-6 py-4 text-3xl font-semibold text-[#13233a] sm:text-4xl"
-              style={{ ...fontSans3, backgroundColor: buttonColor }}
-            >
-              {label}
-            </span>
+          {CHECK_IN_STATUS === 'not-checked-in' && (
+            <p className="mt-2 text-4xl text-[#c5d7e2]" style={fontSans3}>
+              <Bold>{STREAK_DAYS}-day streak</Bold> · Complete check-in to make it{' '}
+              {TARGET_STREAK_DAYS} days!
+            </p>
           )}
 
-          <p className="text-2xl font-bold text-[#c5d7e2]" style={fontSans3}>
-            Leader position: <span className="text-[#c5d7e2]">{LEADER_POSITION}</span>
-          </p>
+          {CHECK_IN_STATUS === 'partial' && (
+            <>
+              <p className="mt-2 text-4xl text-[#c5d7e2]" style={fontSans3}>
+                <Bold>{TASKS_COMPLETED}</Bold> of {TASKS_TOTAL} tasks complete
+              </p>
+              <p className="mt-2 text-2xl text-[#c5d7e2]" style={fontSans3}>
+                <Bold>{STREAK_DAYS}-day streak</Bold> · Check-in today to make it{' '}
+                {TARGET_STREAK_DAYS}
+              </p>
+            </>
+          )}
+
+          {CHECK_IN_STATUS === 'complete' && (
+            <p className="mt-2 text-4xl font-bold text-[#c5d7e2]" style={fontSans3}>
+              {COMPLETED_DAY} day streak!
+            </p>
+          )}
         </div>
+
+        {/* Right — check-in button */}
+        {interactive ? (
+          <button
+            type="button"
+            className="flex h-[76px] items-center justify-center rounded-lg px-8 text-4xl font-bold uppercase text-[#2c353b] transition hover:opacity-90"
+            style={{ ...fontSans3, backgroundColor: buttonColor }}
+          >
+            {label}
+          </button>
+        ) : (
+          <span
+            className="flex h-[76px] items-center justify-center rounded-lg px-8 text-4xl font-bold uppercase text-[#2c353b]"
+            style={{ ...fontSans3, backgroundColor: buttonColor }}
+          >
+            {label}
+          </span>
+        )}
       </div>
     </section>
   )

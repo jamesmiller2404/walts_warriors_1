@@ -7,6 +7,7 @@ import Link from 'next/link'
 
 import type { HomePage, SiteSetting } from '@/payload-types'
 import { mediaUrl } from '@/lib/utils'
+import { fluidFontSize } from '@/lib/fontSize'
 
 type Props = {
   home: HomePage
@@ -82,7 +83,7 @@ export function Hero({ home, settings, authSlot }: Props) {
   const name = settings.businessName || "Walt's Warriors"
 
   return (
-    <section className="relative flex aspect-square min-h-[390px] w-full flex-col overflow-hidden md:aspect-[3840/1430] md:min-h-[300px] md:max-h-[715px]">
+    <section className="relative flex aspect-square min-h-[390px] w-full flex-col overflow-hidden md:aspect-[1440/377] md:min-h-[300px] md:max-h-[715px]">
       {/* Static hero background image — art-directed: 1:1 composition on mobile,
       panoramic on desktop. Plain <img> inside <picture> (not next/image) so the
       hand-optimized WebP variants are served byte-for-byte with no re-encoding.
@@ -128,7 +129,7 @@ export function Hero({ home, settings, authSlot }: Props) {
               className="block"
               style={{
                 fontFamily: 'var(--font-archivo-black)',
-                fontSize: 'clamp(1rem, 3vw, 1.875rem)',
+                fontSize: fluidFontSize(54),
                 // text-shadow (not a drop-shadow filter) so the shadow renders
                 // like the headline — drop-shadow() blurs the element's whole
                 // alpha channel (anti-aliasing + text-stroke edges), which reads
@@ -161,8 +162,11 @@ export function Hero({ home, settings, authSlot }: Props) {
         </div>
       </div>
 
-      {/* Header menu row — vertically centered between title and headline on desktop */}
-      <div className="relative z-10 mt-6 hidden justify-center md:flex">
+      {/* Header menu row — starts at x:587px, y:28px on the 1440px canvas.
+      Nudge: at lg (1024–1279px) the row is pulled left so it stays
+      proportionally placed on the narrower canvas (587px of 1440px ≈ 40.76%,
+      → ~417px at 1024px), returning to the design position at xl. */}
+      <div className="absolute top-[28px] z-10 hidden md:left-[587px] md:flex lg:left-[417px] xl:left-[587px]">
         <ul className="flex items-center gap-7">
           {nav.map((item) => (
             <li key={item.label}>
