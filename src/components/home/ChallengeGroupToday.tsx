@@ -1,5 +1,3 @@
-import Image from 'next/image'
-
 // Hard-coded for now — wire up real challenge-group check-in data later.
 const CHECKED_IN_INITIALS = [
   'MK',
@@ -28,57 +26,17 @@ const OTHER_NOT_CHECKED_IN = TOTAL_MEMBERS - CHECKED_IN_INITIALS.length - (YOU_C
 
 // Hard-coded for now — when the admin panel goes live, this section will be wired to
 // the group's active challenge. Various challenge types will be supported there
-// (e.g. walking minutes, workouts, water intake); `type` drives the label/units.
+// (e.g. walking minutes, workouts, water intake); `unit` drives the label.
 const GROUP_CHALLENGE = {
-  type: 'walking-minutes',
   unit: 'walking minutes',
   period: 'this week',
   goal: 2000,
-  progress: 1400,
+  progress: 1435,
 }
-
-// Hard-coded for now — when the admin panel goes live, the day's shout-outs will be
-// wired into this section from the admin panel. The icon next to each shout-out is
-// chosen at random from the icon set; these pairings are hard-coded placeholders.
-const SHOUT_OUTS = [
-  {
-    name: 'Maria K.',
-    accomplishment: 'finished her first full week',
-    icon: '/icons/magnet-magnetic-black-icon.svg',
-  },
-  {
-    name: 'Tom R.',
-    accomplishment: 'earned the Halfway badge',
-    icon: '/icons/dimension-3d-icon.svg',
-  },
-  {
-    name: 'Pat S.',
-    accomplishment: 'is back after a missed day',
-    icon: '/icons/hand-two-finger-icon.svg',
-  },
-]
 
 const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
 
 const formatNumber = (value: number) => value.toLocaleString('en-US')
-
-// Monochrome smiley shown on the Encourage buttons (matches the mockup's emoji).
-function SmileyIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <circle cx="12" cy="12" r="11" fill="#ffffff" />
-      <circle cx="8.5" cy="9.5" r="1.6" fill="#13233a" />
-      <circle cx="15.5" cy="9.5" r="1.6" fill="#13233a" />
-      <path
-        d="M7.5 14.5c1.1 1.7 2.6 2.6 4.5 2.6s3.4-.9 4.5-2.6"
-        stroke="#13233a"
-        strokeWidth="1.8"
-        fill="none"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
 
 // Standard colors (see updated_requirements.md) plus the challenge-group greens.
 const COLOR_GREEN_FILL = '#8dbf21'
@@ -113,117 +71,71 @@ function Circle({
 
 export function ChallengeGroupToday() {
   const checkedInCount = CHECKED_IN_INITIALS.length + (YOU_CHECKED_IN ? 1 : 0)
-  const progressPercent = Math.max(0, Math.min(100, (GROUP_CHALLENGE.progress / GROUP_CHALLENGE.goal) * 100))
+  const progressPercent = Math.max(
+    0,
+    Math.min(100, (GROUP_CHALLENGE.progress / GROUP_CHALLENGE.goal) * 100),
+  )
 
   return (
-    <div className="w-full" aria-label="Your challenge group today">
-      <h2 className="text-3xl font-bold text-[#c5d7e2]" style={fontSans3}>
+    <div className="w-full rounded-lg bg-[#3a3c4e] px-8 py-8" aria-label="Your challenge group today">
+      <h2
+        className="text-xl font-semibold uppercase tracking-[0.08em] text-[#c5d7e2]"
+        style={fontSans3}
+      >
         Your challenge group today
       </h2>
 
-      <div className="mt-4 rounded-lg bg-[#3a3c4e] px-8 py-7">
-        <p className="text-[#c5d7e2]" style={fontSans3}>
-          <span className="text-3xl font-bold">{checkedInCount} of {TOTAL_MEMBERS}</span>
-          <span className="text-2xl"> warriors have checked in</span>
-        </p>
+      <p className="mt-3 text-3xl font-bold text-[#c5d7e2]" style={fontSans3}>
+        {checkedInCount} of {TOTAL_MEMBERS} checked in
+      </p>
 
-        <ul className="mt-6 grid grid-cols-4 justify-items-start gap-x-7 gap-y-5 sm:grid-cols-6 lg:grid-cols-8">
-          {CHECKED_IN_INITIALS.map((initials, index) => (
-            <Circle key={`${initials}-${index}`} label={`Warrior ${initials} checked in today`} fill>
-              {initials}
-            </Circle>
-          ))}
-
-          <Circle
-            label={YOU_CHECKED_IN ? 'You checked in today' : "You haven't checked in yet"}
-            gold
-          >
-            You
+      <ul className="mt-8 flex flex-wrap gap-x-14 gap-y-10">
+        {CHECKED_IN_INITIALS.map((initials, index) => (
+          <Circle key={`${initials}-${index}`} label={`Warrior ${initials} checked in today`} fill>
+            {initials}
           </Circle>
+        ))}
 
-          {Array.from({ length: OTHER_NOT_CHECKED_IN }, (_, index) => (
-            <Circle key={`not-checked-in-${index}`} label="Warrior has not checked in today" />
-          ))}
-        </ul>
+        <Circle
+          label={YOU_CHECKED_IN ? 'You checked in today' : "You haven't checked in yet"}
+          gold
+        >
+          You
+        </Circle>
 
-        <p className="mt-7 text-xl text-[#c5d7e2]" style={fontSans3}>
-          Green = checked in today · Gold outline = You
+        {Array.from({ length: OTHER_NOT_CHECKED_IN }, (_, index) => (
+          <Circle key={`not-checked-in-${index}`} label="Warrior has not checked in today" />
+        ))}
+      </ul>
+
+      <p className="mt-10 text-xl text-[#c5d7e2]" style={fontSans3}>
+        Green = checked in today · Gold outline = You
+      </p>
+
+      {/* Group challenge progress */}
+      <p className="mt-8 text-2xl font-bold text-[#c5d7e2]" style={fontSans3}>
+        Group goal: {formatNumber(GROUP_CHALLENGE.goal)} {GROUP_CHALLENGE.unit}{' '}
+        {GROUP_CHALLENGE.period}
+      </p>
+
+      <div className="mt-4 flex items-center gap-4">
+        <div
+          role="progressbar"
+          aria-label="Group challenge progress"
+          aria-valuemin={0}
+          aria-valuemax={GROUP_CHALLENGE.goal}
+          aria-valuenow={GROUP_CHALLENGE.progress}
+          className="h-3.5 flex-1 overflow-hidden rounded-full bg-[#3f4d66]"
+        >
+          <div
+            className="h-full rounded-full bg-[#8c8fd0]"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+
+        <p className="shrink-0 text-2xl font-bold text-[#c5d7e2]" style={fontSans3}>
+          {formatNumber(GROUP_CHALLENGE.progress)} minutes
         </p>
-
-        {/* Divider between part 1 and part 2 */}
-        <div className="mt-8 border-t border-[#c5d7e2]/40" aria-hidden="true" />
-
-        {/* Part 2 — group challenge progress */}
-        <div className="mt-6">
-          <p className="text-xl font-bold text-[#c5d7e2]" style={fontSans3}>
-            Challenge group goal: {formatNumber(GROUP_CHALLENGE.goal)} {GROUP_CHALLENGE.unit}{' '}
-            {GROUP_CHALLENGE.period}
-          </p>
-
-          <div className="mt-3 flex items-center gap-4">
-            <div
-              role="progressbar"
-              aria-label="Group challenge progress"
-              aria-valuemin={0}
-              aria-valuemax={GROUP_CHALLENGE.goal}
-              aria-valuenow={GROUP_CHALLENGE.progress}
-              className="h-3.5 flex-1 overflow-hidden rounded-full bg-[#3f4d66]"
-            >
-              <div
-                className="h-full rounded-full bg-[#8c8fd0]"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-
-            <p className="shrink-0 text-xl font-bold text-[#c5d7e2]" style={fontSans3}>
-              {formatNumber(GROUP_CHALLENGE.progress)} of {formatNumber(GROUP_CHALLENGE.goal)}
-            </p>
-          </div>
-        </div>
-
-        {/* Divider between part 2 and part 3 */}
-        <div className="mt-8 border-t border-[#c5d7e2]/40" aria-hidden="true" />
-
-        {/* Part 3 — shout-outs */}
-        <div className="mt-6">
-          <p
-            className="text-lg font-semibold uppercase tracking-[0.08em] text-[#c5d7e2]"
-            style={fontSans3}
-          >
-            Shout-outs
-          </p>
-
-          <ul className="mt-4 space-y-3">
-            {SHOUT_OUTS.map((shoutOut) => (
-              <li key={shoutOut.name} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                <div className="flex min-w-0 items-center gap-3">
-                  <Image
-                    src={shoutOut.icon}
-                    alt=""
-                    width={24}
-                    height={24}
-                    className="h-6 w-6 shrink-0"
-                  />
-                  <p className="text-xl text-[#c5d7e2]" style={fontSans3}>
-                    {shoutOut.name} {shoutOut.accomplishment}
-                  </p>
-                </div>
-
-                {/* Placeholder — the emoji encouragement delivery mechanism isn't built yet */}
-                <button
-                  type="button"
-                  title="Emoji encouragement coming soon"
-                  aria-label={`Send emoji encouragement to ${shoutOut.name}`}
-                  className="inline-flex shrink-0 items-center gap-2 rounded-md border border-[#c5d7e2]/80 px-4 py-1 text-xl text-[#c5d7e2] transition hover:bg-white/10"
-                  style={fontSans3}
-                >
-                  Encourage
-                  <SmileyIcon />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
     </div>
   )

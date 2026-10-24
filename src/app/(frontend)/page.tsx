@@ -1,7 +1,5 @@
-import { AuthArea } from '@/components/auth/AuthArea'
 import { Hero } from '@/components/home/Hero'
 import { CheckInStrip } from '@/components/home/CheckInStrip'
-import { NoteFromWalt } from '@/components/home/NoteFromWalt'
 import { ChallengeGroupToday } from '@/components/home/ChallengeGroupToday'
 import { ComingUp } from '@/components/home/ComingUp'
 import { ThisWeekInLibrary } from '@/components/home/ThisWeekInLibrary'
@@ -9,6 +7,7 @@ import { AskWalt } from '@/components/home/AskWalt'
 import { NextChallenge } from '@/components/home/NextChallenge'
 import { WinsFromChallengeGroup } from '@/components/home/WinsFromChallengeGroup'
 import { getPayloadClient } from '@/lib/payload'
+import { getCurrentMember } from '@/lib/auth'
 import { mediaUrl } from '@/lib/utils'
 import Image from 'next/image'
 import type { HomePage, Media, Program, SiteSetting } from '@/payload-types'
@@ -16,9 +15,10 @@ import type { HomePage, Media, Program, SiteSetting } from '@/payload-types'
 export default async function Home() {
   const payload = await getPayloadClient()
 
-  const [home, settings] = await Promise.all([
+  const [home, settings, member] = await Promise.all([
     payload.findGlobal({ slug: 'home-page', depth: 2 }) as Promise<HomePage>,
     payload.findGlobal({ slug: 'site-settings', depth: 1 }) as Promise<SiteSetting>,
+    getCurrentMember(),
   ])
 
   let programs: Program[] = []
@@ -60,7 +60,7 @@ export default async function Home() {
         imageSrcSet="/images/hero/hero_1x.webp 1x, /images/hero/hero_2x.webp 2x"
         imageSizes="100vw"
       />
-      <Hero home={home} settings={settings} authSlot={<AuthArea />} />
+      <Hero home={home} settings={settings} member={member} />
 
       <CheckInStrip />
 
@@ -68,22 +68,28 @@ export default async function Home() {
         className="relative pb-10"
         style={{ backgroundImage: 'linear-gradient(45deg, #0f1d2e, #182e49)' }}
       >
-        <NoteFromWalt
-          left={
-            <div className="flex w-full flex-col gap-6 lg:w-[340px] lg:shrink-0">
-              <ComingUp />
-              <ThisWeekInLibrary />
-              <AskWalt />
-              <NextChallenge />
+        <section className="w-full" aria-label="Home updates">
+          {/* 1440px design canvas — cards right-aligned, with the challenge-group
+          column on the left. On mobile the columns stack with the challenge-group
+          cards first. */}
+          <div className="mx-auto max-w-[1440px] px-4 pt-6 sm:px-8 lg:px-10">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-end lg:gap-7">
+              {/* Left column — challenge group cards (wide) */}
+              <div className="flex w-full flex-col gap-6 lg:max-w-[1020px]">
+                <ChallengeGroupToday />
+                <WinsFromChallengeGroup />
+              </div>
+
+              {/* Right column — smaller cards (narrow) */}
+              <div className="flex w-full flex-col gap-6 lg:w-[340px] lg:shrink-0">
+                <ComingUp />
+                <ThisWeekInLibrary />
+                <AskWalt />
+                <NextChallenge />
+              </div>
             </div>
-          }
-          below={
-            <>
-              <ChallengeGroupToday />
-              <WinsFromChallengeGroup />
-            </>
-          }
-        />
+          </div>
+        </section>
 
         {/* Soldier background image disabled per request — kept for possible later use
         {bgSrc && (
