@@ -7,6 +7,7 @@ import Link from 'next/link'
 import type { HomePage, Member, SiteSetting } from '@/payload-types'
 import { mediaUrl } from '@/lib/utils'
 import { LogoutButton } from '@/components/auth/LogoutButton'
+import { SiteTitleText } from '@/components/layout/SiteTitle'
 
 type Props = {
   home: HomePage
@@ -30,10 +31,6 @@ const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
 // distance, 6px blur, 0.6 opacity. Used by the headline (text-shadow).
 const dropShadowCss = '4.95px -4.95px 6px rgba(0, 0, 0, 0.6)'
 const headlineShadow = { textShadow: dropShadowCss }
-// Site title — same offset and opacity as the headline, but the offset is pulled
-// back 2px (5px distance vs the headline's 7px) and the blur is 2px tighter
-// (4px vs 6px), compensating for the smaller glyphs.
-const titleShadowCss = '2.54px -2px 3px rgba(0, 0, 0, 0.6)'
 // Softer shadow kept for the tagline.
 const taglineShadow = { textShadow: '3px 4px 8px rgba(0, 0, 0, 0.35)' }
 
@@ -135,25 +132,10 @@ export function Hero({ home, settings, member = null }: Props) {
             />
           ) : null}
           <span className="-ml-4">
-            <span
-              className="block leading-none"
-              style={{
-                fontFamily: 'var(--font-archivo-black)',
-                // Fluid: 54px at the 1440px design width; mobile floor lowered
-                // to 20px so the title + icon cluster both fit on phones.
-                fontSize: 'clamp(20px, 3.75vw, 54px)',
-                // text-shadow (not a drop-shadow filter) so the shadow renders
-                // like the headline — drop-shadow() blurs the element's whole
-                // alpha channel (anti-aliasing + text-stroke edges), which reads
-                // more diffuse at the same blur value.
-                textShadow: titleShadowCss,
-              }}
-            >
-              <span className="text-[#c5d7e2]">Walt&apos;s</span>{' '}
-              <span className="text-black" style={{ WebkitTextStroke: '0.5px rgba(190,190,190,0.7)' }}>
-                WARRIORS
-              </span>
-            </span>
+            {/* Site title — shared component (also used by the check-in page
+            header). Same fluid size the hero has always used: 54px at the
+            1440px design width, 20px mobile floor. */}
+            <SiteTitleText href={null} />
             {settings.tagline ? (
               <span className="hidden text-sm text-stone-300 sm:block">{settings.tagline}</span>
             ) : null}
