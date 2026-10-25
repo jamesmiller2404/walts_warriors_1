@@ -1,0 +1,32 @@
+COLOR TOKENS
+site background: Gradient (0f1d2e - 182e49, 45 degrees)
+text on dark: c5d7e2
+secondary text on dark: dbe7ee
+text on light: 2c353b
+primary card background: 3a3c4e
+secondary card background: 4a4560 / 5c5678
+	- BG color for "Challenge progress" in dashboard_challene1.png
+	- Leaderboard button
+dark card background: 13233a
+	- BG color for "A Note from Walt" card
+accent-gold: e3a64e
+lilac accent1 (lighter): 8c8fd0
+	- progress bars, "Today's Thoughts" BG, "Go to today's challenge" button
+lilac accent2 (darker): 6d6fa2
+green accent: 00d80a
+	- progress bar, "This week" checked off days
+strips: 275b99
+	- lighter blue color for listing the "Today's challenge" check list
+progress bar background: 3f4d66
+footer BG: 0f1d33
+links: 2489f2
+
+FONTS
+main headings: Source Sans 3, 48pt, semibold
+regular text: Source Sans 3, 30, regular
+regular bold text: Source Sans 3, 30, bold
+buttons: Source Sans 3, 36, semibold
+h2 headings: Source Sans 3, 30, semibold, tracking 80
+
+CARDS AND BUTTONS
+corner radii: 8px

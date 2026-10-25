@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
+import { ActionsCheckOff } from '@/components/checkin/ActionsCheckOff'
 import { CheckInHeader } from '@/components/checkin/CheckInHeader'
 import { getCurrentMember } from '@/lib/auth'
 
@@ -29,9 +30,11 @@ export default async function CheckInPage() {
     >
       <CheckInHeader pageName="Challenge Check-In" firstName={firstName} lastInitial={lastInitial} />
 
-      {/* Check-in sections will be added between the header and the footer
-      (the footer renders globally from the (frontend) layout). */}
-      <main className="flex-1" />
+      {/* Check-in sections — first is the actions check-off (dummy UI for now;
+      the user's ticks will be recorded in the DB for their day once wired up). */}
+      <main className="flex-1">
+        <ActionsCheckOff />
+      </main>
     </div>
   )
 }
