@@ -11,10 +11,12 @@ const chunks = (files) =>
       .join(' '),
   );
 
-export default {
+const config = {
   '*.{ts,tsx,js,mjs,cjs}': (files) => [
     ...chunks(files).map((chunk) => `eslint --fix ${chunk}`),
     ...chunks(files).map((chunk) => `prettier --write ${chunk}`),
   ],
   '*.{css,scss,json,md}': (files) => chunks(files).map((chunk) => `prettier --write ${chunk}`),
 };
+
+export default config;
