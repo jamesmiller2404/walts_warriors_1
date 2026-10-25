@@ -1,11 +1,11 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
-import type { HomePage } from '@/payload-types'
+import type { HomePage } from '@/payload-types';
 
 export function CallToAction({ cta }: { cta: HomePage['cta'] }) {
-  if (!cta?.heading && !cta?.text && !cta?.buttonLabel) return null
+  if (!cta?.heading && !cta?.text && !cta?.buttonLabel) return null;
 
-  const href = cta.buttonLink || '/contact'
+  const href = cta.buttonLink || '/contact';
 
   return (
     <section className="rounded-2xl bg-emerald-800 px-6 py-12 text-center text-white shadow-md sm:px-12">
@@ -20,5 +20,5 @@ export function CallToAction({ cta }: { cta: HomePage['cta'] }) {
         </Link>
       ) : null}
     </section>
-  )
+  );
 }

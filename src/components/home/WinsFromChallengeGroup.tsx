@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from 'next/image';
 
 // Hard-coded for now — wins and shout-outs will be wired from the backend later.
 const GROUP_FEED = [
@@ -27,9 +27,9 @@ const GROUP_FEED = [
     accomplishment: 'Walked the dog an extra block each evening',
     icon: '/icons/sparkle-icon.svg',
   },
-]
+];
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
 // Monochrome smiley shown on the Encourage buttons (matches the mockup's emoji).
 function SmileyIcon() {
@@ -46,7 +46,7 @@ function SmileyIcon() {
         strokeLinecap="round"
       />
     </svg>
-  )
+  );
 }
 
 export function WinsFromChallengeGroup() {
@@ -100,5 +100,5 @@ export function WinsFromChallengeGroup() {
         See all in Community
       </a>
     </div>
-  )
+  );
 }

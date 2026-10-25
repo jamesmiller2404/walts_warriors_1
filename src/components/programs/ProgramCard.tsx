@@ -1,12 +1,12 @@
-import Image from 'next/image'
-import Link from 'next/link'
+import Image from 'next/image';
+import Link from 'next/link';
 
-import type { Media, Program } from '@/payload-types'
-import { mediaUrl } from '@/lib/utils'
+import type { Media, Program } from '@/payload-types';
+import { mediaUrl } from '@/lib/utils';
 
 export function ProgramCard({ program }: { program: Program }) {
-  const image = program.image as Media | null | undefined
-  const src = mediaUrl(image, 'card')
+  const image = program.image as Media | null | undefined;
+  const src = mediaUrl(image, 'card');
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:shadow-md min-w-0">
@@ -37,7 +37,9 @@ export function ProgramCard({ program }: { program: Program }) {
           <div className="flex-1" />
         )}
         {program.pricing?.showPrice && program.pricing.priceLabel ? (
-          <p className="mt-3 text-sm font-semibold text-emerald-800">{program.pricing.priceLabel}</p>
+          <p className="mt-3 text-sm font-semibold text-emerald-800">
+            {program.pricing.priceLabel}
+          </p>
         ) : null}
         <Link
           href={`/programs/${program.slug}`}
@@ -47,5 +49,5 @@ export function ProgramCard({ program }: { program: Program }) {
         </Link>
       </div>
     </article>
-  )
+  );
 }

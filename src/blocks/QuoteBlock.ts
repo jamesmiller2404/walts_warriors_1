@@ -1,4 +1,4 @@
-import type { Block } from 'payload'
+import type { Block } from 'payload';
 
 export const QuoteBlock: Block = {
   slug: 'quoteBlock',
@@ -241,4 +241,4 @@ export const QuoteBlock: Block = {
       ],
     },
   ],
-}
+};

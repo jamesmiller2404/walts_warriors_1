@@ -10,9 +10,9 @@ const COMING_UP_EVENTS = [
     detail: 'Saturday, 9:00 am Eastern, join from anywhere',
     signupUrl: '#',
   },
-]
+];
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
 export function ComingUp() {
   return (
@@ -47,5 +47,5 @@ export function ComingUp() {
         ))}
       </ul>
     </div>
-  )
+  );
 }

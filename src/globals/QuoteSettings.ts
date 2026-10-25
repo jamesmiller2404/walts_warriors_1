@@ -1,7 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const QuoteSettings: GlobalConfig = {
   slug: 'quote-settings',
@@ -30,4 +30,4 @@ export const QuoteSettings: GlobalConfig = {
       },
     },
   ],
-}
+};

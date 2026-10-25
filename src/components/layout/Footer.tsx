@@ -1,18 +1,18 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { Fragment } from 'react'
+import Image from 'next/image';
+import Link from 'next/link';
+import { Fragment } from 'react';
 
-import { Container } from '@/components/layout/Container'
-import { fluidFontSize } from '@/lib/fontSize'
-import type { SiteSetting } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { fluidFontSize } from '@/lib/fontSize';
+import type { SiteSetting } from '@/payload-types';
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
-const fontArial = { fontFamily: 'Arial, Helvetica, sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
+const fontArial = { fontFamily: 'Arial, Helvetica, sans-serif' };
 
 type FooterLink = {
-  label: string
-  href: string
-}
+  label: string;
+  href: string;
+};
 
 // Pages that do not exist yet use '#' as a placeholder href.
 const exploreLinks: FooterLink[] = [
@@ -21,35 +21,35 @@ const exploreLinks: FooterLink[] = [
   { label: 'Challenges', href: '/challenges' },
   { label: 'Library', href: '#' },
   { label: 'Community', href: '#' },
-]
+];
 
 const supportLinks: FooterLink[] = [
   { label: 'Help center', href: '#' },
   { label: 'Contact Walt', href: '/contact' },
   { label: 'Frequently asked', href: '#' },
   { label: 'Account settings', href: '#' },
-]
+];
 
 const legalLinks: FooterLink[] = [
   { label: 'Privacy', href: '#' },
   { label: 'Terms', href: '#' },
   { label: 'Accessibility', href: '#' },
-]
+];
 
 function FooterLinkItem({ link, className }: { link: FooterLink; className?: string }) {
-  const classes = className ?? 'hover:text-white'
+  const classes = className ?? 'hover:text-white';
   if (link.href === '#') {
     return (
       <a href={link.href} className={classes}>
         {link.label}
       </a>
-    )
+    );
   }
   return (
     <Link href={link.href} className={classes}>
       {link.label}
     </Link>
-  )
+  );
 }
 
 function LinkColumn({ title, links }: { title: string; links: FooterLink[] }) {
@@ -69,14 +69,14 @@ function LinkColumn({ title, links }: { title: string; links: FooterLink[] }) {
         ))}
       </ul>
     </nav>
-  )
+  );
 }
 
 export function Footer({ settings }: { settings: SiteSetting }) {
-  const year = new Date().getFullYear()
-  const name = settings.businessName || "Walt's Warriors"
+  const year = new Date().getFullYear();
+  const name = settings.businessName || "Walt's Warriors";
   const tagline =
-    settings.tagline || 'Small steps become lasting habits. Move, fuel, and mind, together.'
+    settings.tagline || 'Small steps become lasting habits. Move, fuel, and mind, together.';
 
   return (
     <footer className="mt-auto border-t-2 border-[#e3a64e]">
@@ -155,5 +155,5 @@ export function Footer({ settings }: { settings: SiteSetting }) {
         </Container>
       </div>
     </footer>
-  )
+  );
 }

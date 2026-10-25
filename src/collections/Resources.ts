@@ -1,7 +1,7 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const Resources: CollectionConfig = {
   slug: 'resources',
@@ -12,7 +12,8 @@ export const Resources: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'status', 'publishedAt', 'updatedAt'],
-    description: 'Articles, tips, and resources on nutrition, fitness, mindset, and healthy habits.',
+    description:
+      'Articles, tips, and resources on nutrition, fitness, mindset, and healthy habits.',
     group: 'Content',
   },
   access: {
@@ -43,16 +44,16 @@ export const Resources: CollectionConfig = {
                 .toLowerCase()
                 .trim()
                 .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
+                .replace(/(^-|-$)/g, '');
             }
             if (data?.title && typeof data.title === 'string') {
               return data.title
                 .toLowerCase()
                 .trim()
                 .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
+                .replace(/(^-|-$)/g, '');
             }
-            return value
+            return value;
           },
         ],
       },
@@ -114,4 +115,4 @@ export const Resources: CollectionConfig = {
       },
     },
   ],
-}
+};

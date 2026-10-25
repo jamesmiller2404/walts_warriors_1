@@ -1,27 +1,27 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
-import { Container } from '@/components/layout/Container'
-import { getPayloadClient } from '@/lib/payload'
-import { formatPhoneHref } from '@/lib/utils'
-import type { ContactPage, SiteSetting } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { getPayloadClient } from '@/lib/payload';
+import { formatPhoneHref } from '@/lib/utils';
+import type { ContactPage, SiteSetting } from '@/payload-types';
 
 export const metadata: Metadata = {
   title: 'Contact',
-}
+};
 
 export default async function ContactRoute() {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
   const [settings, page] = await Promise.all([
     payload.findGlobal({ slug: 'site-settings' }) as Promise<SiteSetting>,
     payload.findGlobal({ slug: 'contact-page' }) as Promise<ContactPage>,
-  ])
+  ]);
 
-  const phoneHref = formatPhoneHref(settings.phone)
-  const address = settings.address
+  const phoneHref = formatPhoneHref(settings.phone);
+  const address = settings.address;
   const addressLine = [address?.street, address?.city, address?.state, address?.zip]
     .filter(Boolean)
-    .join(', ')
+    .join(', ');
 
   return (
     <Container size="narrow" className="py-6 sm:py-8 lg:py-12">
@@ -89,7 +89,7 @@ export default async function ContactRoute() {
         {!settings.phone && !settings.email && !addressLine ? (
           <p className="text-stone-600">
             Contact details are not set yet. Add them in{' '}
-          <Link
+            <Link
               href="/admin/globals/site-settings"
               className="font-medium text-emerald-700 underline"
             >
@@ -100,5 +100,5 @@ export default async function ContactRoute() {
         ) : null}
       </div>
     </Container>
-  )
+  );
 }

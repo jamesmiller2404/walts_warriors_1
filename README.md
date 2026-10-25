@@ -37,21 +37,21 @@ On first visit to `/admin`, create the first user (make this an **Administrator*
 
 Copy `.env.example` to `.env`:
 
-| Variable | Purpose |
-|----------|---------|
-| `DATABASE_URL` | SQLite: `file:./walts-warriors.db` |
-| `PAYLOAD_SECRET` | Long random secret for auth tokens |
-| `NEXT_PUBLIC_SERVER_URL` | Public URL (e.g. `http://localhost:3000`) |
-| `R2_BUCKET` | Optional. Unset = local `/media`. R2 bucket name for uploads |
-| `R2_ENDPOINT` | R2 S3 endpoint, incl. `https://` (e.g. `https://<ACCOUNT_ID>.r2.cloudflarestorage.com`) |
-| `R2_ACCESS_KEY_ID` | From Cloudflare → R2 → API tokens (Object Read & Write) |
-| `R2_SECRET_ACCESS_KEY` | From Cloudflare → R2 → API tokens |
+| Variable                 | Purpose                                                                                 |
+| ------------------------ | --------------------------------------------------------------------------------------- |
+| `DATABASE_URL`           | SQLite: `file:./walts-warriors.db`                                                      |
+| `PAYLOAD_SECRET`         | Long random secret for auth tokens                                                      |
+| `NEXT_PUBLIC_SERVER_URL` | Public URL (e.g. `http://localhost:3000`)                                               |
+| `R2_BUCKET`              | Optional. Unset = local `/media`. R2 bucket name for uploads                            |
+| `R2_ENDPOINT`            | R2 S3 endpoint, incl. `https://` (e.g. `https://<ACCOUNT_ID>.r2.cloudflarestorage.com`) |
+| `R2_ACCESS_KEY_ID`       | From Cloudflare → R2 → API tokens (Object Read & Write)                                 |
+| `R2_SECRET_ACCESS_KEY`   | From Cloudflare → R2 → API tokens                                                       |
 
 ## Roles
 
-| Role | Can do |
-|------|--------|
-| **admin** | Manage users, all content, system-oriented fields |
+| Role       | Can do                                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------ |
+| **admin**  | Manage users, all content, system-oriented fields                                                |
 | **editor** | Edit business content (services, pages, media, etc.). Cannot create/delete users or change roles |
 
 ## Content the owner can edit
@@ -67,20 +67,20 @@ Copy `.env.example` to `.env`:
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Development server |
-| `npm run build` | Production build |
-| `npm run start` | Start production server |
-| `npm run generate:types` | Regenerate `payload-types.ts` |
-| `npm run generate:importmap` | Regenerate admin import map |
+| Command                      | Description                   |
+| ---------------------------- | ----------------------------- |
+| `npm run dev`                | Development server            |
+| `npm run build`              | Production build              |
+| `npm run start`              | Start production server       |
+| `npm run generate:types`     | Regenerate `payload-types.ts` |
+| `npm run generate:importmap` | Regenerate admin import map   |
 
 ## File storage
 
-| Environment | Behavior |
-|-------------|----------|
-| **v1 / local** | Files saved under `/media` (gitignored). No extra config. |
-| **R2 (prod)** | Set `R2_BUCKET`, `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` to enable `@payloadcms/storage-s3` for the `media` collection, pointed at Cloudflare R2's S3-compatible endpoint. The bucket stays **private**: Payload keeps `/media/...` URLs and proxies bytes through the app, preserving upload access control. `sharp`-generated sizes (thumbnail/card/hero) upload to R2 alongside originals. |
+| Environment    | Behavior                                                                                                                                                                                                                                                                                                                                                                                                        |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **v1 / local** | Files saved under `/media` (gitignored). No extra config.                                                                                                                                                                                                                                                                                                                                                       |
+| **R2 (prod)**  | Set `R2_BUCKET`, `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` to enable `@payloadcms/storage-s3` for the `media` collection, pointed at Cloudflare R2's S3-compatible endpoint. The bucket stays **private**: Payload keeps `/media/...` URLs and proxies bytes through the app, preserving upload access control. `sharp`-generated sizes (thumbnail/card/hero) upload to R2 alongside originals. |
 
 ## Production notes
 

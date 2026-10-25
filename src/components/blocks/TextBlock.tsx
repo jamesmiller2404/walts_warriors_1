@@ -9,7 +9,7 @@ const fontFamilyMap: Record<string, string> = {
   'eb-garamond-italic': 'var(--font-eb-garamond-italic)',
   'eb-garamond-medium-italic': 'var(--font-eb-garamond-medium-italic)',
   'eb-garamond-semibold-italic': 'var(--font-eb-garamond-semibold-italic)',
-}
+};
 
 const fontColorMap: Record<string, string> = {
   'stone-900': 'text-stone-900',
@@ -21,21 +21,21 @@ const fontColorMap: Record<string, string> = {
   'brand-700': 'text-brand-700',
   'brand-600': 'text-brand-600',
   white: 'text-white',
-}
+};
 
-import { fluidFontSize, resolvePt } from '@/lib/fontSize'
+import { fluidFontSize, resolvePt } from '@/lib/fontSize';
 
 type Props = {
-  text: string
-  fontSize?: string | null
-  fontColor?: string | null
-  fontFamily?: string | null
-}
+  text: string;
+  fontSize?: string | null;
+  fontColor?: string | null;
+  fontFamily?: string | null;
+};
 
 export function TextBlock({ text, fontSize, fontColor, fontFamily }: Props) {
-  const colorClass = fontColor ? fontColorMap[fontColor] : 'text-stone-900'
-  const pt = resolvePt(fontSize)
-  const fluidSize = pt && !Number.isNaN(pt) ? fluidFontSize(pt) : undefined
+  const colorClass = fontColor ? fontColorMap[fontColor] : 'text-stone-900';
+  const pt = resolvePt(fontSize);
+  const fluidSize = pt && !Number.isNaN(pt) ? fluidFontSize(pt) : undefined;
 
   return (
     <p
@@ -48,5 +48,5 @@ export function TextBlock({ text, fontSize, fontColor, fontFamily }: Props) {
     >
       {text}
     </p>
-  )
+  );
 }

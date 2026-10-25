@@ -1,18 +1,18 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
-import { LoginForm } from '@/components/auth/LoginForm'
-import { Container } from '@/components/layout/Container'
+import { LoginForm } from '@/components/auth/LoginForm';
+import { Container } from '@/components/layout/Container';
 
 export const metadata: Metadata = {
   title: 'Log in',
-}
+};
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ verified?: string; reset?: string }>
+  searchParams: Promise<{ verified?: string; reset?: string }>;
 }) {
-  const params = await searchParams
+  const params = await searchParams;
 
   return (
     <Container size="narrow" className="py-12 sm:py-16">
@@ -36,5 +36,5 @@ export default async function LoginPage({
         </div>
       </div>
     </Container>
-  )
+  );
 }

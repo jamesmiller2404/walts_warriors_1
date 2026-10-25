@@ -4,46 +4,46 @@ import type {
   CollectionBeforeDeleteHook,
   CollectionBeforeLoginHook,
   CollectionConfig,
-} from 'payload'
-import { APIError } from 'payload'
+} from 'payload';
+import { APIError } from 'payload';
 
-import { isStaff, isStaffFieldLevel } from '@/access/isStaff'
-import { resetPasswordEmailHTML, verifyEmailHTML } from '@/lib/emailTemplates'
+import { isStaff, isStaffFieldLevel } from '@/access/isStaff';
+import { resetPasswordEmailHTML, verifyEmailHTML } from '@/lib/emailTemplates';
 
 type AuthedUser = {
-  id: number | string
-  collection?: string
-}
+  id: number | string;
+  collection?: string;
+};
 
 // Access: any signed-in staff user (from the Users collection) can see/manage
 // every member. A member can only read/update their own record.
 const isSelfOrStaff = ({ req: { user } }: { req: { user: AuthedUser | null | undefined } }) => {
-  if (!user) return false
+  if (!user) return false;
   // Staff accounts live in the `users` collection; members live in `members`.
-  if (user.collection === 'users') return true
-  return { id: { equals: user.id } }
-}
+  if (user.collection === 'users') return true;
+  return { id: { equals: user.id } };
+};
 
 // Suspended members are blocked at login (lifecycle: suspended = no auth).
 const beforeMemberLogin: CollectionBeforeLoginHook = async ({ user }) => {
-  const status = (user as { status?: string } | null)?.status
+  const status = (user as { status?: string } | null)?.status;
   if (status && status !== 'active') {
-    throw new APIError('This account is not active. Contact the administrator.', 401)
+    throw new APIError('This account is not active. Contact the administrator.', 401);
   }
-  return user
-}
+  return user;
+};
 
 const afterMemberChange: CollectionAfterChangeHook = async ({ doc, operation, req }) => {
-  if (operation !== 'create') return doc
-  const { payload } = req
-  const _stats = await payload.findGlobal({ slug: 'community-stats', overrideAccess: true })
+  if (operation !== 'create') return doc;
+  const { payload } = req;
+  const _stats = await payload.findGlobal({ slug: 'community-stats', overrideAccess: true });
   await payload.updateGlobal({
     slug: 'community-stats',
     data: { totalMembers: (_stats.totalMembers || 0) + 1 },
     overrideAccess: true,
-  })
-  return doc
-}
+  });
+  return doc;
+};
 
 // Runs before the member row is deleted so dependent rows are removed first.
 // Payload relationship FKs are `ON DELETE SET NULL` and the required
@@ -54,21 +54,21 @@ const beforeMemberDelete: CollectionBeforeDeleteHook = async ({ req, id }) => {
     collection: 'check-ins',
     where: { member: { equals: id } },
     overrideAccess: true,
-  })
+  });
   await req.payload.delete({
     collection: 'member-badges',
     where: { member: { equals: id } },
     overrideAccess: true,
-  })
-}
+  });
+};
 
 const afterMemberDelete: CollectionAfterDeleteHook = async ({ req }) => {
-  const { payload } = req
+  const { payload } = req;
   const [members, checkIns, badges] = await Promise.all([
     payload.count({ collection: 'members', overrideAccess: true }),
     payload.count({ collection: 'check-ins', overrideAccess: true }),
     payload.count({ collection: 'member-badges', overrideAccess: true }),
-  ])
+  ]);
   await payload.updateGlobal({
     slug: 'community-stats',
     data: {
@@ -78,9 +78,9 @@ const afterMemberDelete: CollectionAfterDeleteHook = async ({ req }) => {
       lastUpdated: new Date().toISOString(),
     },
     overrideAccess: true,
-  })
-  return {}
-}
+  });
+  return {};
+};
 
 export const Members: CollectionConfig = {
   slug: 'members',
@@ -213,4 +213,4 @@ export const Members: CollectionConfig = {
       },
     },
   ],
-}
+};

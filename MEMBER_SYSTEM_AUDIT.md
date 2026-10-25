@@ -15,6 +15,7 @@
 ## 1. Current architecture assessment
 
 ### Stack
+
 - Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4
 - Payload CMS 3.86 (self-hosted; admin UI at `/admin` via `@payloadcms/next`)
 - Postgres (Supabase) via `@payloadcms/db-postgres`; schema auto-pushed in dev (`db.push: true`, `src/payload.config.ts:67`)
@@ -22,23 +23,25 @@
 - Lexical rich text; all frontend reads go through the local Payload API (`src/lib/payload.ts`)
 
 ### What exists today
+
 The member system is **backend scaffolding only**. The data model, auth plumbing, and derived-data hooks exist; **there is no member-facing UI, no login/signup page, no dashboard, no leaderboard, and no email delivery**.
 
-| Piece | Status |
-|---|---|
-| `members` auth collection (public signup) | Exists (`src/collections/Members.ts`) |
-| `check-ins` + rollup/badge hooks | Exists (`src/collections/CheckIns.ts`) |
-| `badges` definitions | Exists (`src/collections/Badges.ts`) |
-| `member-badges` awards | Exists (`src/collections/MemberBadges.ts`) |
-| `community-stats` global (denormalized counters) | Exists (`src/globals/CommunityStats.ts`) |
-| `challenges` (content) | Exists (`src/collections/Challenges.ts`) |
-| Member login / register / logout pages | Exists (`/login`, `/register`, `/logout`, plus forgot-password/reset-password/verify flows) |
-| Member dashboard / check-in UI | **Missing** (Phase 2) |
-| Community / leaderboard pages | **Missing** (Phase 3) |
-| API route handlers / server actions | Exists (server actions for auth; relies on Payload REST for core) |
-| Email (verification, password reset) | Installed (nodemailer adapter + console fallback in dev) |
+| Piece                                            | Status                                                                                      |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `members` auth collection (public signup)        | Exists (`src/collections/Members.ts`)                                                       |
+| `check-ins` + rollup/badge hooks                 | Exists (`src/collections/CheckIns.ts`)                                                      |
+| `badges` definitions                             | Exists (`src/collections/Badges.ts`)                                                        |
+| `member-badges` awards                           | Exists (`src/collections/MemberBadges.ts`)                                                  |
+| `community-stats` global (denormalized counters) | Exists (`src/globals/CommunityStats.ts`)                                                    |
+| `challenges` (content)                           | Exists (`src/collections/Challenges.ts`)                                                    |
+| Member login / register / logout pages           | Exists (`/login`, `/register`, `/logout`, plus forgot-password/reset-password/verify flows) |
+| Member dashboard / check-in UI                   | **Missing** (Phase 2)                                                                       |
+| Community / leaderboard pages                    | **Missing** (Phase 3)                                                                       |
+| API route handlers / server actions              | Exists (server actions for auth; relies on Payload REST for core)                           |
+| Email (verification, password reset)             | Installed (nodemailer adapter + console fallback in dev)                                    |
 
 ### Key structural observations
+
 1. **Frontend is purely marketing.** Server components call `getPayloadClient()` with no auth context, so all pages are anonymous/public reads. The Hero's bell/account icons (`src/components/home/Hero.tsx:115-119`) are decorative `<Image>` tags, not links.
 2. **Auth exists in the data layer only.** Payload auto-generates REST endpoints (`/api/members/login`, `/register`, `/me`, `/logout`, `/forgot-password`, `/reset-password`, `/verify/:token`, `/unlock`) but nothing in the app calls them.
 3. **Derived data is maintained by `afterChange` hooks** on `check-ins` and `members`:
@@ -53,6 +56,7 @@ The member system is **backend scaffolding only**. The data model, auth plumbing
 ## 2. Existing authentication assessment
 
 ### In place
+
 - **Two auth collections.** `users` (staff, `role: admin | editor`, `saveToJWT` on role) and `members` (`auth: true`, `verify: false`).
 - **First-user bootstrap.** The first `users` row is forced to `admin` via a `beforeChange` hook (`src/collections/Users.ts:27-42`).
 - **Admin UI locked to staff.** `canAccessAdmin` rejects any `req.user.collection !== 'users'`, so members cannot reach `/admin` (`src/access/isAdminOrEditor.ts:12-18`).
@@ -61,16 +65,18 @@ The member system is **backend scaffolding only**. The data model, auth plumbing
 - **Password hashing.** Payload's built-in salt + hash handling on both collections.
 
 ### Gaps / problems
-| Gap | Impact |
-|---|---|
-| `verify: false` on members | Any address can register; no proof of ownership; spam/burner accounts poison stats and the member count |
-| **No email adapter installed** | Verification, forgot-password, and any transactional email cannot be delivered; password-reset is effectively dead for members |
-| No login/register UI | Members cannot actually use the system |
-| No session bootstrap in the App Router | Server components/actions have no way to learn "who is logged in" (`/api/members/me` is never called, no HTTP-only cookie flow) |
-| Registration is open REST (`create: () => true`) | No CAPTCHA, no rate limiting beyond Payload defaults → account/DB spam |
-| Email change not re-verified | A member can change their own email via update with no confirmation |
+
+| Gap                                              | Impact                                                                                                                          |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `verify: false` on members                       | Any address can register; no proof of ownership; spam/burner accounts poison stats and the member count                         |
+| **No email adapter installed**                   | Verification, forgot-password, and any transactional email cannot be delivered; password-reset is effectively dead for members  |
+| No login/register UI                             | Members cannot actually use the system                                                                                          |
+| No session bootstrap in the App Router           | Server components/actions have no way to learn "who is logged in" (`/api/members/me` is never called, no HTTP-only cookie flow) |
+| Registration is open REST (`create: () => true`) | No CAPTCHA, no rate limiting beyond Payload defaults → account/DB spam                                                          |
+| Email change not re-verified                     | A member can change their own email via update with no confirmation                                                             |
 
 ### Assessment
+
 The **skeleton is sound** (dual-auth, sessions, lockout) but the system is **not operational**: no UI, no email, no session handling in the Next app. Auth is "configured but unbuilt."
 
 ---
@@ -78,18 +84,21 @@ The **skeleton is sound** (dual-auth, sessions, lockout) but the system is **not
 ## 3. Users vs. Members assessment
 
 ### Current split
-| | `users` (staff) | `members` (public) |
-|---|---|---|
-| Purpose | Admin panel access, content management | Community participation (check-ins, badges, streaks) |
-| Roles | `admin`, `editor` | none (all equal) |
-| Admin UI access | Yes | No (blocked in `canAccessAdmin`) |
-| Self-service | No | Yes (own profile) |
-| Created by | Admin (`isAdmin` guard) | Anyone (`create: () => true`) |
+
+|                 | `users` (staff)                        | `members` (public)                                   |
+| --------------- | -------------------------------------- | ---------------------------------------------------- |
+| Purpose         | Admin panel access, content management | Community participation (check-ins, badges, streaks) |
+| Roles           | `admin`, `editor`                      | none (all equal)                                     |
+| Admin UI access | Yes                                    | No (blocked in `canAccessAdmin`)                     |
+| Self-service    | No                                     | Yes (own profile)                                    |
+| Created by      | Admin (`isAdmin` guard)                | Anyone (`create: () => true`)                        |
 
 ### Verdict
+
 The **two-collection split is the right call** and is the standard Payload pattern. Members and staff genuinely are different kinds of principals with different identity lifetimes.
 
 Concerns to address:
+
 1. **Implicit scope detection.** Correct behavior currently depends on `req.user.collection`. `isAdminOrEditor` does not check collection — it only works because members have no `role` field (so `role` is `undefined` → returns false). If a `role` field is ever added to members, this breaks silently. **Make every access rule collection-aware explicitly.**
 2. **No cross-identity.** A member who later becomes staff needs a separate `users` account with no link. Low urgency, but consider a `linkedUser` relationship if that workflow exists.
 3. **Email uniqueness is per-collection.** The same address can exist in both — acceptable, but document it.
@@ -154,6 +163,7 @@ erDiagram
 ```
 
 Notes:
+
 - `USERS` has no relations to member data (staff are unrelated to the community graph).
 - Auth collections also own rows in Payload's implicit `sessions` table (omitted above).
 - `community-stats` is a global (single row, no FKs); `totalMembers`/`totalCheckIns`/`totalBadgesAwarded` are denormalized counters.
@@ -254,6 +264,7 @@ erDiagram
 ```
 
 ### Design decisions / rationale
+
 1. **`member-challenges` join collection (new).** `challenges.joinUrl` is an external dead-end; there is no way to track who joined a challenge. Enrollment becomes a first-class entity. Replaces/supplements `joinUrl`.
 2. **`checkInDay` + unique index `(member_id, checkInDay)`.** Enforces one check-in per member per UTC day at the database level — closes the spam hole that exists today (no uniqueness anywhere).
 3. **Keep member rollups denormalized**, but add **field-level write protection** (staff-only) plus a **recompute job** for drift correction. Direct member writes to rollups must be impossible (currently they are possible — see §9).
@@ -267,12 +278,14 @@ erDiagram
 ## 6. Proposed member lifecycle
 
 ### State model
+
 ```
 Registered ──► Verified ──► Active ◄──────┐
    │              │           │           │
    ▼              ▼           ▼           │
 Deleted  ◄───── Suspended ────┘ (re-activate)
 ```
+
 - **Registered** — account created via public signup.
 - **Verified** — email confirmed (requires enabling `verify` + email adapter). Optional until the business says otherwise, but recommended before any public-facing identity.
 - **Active** — can check in, join challenges, earn badges, appear on leaderboards.
@@ -280,6 +293,7 @@ Deleted  ◄───── Suspended ────┘ (re-activate)
 - **Deleted** — soft-delete preferred (retains history, avoids FK cleanup); hard-delete only on legal request.
 
 ### Lifecycle flow
+
 1. **Sign up** — email + password + displayName → `status: pending`, `totalCheckIns: 0`, email sent (verification / welcome).
 2. **Verify** — `verify: true` in `auth` config; token flow via Payload's `/api/members/verify/:token`.
 3. **Onboard** — set avatar, bio, opt into leaderboard visibility; optionally join a challenge (`member-challenges`).
@@ -289,6 +303,7 @@ Deleted  ◄───── Suspended ────┘ (re-activate)
 7. **Exit** — self-service delete (soft) or staff delete (soft/hard).
 
 ### Guard rails to implement
+
 - Check-in create must **force** `member = req.user.id` server-side (field-level access + `beforeChange` overwrite). Staff may override (staff check-in on behalf).
 - `checkInDate` must be clamped (no future dates; backdating blocked or flagged).
 - Rollup fields (`totalCheckIns`, `currentStreak`, `longestStreak`, `lastCheckInDate`) are **write-locked for members** (field-level access) — hooks are the only writers.
@@ -298,32 +313,34 @@ Deleted  ◄───── Suspended ────┘ (re-activate)
 ## 7. Proposed roles/permissions
 
 ### Roles
-| Role | Collection | Scope |
-|---|---|---|
-| Anonymous | — | Read public content + public leaderboard |
-| Member | `members` | Own profile, own check-ins (1/day), own badges, challenge enrollment |
-| Editor | `users.role=editor` | Content CRUD (programs, events, challenges, resources, testimonials, gallery), view members |
-| Admin | `users.role=admin` | Everything above + user management, member management/suspension, badge & challenge definitions, stats correction |
+
+| Role      | Collection          | Scope                                                                                                             |
+| --------- | ------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Anonymous | —                   | Read public content + public leaderboard                                                                          |
+| Member    | `members`           | Own profile, own check-ins (1/day), own badges, challenge enrollment                                              |
+| Editor    | `users.role=editor` | Content CRUD (programs, events, challenges, resources, testimonials, gallery), view members                       |
+| Admin     | `users.role=admin`  | Everything above + user management, member management/suspension, badge & challenge definitions, stats correction |
 
 ### Permission matrix (target)
 
-| Resource / action | Anonymous | Member | Editor | Admin |
-|---|---|---|---|---|
-| Read public content (programs/events/challenges/gallery/resources) | ✅ | ✅ | ✅ | ✅ |
-| Read member `displayName`, avatar, streaks, badges, leaderboard | ✅ | ✅ | ✅ | ✅ |
-| Read member `email`, `bio` (private) | ❌ | own only | ✅ | ✅ |
-| Create member account | ✅ | — | ✅ | ✅ |
-| Update member profile (displayName/avatar/bio/visibility) | ❌ | own only | ✅ | ✅ |
-| Write member rollups / status / delete | ❌ | ❌ | ⚠️ (delete: decide) | ✅ |
-| Create check-in | ❌ | ✅ (own, 1/day) | ✅ (any member) | ✅ |
-| Read/update own check-ins | ❌ | own only | ✅ | ✅ |
-| Award / delete badges | ❌ | ❌ | ✅ | ✅ |
-| Define challenges/badges | ❌ | ❌ | ✅ | ✅ |
-| Join challenge | ❌ | ✅ (own) | ✅ | ✅ |
-| Admin panel | ❌ | ❌ | ✅ | ✅ |
-| Manage staff users | ❌ | ❌ | ❌ | ✅ |
+| Resource / action                                                  | Anonymous | Member          | Editor              | Admin |
+| ------------------------------------------------------------------ | --------- | --------------- | ------------------- | ----- |
+| Read public content (programs/events/challenges/gallery/resources) | ✅        | ✅              | ✅                  | ✅    |
+| Read member `displayName`, avatar, streaks, badges, leaderboard    | ✅        | ✅              | ✅                  | ✅    |
+| Read member `email`, `bio` (private)                               | ❌        | own only        | ✅                  | ✅    |
+| Create member account                                              | ✅        | —               | ✅                  | ✅    |
+| Update member profile (displayName/avatar/bio/visibility)          | ❌        | own only        | ✅                  | ✅    |
+| Write member rollups / status / delete                             | ❌        | ❌              | ⚠️ (delete: decide) | ✅    |
+| Create check-in                                                    | ❌        | ✅ (own, 1/day) | ✅ (any member)     | ✅    |
+| Read/update own check-ins                                          | ❌        | own only        | ✅                  | ✅    |
+| Award / delete badges                                              | ❌        | ❌              | ✅                  | ✅    |
+| Define challenges/badges                                           | ❌        | ❌              | ✅                  | ✅    |
+| Join challenge                                                     | ❌        | ✅ (own)        | ✅                  | ✅    |
+| Admin panel                                                        | ❌        | ❌              | ✅                  | ✅    |
+| Manage staff users                                                 | ❌        | ❌              | ❌                  | ✅    |
 
 ### Enforcement notes
+
 - Keep the `req.user.collection` check in **every** access rule (don't rely on the absence of a `role` field).
 - Add **field-level access** on `members.email` and rollup fields.
 - Use a shared access module (`@/access/memberAccess.ts`) so the "own record" and "staff" predicates are defined once.
@@ -333,52 +350,55 @@ Deleted  ◄───── Suspended ────┘ (re-activate)
 ## 8. Public/private data classification
 
 ### Public (anyone, or leaderboard/community surfaces)
-| Field | Notes |
-|---|---|
-| `members.displayName` | Public identity on feed/leaderboard |
-| `members.avatar` | Public |
-| `members.totalCheckIns` | Leaderboard metric |
-| `members.currentStreak` | Leaderboard metric |
-| `members.longestStreak` | Leaderboard metric |
-| `member-badges.*` | Public award records |
-| `badges.*` | Definitions are public |
+
+| Field                                        | Notes                                                         |
+| -------------------------------------------- | ------------------------------------------------------------- |
+| `members.displayName`                        | Public identity on feed/leaderboard                           |
+| `members.avatar`                             | Public                                                        |
+| `members.totalCheckIns`                      | Leaderboard metric                                            |
+| `members.currentStreak`                      | Leaderboard metric                                            |
+| `members.longestStreak`                      | Leaderboard metric                                            |
+| `member-badges.*`                            | Public award records                                          |
+| `badges.*`                                   | Definitions are public                                        |
 | `check-ins.note`, `checkInDate`, `challenge` | Public **only if** community feed is a product decision (§13) |
-| `challenges.*`, `community-stats.*` | Public |
+| `challenges.*`, `community-stats.*`          | Public                                                        |
 
 ### Private (member-self or staff only)
-| Field | Notes |
-|---|---|
-| `members.email` | Never public; staff-only read |
-| `members.password` / `hash` / `salt` | Never exposed (Payload strips) |
-| `members.loginAttempts`, `lockUntil` | Staff-only |
-| `members.sessions` | Own session only |
-| `members.lastCheckInDate` | **Prefer private** (exact check-in timing is sensitive) — only the streak value is public |
-| `members.bio` | Default private unless feed is public |
-| `members.status`, rollup fields (write) | Staff-only |
+
+| Field                                   | Notes                                                                                     |
+| --------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `members.email`                         | Never public; staff-only read                                                             |
+| `members.password` / `hash` / `salt`    | Never exposed (Payload strips)                                                            |
+| `members.loginAttempts`, `lockUntil`    | Staff-only                                                                                |
+| `members.sessions`                      | Own session only                                                                          |
+| `members.lastCheckInDate`               | **Prefer private** (exact check-in timing is sensitive) — only the streak value is public |
+| `members.bio`                           | Default private unless feed is public                                                     |
+| `members.status`, rollup fields (write) | Staff-only                                                                                |
 
 ### Rule of thumb
+
 Publish **aggregates and display names**; never publish **contact details or exact timestamps**. Add a per-member `showOnLeaderboard` opt-in flag if the business wants privacy control.
 
 ---
 
 ## 9. Security risks
 
-| # | Risk | Severity | Detail | Mitigation |
-|---|---|---|---|---|
-| 1 | **Check-in impersonation** | **High** | `check-ins` `create` access is `isLoggedIn` only (`src/collections/CheckIns.ts:123`); the `member` field accepts any ID. Any authenticated member can create check-ins for *any other member*, inflating/deflating others' streaks and awarding them badges (griefing/framing). | Force `member = req.user.id` for members (field-level access + `beforeChange` overwrite); staff-only override. |
-| 2 | **Stat tampering** | **High** | Member `update` access allows self-update, and `totalCheckIns`/`currentStreak`/`longestStreak`/`lastCheckInDate` have only `admin.readOnly` (UI-only, not API-enforced). A member can `PATCH /api/members/:id` and set their own stats, then farm badges. | Field-level access: rollups staff-only; hooks are the only writers. |
-| 3 | **Check-in spam / badge farming** | **High** | No uniqueness on `(member, day)`; `totalCheckIns` increments on every create; `checkInDate` is client-supplied and can be backdated to keep streaks alive. | Unique index `(member_id, checkInDay)`; clamp date server-side; reject duplicates in `beforeChange`. |
-| 4 | **Unverified public registration** | Medium | `verify: false` + open `create` + no CAPTCHA → spam accounts, poisoned counts, bot-driven DB writes. | Enable `verify`, add email adapter, add rate limiting / CAPTCHA on register, add `status: pending`. |
-| 5 | **No email delivery** | Medium | Forgot-password cannot actually deliver emails; members can be locked out with no recovery path. | Install an email adapter (Resend / nodemailer-SMTP) and test forgot/reset. |
-| 6 | **Orphaned data on member delete** | Medium | Deleting a member leaves `check-ins`/`member-badges` rows with dangling FKs (Payload FK constraints will also block the delete). | `afterDelete` transaction cleanup, or soft-delete. |
-| 7 | **Lost updates / races in hooks** | Medium | Rollups and `community-stats` use read-modify-write outside transactions; concurrent check-ins lose increments or double-award badges. | Wrap rollup+badge logic in a transaction; unique `(member_id, badge_id)`; enqueue badge evaluation. |
-| 8 | **Editor over-permission** | Medium | Editors can delete members and award/delete badges despite "content only" description. | Restrict member delete and badge mutation to admin (or re-scope editor). |
-| 9 | **`overrideAccess: true` misuse** | Medium | Hooks bypass access control by design — correct, but any future hook must never trust client-supplied values (member id, stats, badge ids). | Code review rule: hooks validate + derive everything. |
-| 10 | **Email-change hijack** | Low-Med | Member can change own email with no re-verification. | Require verification on email change. |
-| 11 | **Login brute force** | Low | Payload lockout exists by default — confirm `maxLoginAttempts`/lock config is tuned and not disabled. | Verify settings; add per-IP rate limiting in front. |
-| 12 | **Session/JWT hygiene** | Low | Confirm production cookies are `HttpOnly`, `Secure`, `SameSite`; `PAYLOAD_SECRET` strong and rotated; sessions expire. | Verify Payload 3 defaults in prod. |
+| #   | Risk                               | Severity | Detail                                                                                                                                                                                                                                                                          | Mitigation                                                                                                     |
+| --- | ---------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 1   | **Check-in impersonation**         | **High** | `check-ins` `create` access is `isLoggedIn` only (`src/collections/CheckIns.ts:123`); the `member` field accepts any ID. Any authenticated member can create check-ins for _any other member_, inflating/deflating others' streaks and awarding them badges (griefing/framing). | Force `member = req.user.id` for members (field-level access + `beforeChange` overwrite); staff-only override. |
+| 2   | **Stat tampering**                 | **High** | Member `update` access allows self-update, and `totalCheckIns`/`currentStreak`/`longestStreak`/`lastCheckInDate` have only `admin.readOnly` (UI-only, not API-enforced). A member can `PATCH /api/members/:id` and set their own stats, then farm badges.                       | Field-level access: rollups staff-only; hooks are the only writers.                                            |
+| 3   | **Check-in spam / badge farming**  | **High** | No uniqueness on `(member, day)`; `totalCheckIns` increments on every create; `checkInDate` is client-supplied and can be backdated to keep streaks alive.                                                                                                                      | Unique index `(member_id, checkInDay)`; clamp date server-side; reject duplicates in `beforeChange`.           |
+| 4   | **Unverified public registration** | Medium   | `verify: false` + open `create` + no CAPTCHA → spam accounts, poisoned counts, bot-driven DB writes.                                                                                                                                                                            | Enable `verify`, add email adapter, add rate limiting / CAPTCHA on register, add `status: pending`.            |
+| 5   | **No email delivery**              | Medium   | Forgot-password cannot actually deliver emails; members can be locked out with no recovery path.                                                                                                                                                                                | Install an email adapter (Resend / nodemailer-SMTP) and test forgot/reset.                                     |
+| 6   | **Orphaned data on member delete** | Medium   | Deleting a member leaves `check-ins`/`member-badges` rows with dangling FKs (Payload FK constraints will also block the delete).                                                                                                                                                | `afterDelete` transaction cleanup, or soft-delete.                                                             |
+| 7   | **Lost updates / races in hooks**  | Medium   | Rollups and `community-stats` use read-modify-write outside transactions; concurrent check-ins lose increments or double-award badges.                                                                                                                                          | Wrap rollup+badge logic in a transaction; unique `(member_id, badge_id)`; enqueue badge evaluation.            |
+| 8   | **Editor over-permission**         | Medium   | Editors can delete members and award/delete badges despite "content only" description.                                                                                                                                                                                          | Restrict member delete and badge mutation to admin (or re-scope editor).                                       |
+| 9   | **`overrideAccess: true` misuse**  | Medium   | Hooks bypass access control by design — correct, but any future hook must never trust client-supplied values (member id, stats, badge ids).                                                                                                                                     | Code review rule: hooks validate + derive everything.                                                          |
+| 10  | **Email-change hijack**            | Low-Med  | Member can change own email with no re-verification.                                                                                                                                                                                                                            | Require verification on email change.                                                                          |
+| 11  | **Login brute force**              | Low      | Payload lockout exists by default — confirm `maxLoginAttempts`/lock config is tuned and not disabled.                                                                                                                                                                           | Verify settings; add per-IP rate limiting in front.                                                            |
+| 12  | **Session/JWT hygiene**            | Low      | Confirm production cookies are `HttpOnly`, `Secure`, `SameSite`; `PAYLOAD_SECRET` strong and rotated; sessions expire.                                                                                                                                                          | Verify Payload 3 defaults in prod.                                                                             |
 
-**Priority order:** #1, #2, #3 are exploitable end-to-end *today* through the public REST API even though no UI exists — fix before any UI ships. #4/#5 gate launching public signup.
+**Priority order:** #1, #2, #3 are exploitable end-to-end _today_ through the public REST API even though no UI exists — fix before any UI ships. #4/#5 gate launching public signup.
 
 ---
 

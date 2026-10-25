@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { useActionState } from 'react'
+import Link from 'next/link';
+import { useActionState } from 'react';
 
-import { forgotPasswordAction } from '@/lib/authActions'
-import { buttonClass, fieldLabelClass, FormMessage, inputClass } from './formStyles'
+import { forgotPasswordAction } from '@/lib/authActions';
+import { buttonClass, fieldLabelClass, FormMessage, inputClass } from './formStyles';
 
 export function ForgotPasswordForm() {
-  const [state, formAction, pending] = useActionState(forgotPasswordAction, {})
+  const [state, formAction, pending] = useActionState(forgotPasswordAction, {});
 
   return (
     <form action={formAction} className="space-y-5">
@@ -38,5 +38,5 @@ export function ForgotPasswordForm() {
         </Link>
       </p>
     </form>
-  )
+  );
 }

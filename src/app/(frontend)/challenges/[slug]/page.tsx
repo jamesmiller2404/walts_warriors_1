@@ -1,48 +1,45 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { Container } from '@/components/layout/Container'
-import { getPayloadClient } from '@/lib/payload'
-import { RichText } from '@/lib/richText'
-import { mediaUrl } from '@/lib/utils'
-import type { Challenge, Media } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { getPayloadClient } from '@/lib/payload';
+import { RichText } from '@/lib/richText';
+import { mediaUrl } from '@/lib/utils';
+import type { Challenge, Media } from '@/payload-types';
 
 type Props = {
-  params: Promise<{ slug: string }>
-}
+  params: Promise<{ slug: string }>;
+};
 
 async function getChallenge(slug: string): Promise<Challenge | null> {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
   const result = await payload.find({
     collection: 'challenges',
     where: {
-      and: [
-        { slug: { equals: slug } },
-        { status: { in: ['upcoming', 'active', 'completed'] } },
-      ],
+      and: [{ slug: { equals: slug } }, { status: { in: ['upcoming', 'active', 'completed'] } }],
     },
     limit: 1,
     depth: 1,
-  })
-  return (result.docs[0] as Challenge | undefined) ?? null
+  });
+  return (result.docs[0] as Challenge | undefined) ?? null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const challenge = await getChallenge(slug)
-  if (!challenge) return { title: 'Challenge' }
-  return { title: challenge.title, description: challenge.summary || undefined }
+  const { slug } = await params;
+  const challenge = await getChallenge(slug);
+  if (!challenge) return { title: 'Challenge' };
+  return { title: challenge.title, description: challenge.summary || undefined };
 }
 
 export default async function ChallengeDetailPage({ params }: Props) {
-  const { slug } = await params
-  const challenge = await getChallenge(slug)
-  if (!challenge) notFound()
+  const { slug } = await params;
+  const challenge = await getChallenge(slug);
+  if (!challenge) notFound();
 
-  const image = challenge.image as Media | null | undefined
-  const src = mediaUrl(image, 'hero')
+  const image = challenge.image as Media | null | undefined;
+  const src = mediaUrl(image, 'hero');
   const range =
     challenge.startDate || challenge.endDate
       ? [
@@ -63,7 +60,7 @@ export default async function ChallengeDetailPage({ params }: Props) {
         ]
           .filter(Boolean)
           .join(' – ')
-      : null
+      : null;
 
   return (
     <Container as="article" size="narrow" className="py-6 sm:py-8 lg:py-12">
@@ -73,9 +70,13 @@ export default async function ChallengeDetailPage({ params }: Props) {
       >
         ← All challenges
       </Link>
-      <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">{challenge.title}</h1>
+      <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">
+        {challenge.title}
+      </h1>
       {range ? <p className="mt-3 text-sm font-medium text-emerald-700">{range}</p> : null}
-      {challenge.summary ? <p className="mt-4 text-lg text-stone-600">{challenge.summary}</p> : null}
+      {challenge.summary ? (
+        <p className="mt-4 text-lg text-stone-600">{challenge.summary}</p>
+      ) : null}
 
       {src ? (
         <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl bg-stone-100">
@@ -116,5 +117,5 @@ export default async function ChallengeDetailPage({ params }: Props) {
         </div>
       )}
     </Container>
-  )
+  );
 }

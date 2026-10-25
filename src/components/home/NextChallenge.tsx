@@ -4,9 +4,9 @@ const NEXT_CHALLENGE = {
   title: 'November challenge group',
   detail: 'Starts Nov 2 · Strength and balance focus',
   signupUrl: '#',
-}
+};
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
 export function NextChallenge() {
   return (
@@ -33,5 +33,5 @@ export function NextChallenge() {
         Register your spot
       </a>
     </div>
-  )
+  );
 }

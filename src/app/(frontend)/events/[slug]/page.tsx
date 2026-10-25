@@ -1,20 +1,20 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { Container } from '@/components/layout/Container'
-import { getPayloadClient } from '@/lib/payload'
-import { RichText } from '@/lib/richText'
-import { mediaUrl } from '@/lib/utils'
-import type { Event, Media } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { getPayloadClient } from '@/lib/payload';
+import { RichText } from '@/lib/richText';
+import { mediaUrl } from '@/lib/utils';
+import type { Event, Media } from '@/payload-types';
 
 type Props = {
-  params: Promise<{ slug: string }>
-}
+  params: Promise<{ slug: string }>;
+};
 
 async function getEvent(slug: string): Promise<Event | null> {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
   const result = await payload.find({
     collection: 'events',
     where: {
@@ -22,24 +22,24 @@ async function getEvent(slug: string): Promise<Event | null> {
     },
     limit: 1,
     depth: 1,
-  })
-  return (result.docs[0] as Event | undefined) ?? null
+  });
+  return (result.docs[0] as Event | undefined) ?? null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const event = await getEvent(slug)
-  if (!event) return { title: 'Event' }
-  return { title: event.title, description: event.summary || undefined }
+  const { slug } = await params;
+  const event = await getEvent(slug);
+  if (!event) return { title: 'Event' };
+  return { title: event.title, description: event.summary || undefined };
 }
 
 export default async function EventDetailPage({ params }: Props) {
-  const { slug } = await params
-  const event = await getEvent(slug)
-  if (!event) notFound()
+  const { slug } = await params;
+  const event = await getEvent(slug);
+  if (!event) notFound();
 
-  const image = event.image as Media | null | undefined
-  const src = mediaUrl(image, 'hero')
+  const image = event.image as Media | null | undefined;
+  const src = mediaUrl(image, 'hero');
   const start = event.startDate
     ? new Date(event.startDate).toLocaleString(undefined, {
         year: 'numeric',
@@ -48,14 +48,16 @@ export default async function EventDetailPage({ params }: Props) {
         hour: 'numeric',
         minute: '2-digit',
       })
-    : null
+    : null;
 
   return (
     <Container size="narrow" className="py-6 sm:py-8 lg:py-12">
       <Link href="/events" className="text-sm font-medium text-emerald-700 hover:text-emerald-900">
         ← All events
       </Link>
-      <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">{event.title}</h1>
+      <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">
+        {event.title}
+      </h1>
       {start ? <p className="mt-3 text-sm font-medium text-emerald-700">{start}</p> : null}
       {event.location ? <p className="mt-1 text-stone-600">{event.location}</p> : null}
       {event.summary ? <p className="mt-4 text-lg text-stone-600">{event.summary}</p> : null}
@@ -92,5 +94,5 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
       ) : null}
     </Container>
-  )
+  );
 }

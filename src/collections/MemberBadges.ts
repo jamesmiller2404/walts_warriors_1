@@ -1,25 +1,29 @@
-import type { CollectionAfterDeleteHook, CollectionBeforeChangeHook, CollectionConfig } from 'payload'
+import type {
+  CollectionAfterDeleteHook,
+  CollectionBeforeChangeHook,
+  CollectionConfig,
+} from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 // `{memberId}:{badgeId}` unique key — DB-level guard against duplicate awards
 // (the CheckIns hook also de-dupes, but a concurrent check-in race would
 // otherwise violate the unique constraint).
 const beforeAwardChange: CollectionBeforeChangeHook = ({ data }) => {
-  if (!data) return data
-  const memberId = typeof data.member === 'object' ? data.member.id : data.member
-  const badgeId = typeof data.badge === 'object' ? data.badge.id : data.badge
+  if (!data) return data;
+  const memberId = typeof data.member === 'object' ? data.member.id : data.member;
+  const badgeId = typeof data.badge === 'object' ? data.badge.id : data.badge;
   if (memberId && badgeId) {
-    data.awardKey = `${memberId}:${badgeId}`
+    data.awardKey = `${memberId}:${badgeId}`;
   }
-  return data
-}
+  return data;
+};
 
 // Staff can delete badge awards directly; keep the community counter in sync.
 const afterAwardDelete: CollectionAfterDeleteHook = async ({ req }) => {
-  const { payload } = req
-  const stats = await payload.findGlobal({ slug: 'community-stats', overrideAccess: true })
+  const { payload } = req;
+  const stats = await payload.findGlobal({ slug: 'community-stats', overrideAccess: true });
   await payload.updateGlobal({
     slug: 'community-stats',
     data: {
@@ -27,9 +31,9 @@ const afterAwardDelete: CollectionAfterDeleteHook = async ({ req }) => {
       lastUpdated: new Date().toISOString(),
     },
     overrideAccess: true,
-  })
-  return {}
-}
+  });
+  return {};
+};
 
 export const MemberBadges: CollectionConfig = {
   slug: 'member-badges',
@@ -40,7 +44,8 @@ export const MemberBadges: CollectionConfig = {
   admin: {
     useAsTitle: 'id',
     defaultColumns: ['member', 'badge', 'awardedAt'],
-    description: 'Records of badges members have earned. Created automatically by the check-in hook.',
+    description:
+      'Records of badges members have earned. Created automatically by the check-in hook.',
     group: 'Community',
   },
   access: {
@@ -87,4 +92,4 @@ export const MemberBadges: CollectionConfig = {
       },
     },
   ],
-}
+};

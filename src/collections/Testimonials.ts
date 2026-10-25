@@ -1,7 +1,7 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
@@ -51,4 +51,4 @@ export const Testimonials: CollectionConfig = {
       },
     },
   ],
-}
+};

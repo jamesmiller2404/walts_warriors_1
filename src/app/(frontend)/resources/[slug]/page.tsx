@@ -1,20 +1,20 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { Container } from '@/components/layout/Container'
-import { getPayloadClient } from '@/lib/payload'
-import { RichText } from '@/lib/richText'
-import { mediaUrl } from '@/lib/utils'
-import type { Media, Resource } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { getPayloadClient } from '@/lib/payload';
+import { RichText } from '@/lib/richText';
+import { mediaUrl } from '@/lib/utils';
+import type { Media, Resource } from '@/payload-types';
 
 type Props = {
-  params: Promise<{ slug: string }>
-}
+  params: Promise<{ slug: string }>;
+};
 
 async function getResource(slug: string): Promise<Resource | null> {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
   const result = await payload.find({
     collection: 'resources',
     where: {
@@ -22,39 +22,44 @@ async function getResource(slug: string): Promise<Resource | null> {
     },
     limit: 1,
     depth: 1,
-  })
-  return (result.docs[0] as Resource | undefined) ?? null
+  });
+  return (result.docs[0] as Resource | undefined) ?? null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const resource = await getResource(slug)
-  if (!resource) return { title: 'Resource' }
-  return { title: resource.title }
+  const { slug } = await params;
+  const resource = await getResource(slug);
+  if (!resource) return { title: 'Resource' };
+  return { title: resource.title };
 }
 
 export default async function ResourceDetailPage({ params }: Props) {
-  const { slug } = await params
-  const resource = await getResource(slug)
-  if (!resource) notFound()
+  const { slug } = await params;
+  const resource = await getResource(slug);
+  if (!resource) notFound();
 
-  const image = resource.featuredImage as Media | null | undefined
-  const src = mediaUrl(image, 'hero')
+  const image = resource.featuredImage as Media | null | undefined;
+  const src = mediaUrl(image, 'hero');
   const date = resource.publishedAt
     ? new Date(resource.publishedAt).toLocaleDateString(undefined, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       })
-    : null
+    : null;
 
   return (
     <Container size="narrow" className="py-6 sm:py-8 lg:py-12">
-      <Link href="/resources" className="text-sm font-medium text-emerald-700 hover:text-emerald-900">
+      <Link
+        href="/resources"
+        className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+      >
         ← All resources
       </Link>
       {date ? <p className="mt-4 text-sm font-medium text-stone-500">{date}</p> : null}
-      <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">{resource.title}</h1>
+      <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-stone-900 break-words">
+        {resource.title}
+      </h1>
 
       {src ? (
         <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl bg-stone-100">
@@ -73,5 +78,5 @@ export default async function ResourceDetailPage({ params }: Props) {
         <RichText data={resource.content as Parameters<typeof RichText>[0]['data']} />
       </div>
     </Container>
-  )
+  );
 }

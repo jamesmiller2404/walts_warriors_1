@@ -2,9 +2,9 @@
 const ASK_WALT = {
   heading: "Ask Walt · For Wednesday's Q&A",
   placeholder: 'What would you like Walt to talk about...?',
-}
+};
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
 export function AskWalt() {
   return (
@@ -33,5 +33,5 @@ export function AskWalt() {
         Send
       </button>
     </div>
-  )
+  );
 }

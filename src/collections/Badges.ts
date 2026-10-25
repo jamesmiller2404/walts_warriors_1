@@ -1,7 +1,7 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const Badges: CollectionConfig = {
   slug: 'badges',
@@ -12,7 +12,8 @@ export const Badges: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'criteriaType', 'criteriaValue'],
-    description: 'Badge definitions. Adding a row here creates a new badge — no code change needed.',
+    description:
+      'Badge definitions. Adding a row here creates a new badge — no code change needed.',
     group: 'Community',
   },
   access: {
@@ -57,4 +58,4 @@ export const Badges: CollectionConfig = {
       },
     },
   ],
-}
+};

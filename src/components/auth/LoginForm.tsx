@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { useActionState } from 'react'
+import Link from 'next/link';
+import { useActionState } from 'react';
 
-import { loginAction } from '@/lib/authActions'
-import { buttonClass, fieldLabelClass, FormMessage, inputClass } from './formStyles'
+import { loginAction } from '@/lib/authActions';
+import { buttonClass, fieldLabelClass, FormMessage, inputClass } from './formStyles';
 
 export function LoginForm() {
-  const [state, formAction, pending] = useActionState(loginAction, {})
+  const [state, formAction, pending] = useActionState(loginAction, {});
 
   return (
     <form action={formAction} className="space-y-5">
@@ -54,5 +54,5 @@ export function LoginForm() {
         </Link>
       </div>
     </form>
-  )
+  );
 }

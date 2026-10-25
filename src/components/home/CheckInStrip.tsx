@@ -1,23 +1,23 @@
-import type { ReactNode } from 'react'
+import type { ReactNode } from 'react';
 
-type CheckInStatus = 'not-checked-in' | 'partial' | 'complete'
+type CheckInStatus = 'not-checked-in' | 'partial' | 'complete';
 
 // Hard-coded for now — wire up real check-in state later.
 // 'not-checked-in' → CHECK IN button (gold)
 // 'partial'        → CONTINUE CHECK IN button (gold)
 // 'complete'       → CHECK-IN COMPLETE button (green)
-const CHECK_IN_STATUS: CheckInStatus = 'partial'
+const CHECK_IN_STATUS: CheckInStatus = 'partial';
 
 // Placeholder values — wire up real data later.
-const CURRENT_DAY = 4
-const COMPLETED_DAY = 5
-const CHALLENGE_LENGTH = 30
-const STREAK_DAYS = 4
-const TARGET_STREAK_DAYS = 5
-const TASKS_COMPLETED = 1
-const TASKS_TOTAL = 3
+const CURRENT_DAY = 4;
+const COMPLETED_DAY = 5;
+const CHALLENGE_LENGTH = 30;
+const STREAK_DAYS = 4;
+const TARGET_STREAK_DAYS = 5;
+const TASKS_COMPLETED = 1;
+const TASKS_TOTAL = 3;
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
 const statusConfig: Record<
   CheckInStatus,
@@ -26,7 +26,7 @@ const statusConfig: Record<
   'not-checked-in': { label: 'Check In', buttonColor: '#e3a64e', interactive: true },
   partial: { label: 'Continue Check In', buttonColor: '#e3a64e', interactive: true },
   complete: { label: 'Check-In Complete', buttonColor: '#8dbf21', interactive: false },
-}
+};
 
 function StreakLabel({ day }: { day: number }) {
   return (
@@ -36,16 +36,16 @@ function StreakLabel({ day }: { day: number }) {
     >
       Today, Day {day} of {CHALLENGE_LENGTH}
     </p>
-  )
+  );
 }
 
 function Bold({ children }: { children: ReactNode }) {
-  return <span className="font-bold">{children}</span>
+  return <span className="font-bold">{children}</span>;
 }
 
 export function CheckInStrip() {
-  const { label, buttonColor, interactive } = statusConfig[CHECK_IN_STATUS]
-  const day = CHECK_IN_STATUS === 'complete' ? COMPLETED_DAY : CURRENT_DAY
+  const { label, buttonColor, interactive } = statusConfig[CHECK_IN_STATUS];
+  const day = CHECK_IN_STATUS === 'complete' ? COMPLETED_DAY : CURRENT_DAY;
 
   return (
     <section className="w-full bg-[#5c5678]" aria-label="Daily check-in">
@@ -99,5 +99,5 @@ export function CheckInStrip() {
         )}
       </div>
     </section>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const Programs: CollectionConfig = {
   slug: 'programs',
@@ -12,7 +12,8 @@ export const Programs: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'published', 'order', 'updatedAt'],
-    description: 'Programs and services for nutrition, fitness, mindset, and healthy lifestyle habits.',
+    description:
+      'Programs and services for nutrition, fitness, mindset, and healthy lifestyle habits.',
     group: 'Content',
   },
   access: {
@@ -33,7 +34,8 @@ export const Programs: CollectionConfig = {
       required: true,
       unique: true,
       admin: {
-        description: 'URL-friendly name (e.g. nutrition-coaching). Used in /programs/nutrition-coaching',
+        description:
+          'URL-friendly name (e.g. nutrition-coaching). Used in /programs/nutrition-coaching',
       },
       hooks: {
         beforeValidate: [
@@ -43,16 +45,16 @@ export const Programs: CollectionConfig = {
                 .toLowerCase()
                 .trim()
                 .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
+                .replace(/(^-|-$)/g, '');
             }
             if (data?.name && typeof data.name === 'string') {
               return data.name
                 .toLowerCase()
                 .trim()
                 .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
+                .replace(/(^-|-$)/g, '');
             }
-            return value
+            return value;
           },
         ],
       },
@@ -140,4 +142,4 @@ export const Programs: CollectionConfig = {
       },
     },
   ],
-}
+};

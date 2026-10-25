@@ -4,19 +4,13 @@ text on dark: c5d7e2
 secondary text on dark: dbe7ee
 text on light: 2c353b
 primary card background: 3a3c4e
-secondary card background: 4a4560 / 5c5678
-	- BG color for "Challenge progress" in dashboard_challene1.png
-	- Leaderboard button
-dark card background: 13233a
-	- BG color for "A Note from Walt" card
+secondary card background: 4a4560 / 5c5678 - BG color for "Challenge progress" in dashboard_challene1.png - Leaderboard button
+dark card background: 13233a - BG color for "A Note from Walt" card
 accent-gold: e3a64e
-lilac accent1 (lighter): 8c8fd0
-	- progress bars, "Today's Thoughts" BG, "Go to today's challenge" button
+lilac accent1 (lighter): 8c8fd0 - progress bars, "Today's Thoughts" BG, "Go to today's challenge" button
 lilac accent2 (darker): 6d6fa2
-green accent: 00d80a
-	- progress bar, "This week" checked off days
-strips: 275b99
-	- lighter blue color for listing the "Today's challenge" check list
+green accent: 00d80a - progress bar, "This week" checked off days
+strips: 275b99 - lighter blue color for listing the "Today's challenge" check list
 progress bar background: 3f4d66
 footer BG: 0f1d33
 

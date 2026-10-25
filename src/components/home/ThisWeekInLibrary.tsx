@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from 'next/image';
 
 // Hard-coded for now — this feature will be defined in the admin panel when it goes live.
 const LIBRARY_FEATURE = {
@@ -7,13 +7,16 @@ const LIBRARY_FEATURE = {
   meta: 'Read · 4 min',
   url: '#',
   icon: '/icons/crescentMoon1.svg',
-}
+};
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
 export function ThisWeekInLibrary() {
   return (
-    <div className="w-full rounded-lg bg-[#3a3c4e]/50 px-6 py-6" aria-label="This week in the library">
+    <div
+      className="w-full rounded-lg bg-[#3a3c4e]/50 px-6 py-6"
+      aria-label="This week in the library"
+    >
       <p
         className="text-lg font-semibold uppercase tracking-[0.08em] text-[#c5d7e2]"
         style={fontSans3}
@@ -41,5 +44,5 @@ export function ThisWeekInLibrary() {
         Open
       </a>
     </div>
-  )
+  );
 }

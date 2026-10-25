@@ -1,31 +1,31 @@
-import { Hero } from '@/components/home/Hero'
-import { CheckInStrip } from '@/components/home/CheckInStrip'
-import { ChallengeGroupToday } from '@/components/home/ChallengeGroupToday'
-import { ComingUp } from '@/components/home/ComingUp'
-import { ThisWeekInLibrary } from '@/components/home/ThisWeekInLibrary'
-import { AskWalt } from '@/components/home/AskWalt'
-import { NextChallenge } from '@/components/home/NextChallenge'
-import { WinsFromChallengeGroup } from '@/components/home/WinsFromChallengeGroup'
-import { getPayloadClient } from '@/lib/payload'
-import { getCurrentMember } from '@/lib/auth'
-import { mediaUrl } from '@/lib/utils'
-import Image from 'next/image'
-import type { HomePage, Media, Program, SiteSetting } from '@/payload-types'
+import { Hero } from '@/components/home/Hero';
+import { CheckInStrip } from '@/components/home/CheckInStrip';
+import { ChallengeGroupToday } from '@/components/home/ChallengeGroupToday';
+import { ComingUp } from '@/components/home/ComingUp';
+import { ThisWeekInLibrary } from '@/components/home/ThisWeekInLibrary';
+import { AskWalt } from '@/components/home/AskWalt';
+import { NextChallenge } from '@/components/home/NextChallenge';
+import { WinsFromChallengeGroup } from '@/components/home/WinsFromChallengeGroup';
+import { getPayloadClient } from '@/lib/payload';
+import { getCurrentMember } from '@/lib/auth';
+import { mediaUrl } from '@/lib/utils';
+import Image from 'next/image';
+import type { HomePage, Media, Program, SiteSetting } from '@/payload-types';
 
 export default async function Home() {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
 
   const [home, settings, member] = await Promise.all([
     payload.findGlobal({ slug: 'home-page', depth: 2 }) as Promise<HomePage>,
     payload.findGlobal({ slug: 'site-settings', depth: 1 }) as Promise<SiteSetting>,
     getCurrentMember(),
-  ])
+  ]);
 
-  let programs: Program[] = []
+  let programs: Program[] = [];
 
-  const featured = home.featuredPrograms
+  const featured = home.featuredPrograms;
   if (Array.isArray(featured) && featured.length > 0 && typeof featured[0] === 'object') {
-    programs = featured as Program[]
+    programs = featured as Program[];
   } else {
     const result = await payload.find({
       collection: 'programs',
@@ -33,13 +33,16 @@ export default async function Home() {
       sort: 'order',
       limit: 6,
       depth: 1,
-    })
-    programs = result.docs as Program[]
+    });
+    programs = result.docs as Program[];
   }
 
-  const bgImage = home.backgroundImage as Media | null | undefined
-  const bgSrc = mediaUrl(bgImage)
-  const bgOpacity = typeof home.backgroundOpacity === 'number' ? Math.max(0, Math.min(100, home.backgroundOpacity)) : 100
+  const bgImage = home.backgroundImage as Media | null | undefined;
+  const bgSrc = mediaUrl(bgImage);
+  const bgOpacity =
+    typeof home.backgroundOpacity === 'number'
+      ? Math.max(0, Math.min(100, home.backgroundOpacity))
+      : 100;
 
   return (
     <>
@@ -136,5 +139,5 @@ export default async function Home() {
         */}
       </div>
     </>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
+import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres';
 
 // Full-schema baseline — intended for FRESH databases only. For the existing
 // push-managed Supabase DB, mark this migration as applied (insert a row into
@@ -649,7 +649,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "about_walt_focus_areas_order_idx" ON "about_walt_focus_areas" USING btree ("_order");
   CREATE INDEX "about_walt_focus_areas_parent_id_idx" ON "about_walt_focus_areas" USING btree ("_parent_id");
   CREATE INDEX "about_walt_hero_image_idx" ON "about_walt" USING btree ("hero_image_id");
-  CREATE INDEX "about_walt_portrait_idx" ON "about_walt" USING btree ("portrait_id");`)
+  CREATE INDEX "about_walt_portrait_idx" ON "about_walt" USING btree ("portrait_id");`);
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
@@ -724,5 +724,5 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_home_page_blocks_image_block_row_start";
   DROP TYPE "public"."enum_home_page_blocks_image_block_row_span";
   DROP TYPE "public"."enum_home_page_blocks_image_block_object_fit";
-  DROP TYPE "public"."enum_quote_settings_rotation_mode";`)
+  DROP TYPE "public"."enum_quote_settings_rotation_mode";`);
 }

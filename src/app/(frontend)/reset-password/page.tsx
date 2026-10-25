@@ -1,20 +1,20 @@
-import type { Metadata } from 'next'
-import { cookies } from 'next/headers'
+import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 
-import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm'
-import { Container } from '@/components/layout/Container'
+import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm';
+import { Container } from '@/components/layout/Container';
 
 export const metadata: Metadata = {
   title: 'Reset password',
-}
+};
 
 export default async function ResetPasswordPage() {
   // The token arrives via the /reset-password/link Route Handler, which
   // exchanges the URL token for a short-lived httpOnly cookie. Server
   // Components cannot set cookies during render, so the exchange must not
   // happen here — we only read the cookie.
-  const cookieStore = await cookies()
-  const token = cookieStore.get('pw-reset-token')?.value || ''
+  const cookieStore = await cookies();
+  const token = cookieStore.get('pw-reset-token')?.value || '';
 
   return (
     <Container size="narrow" className="py-12 sm:py-16">
@@ -33,5 +33,5 @@ export default async function ResetPasswordPage() {
         )}
       </div>
     </Container>
-  )
+  );
 }

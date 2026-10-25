@@ -1,11 +1,11 @@
-import type { GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
-import { ImageBlock } from '@/blocks/ImageBlock'
-import { QuoteBlock } from '@/blocks/QuoteBlock'
-import { TextBlock } from '@/blocks/TextBlock'
-import { DynamicQuoteBlock } from '@/blocks/DynamicQuoteBlock'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
+import { ImageBlock } from '@/blocks/ImageBlock';
+import { QuoteBlock } from '@/blocks/QuoteBlock';
+import { TextBlock } from '@/blocks/TextBlock';
+import { DynamicQuoteBlock } from '@/blocks/DynamicQuoteBlock';
 
 export const HomePage: GlobalConfig = {
   slug: 'home-page',
@@ -24,7 +24,8 @@ export const HomePage: GlobalConfig = {
       type: 'upload',
       relationTo: 'media',
       admin: {
-        description: 'Background image that starts immediately below the hero image (top of this image aligns to bottom of hero).',
+        description:
+          'Background image that starts immediately below the hero image (top of this image aligns to bottom of hero).',
       },
     },
     {
@@ -121,4 +122,4 @@ export const HomePage: GlobalConfig = {
       blocks: [TextBlock, QuoteBlock, DynamicQuoteBlock, ImageBlock],
     },
   ],
-}
+};

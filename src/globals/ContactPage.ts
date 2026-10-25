@@ -1,13 +1,14 @@
-import type { GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const ContactPage: GlobalConfig = {
   slug: 'contact-page',
   label: 'Contact',
   admin: {
-    description: 'Copy for the public contact page. Phone, email, and address live in Site Settings.',
+    description:
+      'Copy for the public contact page. Phone, email, and address live in Site Settings.',
     group: 'Pages',
   },
   access: {
@@ -35,4 +36,4 @@ export const ContactPage: GlobalConfig = {
       },
     },
   ],
-}
+};

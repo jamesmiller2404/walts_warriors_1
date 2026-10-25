@@ -1,7 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const CommunityStats: GlobalConfig = {
   slug: 'community-stats',
@@ -42,4 +42,4 @@ export const CommunityStats: GlobalConfig = {
       admin: { readOnly: true },
     },
   ],
-}
+};

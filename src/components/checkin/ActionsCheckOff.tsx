@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState } from 'react';
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
 // Dummy daily actions — the real tasks will come from the member's active
 // challenge, and the ticks will be recorded in the database for that member's
@@ -11,18 +11,18 @@ const TASKS = [
   { label: 'Walk for ten minutes', category: 'MOVE' },
   { label: 'Read for five minutes', category: 'MIND' },
   { label: 'Drink 750 ml of water', category: 'FUEL' },
-]
+];
 
 // First section below the check-in-page header: the actions check-off list
 // ("Today's Challenge"). Sizing follows the page's fluid convention — every
 // value is vw-proportional at the 1440px design width with a clamp() floor.
 export function ActionsCheckOff() {
   // Dummy local state — toggles are lost on reload; nothing is persisted.
-  const [done, setDone] = useState<boolean[]>(TASKS.map(() => false))
+  const [done, setDone] = useState<boolean[]>(TASKS.map(() => false));
 
   const toggle = (index: number) => {
-    setDone((prev) => prev.map((d, i) => (i === index ? !d : d)))
-  }
+    setDone((prev) => prev.map((d, i) => (i === index ? !d : d)));
+  };
 
   return (
     <section
@@ -57,7 +57,12 @@ export function ActionsCheckOff() {
       emphasized, per the mockup. */}
       <p
         className="text-[#c5d7e2]"
-        style={{ ...fontSans3, fontSize: 'clamp(13px, 2.0833vw, 30px)', fontWeight: 600, lineHeight: 1.3 }}
+        style={{
+          ...fontSans3,
+          fontSize: 'clamp(13px, 2.0833vw, 30px)',
+          fontWeight: 600,
+          lineHeight: 1.3,
+        }}
       >
         Day 16 · Build Momentum ·{' '}
         <span className="font-bold">Small steps become lasting habits.</span>
@@ -76,7 +81,7 @@ export function ActionsCheckOff() {
         }}
       >
         {TASKS.map((task, index) => {
-          const checked = done[index]
+          const checked = done[index];
           return (
             <button
               key={task.category}
@@ -137,7 +142,7 @@ export function ActionsCheckOff() {
                 {task.category}
               </span>
             </button>
-          )
+          );
         })}
       </div>
 
@@ -154,5 +159,5 @@ export function ActionsCheckOff() {
         A check-in counts when any 1 or all 3 tasks are done. Tasks save as you tick them.
       </p>
     </section>
-  )
+  );
 }

@@ -1,52 +1,55 @@
-import { ImageBlock as ImageBlockComponent } from '@/components/blocks/ImageBlock'
-import { DynamicQuote } from '@/components/blocks/DynamicQuote'
-import { QuoteBlock } from '@/components/blocks/QuoteBlock'
-import { TextBlock } from '@/components/blocks/TextBlock'
-import type { RotationMode } from '@/components/blocks/DynamicQuote'
+import { ImageBlock as ImageBlockComponent } from '@/components/blocks/ImageBlock';
+import { DynamicQuote } from '@/components/blocks/DynamicQuote';
+import { QuoteBlock } from '@/components/blocks/QuoteBlock';
+import { TextBlock } from '@/components/blocks/TextBlock';
+import type { RotationMode } from '@/components/blocks/DynamicQuote';
 
 type ContentBlockItem = {
-  id?: string | null
-  blockType: string
-  text?: string | null
-  columnStart?: string | null
-  columnSpan?: string | null
-  rowStart?: string | null
-  rowSpan?: string | null
-  fontSize?: string | null
-  fontColor?: string | null
-  fontFamily?: string | null
-  quote?: string | null
-  attribution?: string | null
-  quoteFontFamily?: string | null
-  quoteFontSize?: string | null
-  quoteFontColor?: string | null
-  attributionFontFamily?: string | null
-  attributionFontSize?: string | null
-  attributionFontColor?: string | null
-  image?: string | number | null
-  objectFit?: string | null
-  objectPosition?: string | null
-  alt?: string | null
-  caption?: string | null
-}
+  id?: string | null;
+  blockType: string;
+  text?: string | null;
+  columnStart?: string | null;
+  columnSpan?: string | null;
+  rowStart?: string | null;
+  rowSpan?: string | null;
+  fontSize?: string | null;
+  fontColor?: string | null;
+  fontFamily?: string | null;
+  quote?: string | null;
+  attribution?: string | null;
+  quoteFontFamily?: string | null;
+  quoteFontSize?: string | null;
+  quoteFontColor?: string | null;
+  attributionFontFamily?: string | null;
+  attributionFontSize?: string | null;
+  attributionFontColor?: string | null;
+  image?: string | number | null;
+  objectFit?: string | null;
+  objectPosition?: string | null;
+  alt?: string | null;
+  caption?: string | null;
+};
 
 type QuoteItem = {
-  id: number
-  quote: string
-  attribution?: string | null
-}
+  id: number;
+  quote: string;
+  attribution?: string | null;
+};
 
 type Props = {
-  blocks: ContentBlockItem[]
-  quotes?: QuoteItem[]
-  rotationMode?: RotationMode | null
-}
+  blocks: ContentBlockItem[];
+  quotes?: QuoteItem[];
+  rotationMode?: RotationMode | null;
+};
 
 export function ContentBlocks({ blocks, quotes, rotationMode }: Props) {
-  if (!blocks?.length) return null
+  if (!blocks?.length) return null;
 
   return (
-    <div className="flex flex-col gap-6 md:grid md:grid-cols-12 md:gap-6" style={{ overflowWrap: 'break-word' }}>
+    <div
+      className="flex flex-col gap-6 md:grid md:grid-cols-12 md:gap-6"
+      style={{ overflowWrap: 'break-word' }}
+    >
       {blocks.map((block) => {
         switch (block.blockType) {
           case 'textBlock':
@@ -55,9 +58,10 @@ export function ContentBlocks({ blocks, quotes, rotationMode }: Props) {
                 key={block.id}
                 style={{
                   gridColumn: `${block.columnStart ?? '1'} / span ${block.columnSpan ?? '6'}`,
-                  gridRow: block.rowStart && block.rowStart !== 'auto'
-                    ? `${block.rowStart} / span ${block.rowSpan !== 'auto' ? (block.rowSpan ?? '1') : '1'}`
-                    : undefined,
+                  gridRow:
+                    block.rowStart && block.rowStart !== 'auto'
+                      ? `${block.rowStart} / span ${block.rowSpan !== 'auto' ? (block.rowSpan ?? '1') : '1'}`
+                      : undefined,
                 }}
               >
                 <TextBlock
@@ -67,22 +71,23 @@ export function ContentBlocks({ blocks, quotes, rotationMode }: Props) {
                   fontFamily={block.fontFamily}
                 />
               </div>
-            )
+            );
           case 'quoteBlock':
             // Quote disabled per request — kept for possible later use
-            return null
+            return null;
           case 'dynamicQuote':
             // Dynamic quote disabled per request — kept for possible later use
-            return null
+            return null;
           case 'imageBlock':
             return (
               <div
                 key={block.id}
                 style={{
                   gridColumn: `${block.columnStart ?? '1'} / span ${block.columnSpan ?? '6'}`,
-                  gridRow: block.rowStart && block.rowStart !== 'auto'
-                    ? `${block.rowStart} / span ${block.rowSpan !== 'auto' ? (block.rowSpan ?? '1') : '1'}`
-                    : undefined,
+                  gridRow:
+                    block.rowStart && block.rowStart !== 'auto'
+                      ? `${block.rowStart} / span ${block.rowSpan !== 'auto' ? (block.rowSpan ?? '1') : '1'}`
+                      : undefined,
                 }}
               >
                 <ImageBlockComponent
@@ -93,11 +98,11 @@ export function ContentBlocks({ blocks, quotes, rotationMode }: Props) {
                   caption={block.caption}
                 />
               </div>
-            )
+            );
           default:
-            return null
+            return null;
         }
       })}
     </div>
-  )
+  );
 }

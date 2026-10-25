@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
-import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm'
-import { Container } from '@/components/layout/Container'
+import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
+import { Container } from '@/components/layout/Container';
 
 export const metadata: Metadata = {
   title: 'Forgot password',
-}
+};
 
 export default function ForgotPasswordPage() {
   return (
@@ -21,5 +21,5 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
     </Container>
-  )
+  );
 }

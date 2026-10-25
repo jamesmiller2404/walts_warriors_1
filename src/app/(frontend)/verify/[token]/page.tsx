@@ -1,24 +1,20 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-import { Container } from '@/components/layout/Container'
-import { getPayloadClient } from '@/lib/payload'
+import { Container } from '@/components/layout/Container';
+import { getPayloadClient } from '@/lib/payload';
 
 export const metadata: Metadata = {
   title: 'Verify your email',
-}
+};
 
-export default async function VerifyEmailPage({
-  params,
-}: {
-  params: Promise<{ token: string }>
-}) {
-  const { token } = await params
+export default async function VerifyEmailPage({ params }: { params: Promise<{ token: string }> }) {
+  const { token } = await params;
 
   try {
-    const payload = await getPayloadClient()
-    await payload.verifyEmail({ collection: 'members', token })
+    const payload = await getPayloadClient();
+    await payload.verifyEmail({ collection: 'members', token });
   } catch {
     // Invalid or expired token — render the failure state below.
     return (
@@ -38,8 +34,8 @@ export default async function VerifyEmailPage({
           </p>
         </div>
       </Container>
-    )
+    );
   }
 
-  redirect('/login?verified=1')
+  redirect('/login?verified=1');
 }

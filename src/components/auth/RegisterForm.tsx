@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { useActionState } from 'react'
+import Link from 'next/link';
+import { useActionState } from 'react';
 
-import { registerAction } from '@/lib/authActions'
-import { buttonClass, fieldLabelClass, FormMessage, inputClass } from './formStyles'
+import { registerAction } from '@/lib/authActions';
+import { buttonClass, fieldLabelClass, FormMessage, inputClass } from './formStyles';
 
 export function RegisterForm() {
-  const [state, formAction, pending] = useActionState(registerAction, {})
+  const [state, formAction, pending] = useActionState(registerAction, {});
 
   return (
     <form action={formAction} className="space-y-5">
@@ -69,5 +69,5 @@ export function RegisterForm() {
         </Link>
       </p>
     </form>
-  )
+  );
 }

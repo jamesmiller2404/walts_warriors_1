@@ -12,17 +12,17 @@ const CHECKED_IN_INITIALS = [
   'OP',
   'FV',
   'ED',
-]
+];
 
 // Hard-coded for now — wire up real challenge-group membership later.
-const TOTAL_MEMBERS = 18
+const TOTAL_MEMBERS = 18;
 
 // Hard-coded for now — wire up the signed-in user's check-in state later.
-const YOU_CHECKED_IN = false
+const YOU_CHECKED_IN = false;
 
 // Members who have not checked in and are not the signed-in user
 // (shown as unfilled circles without initials).
-const OTHER_NOT_CHECKED_IN = TOTAL_MEMBERS - CHECKED_IN_INITIALS.length - (YOU_CHECKED_IN ? 0 : 1)
+const OTHER_NOT_CHECKED_IN = TOTAL_MEMBERS - CHECKED_IN_INITIALS.length - (YOU_CHECKED_IN ? 0 : 1);
 
 // Hard-coded for now — when the admin panel goes live, this section will be wired to
 // the group's active challenge. Various challenge types will be supported there
@@ -32,17 +32,17 @@ const GROUP_CHALLENGE = {
   period: 'this week',
   goal: 2000,
   progress: 1435,
-}
+};
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
-const formatNumber = (value: number) => value.toLocaleString('en-US')
+const formatNumber = (value: number) => value.toLocaleString('en-US');
 
 // Standard colors (see updated_requirements.md) plus the challenge-group greens.
-const COLOR_GREEN_FILL = '#8dbf21'
-const COLOR_INITIALS = '#2c353b'
-const COLOR_GOLD = '#e3a64e'
-const COLOR_TEXT = '#c5d7e2'
+const COLOR_GREEN_FILL = '#8dbf21';
+const COLOR_INITIALS = '#2c353b';
+const COLOR_GOLD = '#e3a64e';
+const COLOR_TEXT = '#c5d7e2';
 
 function Circle({
   children,
@@ -50,34 +50,37 @@ function Circle({
   fill,
   gold,
 }: {
-  children?: string
-  label: string
-  fill?: boolean
-  gold?: boolean
+  children?: string;
+  label: string;
+  fill?: boolean;
+  gold?: boolean;
 }) {
-  const base = 'flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold'
+  const base = 'flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold';
   const style = fill
     ? { ...fontSans3, backgroundColor: COLOR_GREEN_FILL, color: COLOR_INITIALS }
     : gold
       ? { ...fontSans3, border: `3px solid ${COLOR_GOLD}`, color: COLOR_GOLD }
-      : { ...fontSans3, border: `1.5px solid ${COLOR_TEXT}`, color: COLOR_TEXT }
+      : { ...fontSans3, border: `1.5px solid ${COLOR_TEXT}`, color: COLOR_TEXT };
 
   return (
     <li role="listitem" aria-label={label} className={`${base} list-none`} style={style}>
       {children}
     </li>
-  )
+  );
 }
 
 export function ChallengeGroupToday() {
-  const checkedInCount = CHECKED_IN_INITIALS.length + (YOU_CHECKED_IN ? 1 : 0)
+  const checkedInCount = CHECKED_IN_INITIALS.length + (YOU_CHECKED_IN ? 1 : 0);
   const progressPercent = Math.max(
     0,
     Math.min(100, (GROUP_CHALLENGE.progress / GROUP_CHALLENGE.goal) * 100),
-  )
+  );
 
   return (
-    <div className="w-full rounded-lg bg-[#3a3c4e] px-8 py-8" aria-label="Your challenge group today">
+    <div
+      className="w-full rounded-lg bg-[#3a3c4e] px-8 py-8"
+      aria-label="Your challenge group today"
+    >
       <h2
         className="text-xl font-semibold uppercase tracking-[0.08em] text-[#c5d7e2]"
         style={fontSans3}
@@ -96,10 +99,7 @@ export function ChallengeGroupToday() {
           </Circle>
         ))}
 
-        <Circle
-          label={YOU_CHECKED_IN ? 'You checked in today' : "You haven't checked in yet"}
-          gold
-        >
+        <Circle label={YOU_CHECKED_IN ? 'You checked in today' : "You haven't checked in yet"} gold>
           You
         </Circle>
 
@@ -138,5 +138,5 @@ export function ChallengeGroupToday() {
         </p>
       </div>
     </div>
-  )
+  );
 }

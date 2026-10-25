@@ -1,7 +1,7 @@
-import type { Metadata } from 'next'
-import React from 'react'
+import type { Metadata } from 'next';
+import React from 'react';
 
-import { Footer } from '@/components/layout/Footer'
+import { Footer } from '@/components/layout/Footer';
 import {
   archivoBlack,
   ebGaramondItalic,
@@ -14,18 +14,18 @@ import {
   montserratBold,
   montserratExtraBold,
   sourceSans3,
-} from '@/lib/fonts'
-import { getPayloadClient } from '@/lib/payload'
-import type { SiteSetting } from '@/payload-types'
+} from '@/lib/fonts';
+import { getPayloadClient } from '@/lib/payload';
+import type { SiteSetting } from '@/payload-types';
 
-import './globals.css'
+import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const payload = await getPayloadClient()
+    const payload = await getPayloadClient();
     const settings = (await payload.findGlobal({
       slug: 'site-settings',
-    })) as SiteSetting
+    })) as SiteSetting;
 
     return {
       title: {
@@ -33,12 +33,12 @@ export async function generateMetadata(): Promise<Metadata> {
         template: `%s | ${settings.businessName || "Walt's Warriors"}`,
       },
       description: settings.tagline || 'Professional small-business website',
-    }
+    };
   } catch {
     return {
       title: "Walt's Warriors",
       description: 'Professional small-business website',
-    }
+    };
   }
 }
 
@@ -47,17 +47,17 @@ const fallbackSettings: SiteSetting = {
   businessName: "Walt's Warriors",
   updatedAt: '',
   createdAt: '',
-}
+};
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
-  let settings = fallbackSettings
+  let settings = fallbackSettings;
 
   try {
-    const payload = await getPayloadClient()
+    const payload = await getPayloadClient();
     settings = (await payload.findGlobal({
       slug: 'site-settings',
       depth: 1,
-    })) as SiteSetting
+    })) as SiteSetting;
   } catch {
     // DB may not be ready on first boot
   }
@@ -84,5 +84,5 @@ export default async function FrontendLayout({ children }: { children: React.Rea
         <Footer settings={settings} />
       </body>
     </html>
-  )
+  );
 }

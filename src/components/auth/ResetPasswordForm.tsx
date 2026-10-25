@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useActionState } from 'react'
+import { useActionState } from 'react';
 
-import { resetPasswordAction } from '@/lib/authActions'
-import { buttonClass, fieldLabelClass, FormMessage, inputClass } from './formStyles'
+import { resetPasswordAction } from '@/lib/authActions';
+import { buttonClass, fieldLabelClass, FormMessage, inputClass } from './formStyles';
 
 export function ResetPasswordForm({ token }: { token: string }) {
-  const [state, formAction, pending] = useActionState(resetPasswordAction, {})
+  const [state, formAction, pending] = useActionState(resetPasswordAction, {});
 
   return (
     <form action={formAction} className="space-y-5">
@@ -33,5 +33,5 @@ export function ResetPasswordForm({ token }: { token: string }) {
         {pending ? 'Resetting…' : 'Set new password'}
       </button>
     </form>
-  )
+  );
 }

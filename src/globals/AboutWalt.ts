@@ -1,7 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const AboutWalt: GlobalConfig = {
   slug: 'about-walt',
@@ -19,7 +19,7 @@ export const AboutWalt: GlobalConfig = {
       name: 'headline',
       type: 'text',
       required: true,
-      defaultValue: 'About Walt\'s Warriors',
+      defaultValue: "About Walt's Warriors",
     },
     {
       name: 'subheadline',
@@ -95,4 +95,4 @@ export const AboutWalt: GlobalConfig = {
       },
     },
   ],
-}
+};

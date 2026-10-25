@@ -1,7 +1,7 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload';
 
-import { isAdmin, isAdminFieldLevel } from '@/access/isAdmin'
-import { canAccessAdmin, isAdminOrEditor } from '@/access/isAdminOrEditor'
+import { isAdmin, isAdminFieldLevel } from '@/access/isAdmin';
+import { canAccessAdmin, isAdminOrEditor } from '@/access/isAdminOrEditor';
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -18,9 +18,9 @@ export const Users: CollectionConfig = {
     delete: isAdmin,
     read: isAdminOrEditor,
     update: ({ req: { user } }) => {
-      if (!user) return false
-      if ((user as { role?: string }).role === 'admin') return true
-      return { id: { equals: user.id } }
+      if (!user) return false;
+      if ((user as { role?: string }).role === 'admin') return true;
+      return { id: { equals: user.id } };
     },
   },
   hooks: {
@@ -31,12 +31,12 @@ export const Users: CollectionConfig = {
             collection: 'users',
             limit: 1,
             depth: 0,
-          })
+          });
           if (existing.totalDocs === 0) {
-            data.role = 'admin'
+            data.role = 'admin';
           }
         }
-        return data
+        return data;
       },
     ],
   },
@@ -69,4 +69,4 @@ export const Users: CollectionConfig = {
       saveToJWT: true,
     },
   ],
-}
+};

@@ -1,48 +1,48 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { Container } from '@/components/layout/Container'
-import { PageHeader } from '@/components/layout/PageHeader'
-import { getPayloadClient } from '@/lib/payload'
-import { mediaUrl } from '@/lib/utils'
-import type { Event, Media } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { getPayloadClient } from '@/lib/payload';
+import { mediaUrl } from '@/lib/utils';
+import type { Event, Media } from '@/payload-types';
 
 export const metadata: Metadata = {
   title: 'Events',
-}
+};
 
 function formatEventDate(start?: string | null, end?: string | null) {
-  if (!start) return null
-  const startDate = new Date(start)
+  if (!start) return null;
+  const startDate = new Date(start);
   const startLabel = startDate.toLocaleString(undefined, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
-  })
-  if (!end) return startLabel
-  const endDate = new Date(end)
+  });
+  if (!end) return startLabel;
+  const endDate = new Date(end);
   const endLabel = endDate.toLocaleString(undefined, {
     month: 'long',
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
-  })
-  return `${startLabel} – ${endLabel}`
+  });
+  return `${startLabel} – ${endLabel}`;
 }
 
 export default async function EventsPage() {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
   const result = await payload.find({
     collection: 'events',
     where: { published: { equals: true } },
     sort: 'startDate',
     limit: 50,
     depth: 1,
-  })
-  const events = result.docs as Event[]
+  });
+  const events = result.docs as Event[];
 
   return (
     <Container className="py-6 sm:py-8 lg:py-12">
@@ -54,9 +54,9 @@ export default async function EventsPage() {
       {events.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2">
           {events.map((event) => {
-            const image = event.image as Media | null | undefined
-            const src = mediaUrl(image, 'card')
-            const when = formatEventDate(event.startDate, event.endDate)
+            const image = event.image as Media | null | undefined;
+            const src = mediaUrl(image, 'card');
+            const when = formatEventDate(event.startDate, event.endDate);
 
             return (
               <article
@@ -99,7 +99,7 @@ export default async function EventsPage() {
                   </Link>
                 </div>
               </article>
-            )
+            );
           })}
         </div>
       ) : (
@@ -112,5 +112,5 @@ export default async function EventsPage() {
         </div>
       )}
     </Container>
-  )
+  );
 }

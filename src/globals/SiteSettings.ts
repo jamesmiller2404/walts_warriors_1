@@ -1,7 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -131,4 +131,4 @@ export const SiteSettings: GlobalConfig = {
       ],
     },
   ],
-}
+};

@@ -66,14 +66,5 @@
     "sharp@0.34.5": true,
     "sharp@0.34.2": true,
     "unrs-resolver@1.12.2": true
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js,mjs,cjs}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{css,scss,json,md}": [
-      "prettier --write"
-    ]
   }
 }

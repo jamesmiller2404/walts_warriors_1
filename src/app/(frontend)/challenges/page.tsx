@@ -1,25 +1,25 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { Container } from '@/components/layout/Container'
-import { PageHeader } from '@/components/layout/PageHeader'
-import { getPayloadClient } from '@/lib/payload'
-import { mediaUrl } from '@/lib/utils'
-import type { Challenge, Media } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { getPayloadClient } from '@/lib/payload';
+import { mediaUrl } from '@/lib/utils';
+import type { Challenge, Media } from '@/payload-types';
 
 export const metadata: Metadata = {
   title: 'Challenges',
-}
+};
 
 const statusLabel: Record<string, string> = {
   upcoming: 'Upcoming',
   active: 'Active',
   completed: 'Completed',
-}
+};
 
 export default async function ChallengesPage() {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
   const result = await payload.find({
     collection: 'challenges',
     where: {
@@ -30,8 +30,8 @@ export default async function ChallengesPage() {
     sort: '-startDate',
     limit: 50,
     depth: 1,
-  })
-  const challenges = result.docs as Challenge[]
+  });
+  const challenges = result.docs as Challenge[];
 
   return (
     <Container className="py-6 sm:py-8 lg:py-12">
@@ -43,9 +43,9 @@ export default async function ChallengesPage() {
       {challenges.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {challenges.map((challenge) => {
-            const image = challenge.image as Media | null | undefined
-            const src = mediaUrl(image, 'card')
-            const label = statusLabel[challenge.status] || challenge.status
+            const image = challenge.image as Media | null | undefined;
+            const src = mediaUrl(image, 'card');
+            const label = statusLabel[challenge.status] || challenge.status;
 
             return (
               <article
@@ -72,10 +72,7 @@ export default async function ChallengesPage() {
                     {label}
                   </p>
                   <h2 className="mt-1 text-lg font-semibold text-stone-900">
-                    <Link
-                      href={`/challenges/${challenge.slug}`}
-                      className="hover:text-emerald-800"
-                    >
+                    <Link href={`/challenges/${challenge.slug}`} className="hover:text-emerald-800">
                       {challenge.title}
                     </Link>
                   </h2>
@@ -92,7 +89,7 @@ export default async function ChallengesPage() {
                   </Link>
                 </div>
               </article>
-            )
+            );
           })}
         </div>
       ) : (
@@ -108,5 +105,5 @@ export default async function ChallengesPage() {
         </div>
       )}
     </Container>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload';
 
-import { isAdminOrEditor } from '@/access/isAdminOrEditor'
-import { anyone } from '@/access/anyone'
+import { isAdminOrEditor } from '@/access/isAdminOrEditor';
+import { anyone } from '@/access/anyone';
 
 export const Challenges: CollectionConfig = {
   slug: 'challenges',
@@ -43,16 +43,16 @@ export const Challenges: CollectionConfig = {
                 .toLowerCase()
                 .trim()
                 .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
+                .replace(/(^-|-$)/g, '');
             }
             if (data?.title && typeof data.title === 'string') {
               return data.title
                 .toLowerCase()
                 .trim()
                 .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
+                .replace(/(^-|-$)/g, '');
             }
-            return value
+            return value;
           },
         ],
       },
@@ -126,4 +126,4 @@ export const Challenges: CollectionConfig = {
       },
     },
   ],
-}
+};

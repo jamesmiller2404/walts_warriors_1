@@ -1,4 +1,4 @@
-import type { Block } from 'payload'
+import type { Block } from 'payload';
 
 const fontFamilyOptions = [
   { label: 'Manrope', value: 'manrope' },
@@ -11,7 +11,7 @@ const fontFamilyOptions = [
   { label: 'EB Garamond Italic', value: 'eb-garamond-italic' },
   { label: 'EB Garamond Medium Italic', value: 'eb-garamond-medium-italic' },
   { label: 'EB Garamond SemiBold Italic', value: 'eb-garamond-semibold-italic' },
-]
+];
 
 const fontColorOptions = [
   { label: 'Stone 900 (dark)', value: 'stone-900' },
@@ -23,7 +23,7 @@ const fontColorOptions = [
   { label: 'Brand 700', value: 'brand-700' },
   { label: 'Brand 600', value: 'brand-600' },
   { label: 'White', value: 'white' },
-]
+];
 
 export const DynamicQuoteBlock: Block = {
   slug: 'dynamicQuote',
@@ -209,4 +209,4 @@ export const DynamicQuoteBlock: Block = {
       ],
     },
   ],
-}
+};

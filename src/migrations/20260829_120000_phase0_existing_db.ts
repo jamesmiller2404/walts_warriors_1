@@ -1,4 +1,4 @@
-import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
+import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres';
 
 // Incremental Phase 0 migration for the EXISTING push-managed Supabase DB.
 // The full baseline (`20260827_054735_phase0_member_hardening`) cannot apply
@@ -44,7 +44,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "members_status_idx" ON "members" USING btree ("status");
   CREATE INDEX IF NOT EXISTS "check_ins_check_in_day_idx" ON "check_ins" USING btree ("check_in_day");
   CREATE UNIQUE INDEX IF NOT EXISTS "check_ins_check_in_key_idx" ON "check_ins" USING btree ("check_in_key");
-  CREATE UNIQUE INDEX IF NOT EXISTS "member_badges_award_key_idx" ON "member_badges" USING btree ("award_key");`)
+  CREATE UNIQUE INDEX IF NOT EXISTS "member_badges_award_key_idx" ON "member_badges" USING btree ("award_key");`);
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
@@ -57,5 +57,5 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   ALTER TABLE "check_ins" DROP COLUMN IF EXISTS "check_in_key";
   ALTER TABLE "check_ins" DROP COLUMN IF EXISTS "check_in_day";
   ALTER TABLE "members" DROP COLUMN IF EXISTS "status";
-  DROP TYPE IF EXISTS "public"."enum_members_status";`)
+  DROP TYPE IF EXISTS "public"."enum_members_status";`);
 }

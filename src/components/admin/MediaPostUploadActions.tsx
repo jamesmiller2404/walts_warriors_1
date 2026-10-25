@@ -1,29 +1,29 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { Button, useConfig, useDocumentInfo, useFormFields } from '@payloadcms/ui'
-import { formatAdminURL } from 'payload/shared'
+import React from 'react';
+import { Button, useConfig, useDocumentInfo, useFormFields } from '@payloadcms/ui';
+import { formatAdminURL } from 'payload/shared';
 
-const baseClass = 'media-post-upload-actions'
+const baseClass = 'media-post-upload-actions';
 
 export const MediaPostUploadActions: React.FC = () => {
-  const { id } = useDocumentInfo()
-  const { config } = useConfig()
-  const filename = useFormFields(([fields]) => fields.filename?.value)
+  const { id } = useDocumentInfo();
+  const { config } = useConfig();
+  const filename = useFormFields(([fields]) => fields.filename?.value);
 
   if (!id || !filename) {
-    return null
+    return null;
   }
 
-  const adminRoute = config.routes.admin
+  const adminRoute = config.routes.admin;
   const createURL = formatAdminURL({
     adminRoute,
     path: '/collections/media/create',
-  })
+  });
   const listURL = formatAdminURL({
     adminRoute,
     path: '/collections/media',
-  })
+  });
 
   return (
     <div
@@ -43,7 +43,7 @@ export const MediaPostUploadActions: React.FC = () => {
         Back to Media
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default MediaPostUploadActions
+export default MediaPostUploadActions;

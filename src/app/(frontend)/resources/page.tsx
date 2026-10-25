@@ -1,27 +1,27 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { Container } from '@/components/layout/Container'
-import { PageHeader } from '@/components/layout/PageHeader'
-import { getPayloadClient } from '@/lib/payload'
-import { mediaUrl } from '@/lib/utils'
-import type { Media, Resource } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { getPayloadClient } from '@/lib/payload';
+import { mediaUrl } from '@/lib/utils';
+import type { Media, Resource } from '@/payload-types';
 
 export const metadata: Metadata = {
   title: 'Resources & Articles',
-}
+};
 
 export default async function ResourcesPage() {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
   const result = await payload.find({
     collection: 'resources',
     where: { status: { equals: 'published' } },
     sort: '-publishedAt',
     limit: 50,
     depth: 1,
-  })
-  const resources = result.docs as Resource[]
+  });
+  const resources = result.docs as Resource[];
 
   return (
     <Container className="py-6 sm:py-8 lg:py-12">
@@ -33,15 +33,15 @@ export default async function ResourcesPage() {
       {resources.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2">
           {resources.map((resource) => {
-            const image = resource.featuredImage as Media | null | undefined
-            const src = mediaUrl(image, 'card')
+            const image = resource.featuredImage as Media | null | undefined;
+            const src = mediaUrl(image, 'card');
             const date = resource.publishedAt
               ? new Date(resource.publishedAt).toLocaleDateString(undefined, {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })
-              : null
+              : null;
 
             return (
               <article
@@ -81,18 +81,21 @@ export default async function ResourcesPage() {
                   </Link>
                 </div>
               </article>
-            )
+            );
           })}
         </div>
       ) : (
         <div className="rounded-xl border border-dashed border-stone-300 bg-white p-10 text-center text-stone-600">
           No articles yet. Create one in{' '}
-          <Link href="/admin/collections/resources" className="font-medium text-emerald-700 underline">
+          <Link
+            href="/admin/collections/resources"
+            className="font-medium text-emerald-700 underline"
+          >
             Admin → Resources / Articles
           </Link>
           .
         </div>
       )}
     </Container>
-  )
+  );
 }

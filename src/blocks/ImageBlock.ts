@@ -1,4 +1,4 @@
-import type { Block } from 'payload'
+import type { Block } from 'payload';
 
 export const ImageBlock: Block = {
   slug: 'imageBlock',
@@ -132,14 +132,16 @@ export const ImageBlock: Block = {
       type: 'text',
       defaultValue: 'center',
       admin: {
-        description: 'CSS object-position value (e.g. center, top, 50% 20%). Use % values to keep the soldier\'s head/torso visible.',
+        description:
+          "CSS object-position value (e.g. center, top, 50% 20%). Use % values to keep the soldier's head/torso visible.",
       },
     },
     {
       name: 'alt',
       type: 'text',
       admin: {
-        description: 'Override the media\'s alt text for accessibility. Leave empty to use the media default.',
+        description:
+          "Override the media's alt text for accessibility. Leave empty to use the media default.",
       },
     },
     {
@@ -150,4 +152,4 @@ export const ImageBlock: Block = {
       },
     },
   ],
-}
+};

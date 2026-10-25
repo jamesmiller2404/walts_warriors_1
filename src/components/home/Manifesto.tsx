@@ -1,10 +1,10 @@
 type ManifestoProps = {
-  quote?: string
-  imageUrl?: string
-}
+  quote?: string;
+  imageUrl?: string;
+};
 
 export function Manifesto({
-  quote = "Nothing feels as good as feeling good feels feels!",
+  quote = 'Nothing feels as good as feeling good feels feels!',
   imageUrl,
 }: ManifestoProps) {
   return (
@@ -25,5 +25,5 @@ export function Manifesto({
         </div>
       </div>
     </section>
-  )
+  );
 }

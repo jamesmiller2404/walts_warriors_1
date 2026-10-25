@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 // Site title "Walt's WARRIORS" — shared by the home-page hero and the
 // check-in-page header so both render the identical two-tone treatment;
@@ -8,16 +8,19 @@ import Link from 'next/link'
 // falls toward 45° (up-right) — same offset family as the hero headline, but
 // the offset is pulled back 2px (5px distance vs the headline's 7px) and the
 // blur is 2px tighter (4px vs 6px), compensating for the smaller glyphs.
-const titleShadowCss = '2.54px -2px 3px rgba(0, 0, 0, 0.6)'
+const titleShadowCss = '2.54px -2px 3px rgba(0, 0, 0, 0.6)';
 
 type SiteTitleTextProps = {
   /** CSS font-size. Defaults to the home-page hero's fluid size. */
-  fontSize?: string
+  fontSize?: string;
   /** Link target. Pass null to render plain text (no link). */
-  href?: string | null
-}
+  href?: string | null;
+};
 
-export function SiteTitleText({ fontSize = 'clamp(20px, 3.75vw, 54px)', href = '/' }: SiteTitleTextProps) {
+export function SiteTitleText({
+  fontSize = 'clamp(20px, 3.75vw, 54px)',
+  href = '/',
+}: SiteTitleTextProps) {
   const title = (
     <span
       className="block leading-none"
@@ -38,14 +41,14 @@ export function SiteTitleText({ fontSize = 'clamp(20px, 3.75vw, 54px)', href = '
         WARRIORS
       </span>
     </span>
-  )
+  );
 
   if (href === null) {
-    return title
+    return title;
   }
   return (
     <Link href={href} className="inline-block min-w-0">
       {title}
     </Link>
-  )
+  );
 }

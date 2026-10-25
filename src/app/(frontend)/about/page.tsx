@@ -1,36 +1,33 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { Container } from '@/components/layout/Container'
-import { PageHeader } from '@/components/layout/PageHeader'
-import { getPayloadClient } from '@/lib/payload'
-import { RichText } from '@/lib/richText'
-import { mediaUrl } from '@/lib/utils'
-import type { AboutWalt, Media } from '@/payload-types'
+import { Container } from '@/components/layout/Container';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { getPayloadClient } from '@/lib/payload';
+import { RichText } from '@/lib/richText';
+import { mediaUrl } from '@/lib/utils';
+import type { AboutWalt, Media } from '@/payload-types';
 
 export const metadata: Metadata = {
   title: 'About Walt',
-}
+};
 
 export default async function AboutPage() {
-  const payload = await getPayloadClient()
+  const payload = await getPayloadClient();
   const about = (await payload.findGlobal({
     slug: 'about-walt',
     depth: 1,
-  })) as AboutWalt
+  })) as AboutWalt;
 
-  const hero = about.heroImage as Media | null | undefined
-  const portrait = about.portrait as Media | null | undefined
-  const heroSrc = mediaUrl(hero, 'hero')
-  const portraitSrc = mediaUrl(portrait, 'thumbnail')
+  const hero = about.heroImage as Media | null | undefined;
+  const portrait = about.portrait as Media | null | undefined;
+  const heroSrc = mediaUrl(hero, 'hero');
+  const portraitSrc = mediaUrl(portrait, 'thumbnail');
 
   return (
     <Container className="py-6 sm:py-8 lg:py-12">
-      <PageHeader
-        title={about.headline || "About Walt's Warriors"}
-        subtitle={about.subheadline}
-      />
+      <PageHeader title={about.headline || "About Walt's Warriors"} subtitle={about.subheadline} />
 
       {heroSrc ? (
         <div className="relative mb-12 aspect-[1920/1440] overflow-hidden rounded-2xl bg-stone-100">
@@ -77,7 +74,9 @@ export default async function AboutPage() {
                   >
                     <h3 className="text-lg font-semibold text-stone-900">{area.title}</h3>
                     {area.description ? (
-                      <p className="mt-2 text-sm leading-relaxed text-stone-600">{area.description}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-stone-600">
+                        {area.description}
+                      </p>
                     ) : null}
                   </div>
                 ))}
@@ -113,5 +112,5 @@ export default async function AboutPage() {
         </p>
       ) : null}
     </Container>
-  )
+  );
 }

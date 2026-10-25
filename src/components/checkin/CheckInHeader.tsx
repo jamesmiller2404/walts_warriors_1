@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { SiteTitleText } from '@/components/layout/SiteTitle'
+import { SiteTitleText } from '@/components/layout/SiteTitle';
 
-const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' }
+const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
 // Placeholder header-menu links (wire real routes later) — same list as Hero.tsx.
 const nav = [
@@ -15,7 +15,7 @@ const nav = [
   { href: '#', label: 'Challenges' },
   { href: '#', label: 'Community' },
   { href: '#', label: 'Library' },
-]
+];
 
 // Time-of-day header artwork, per the check-in-page design: sunrise 4am–12pm,
 // sun and clouds 12pm–8pm, crescent moon 8pm–4am (viewer's local time). Each
@@ -30,7 +30,7 @@ function artworkForHour(hour: number) {
       src2x: '/images/sunriseHR_2880x266px.png',
       tabletSrc: '/images/sunriseHR_mobile_768x60px.png',
       phoneSrc: '/images/sunriseHR_mobile_375x116px.png',
-    }
+    };
   }
   if (hour >= 12 && hour < 20) {
     return {
@@ -38,47 +38,51 @@ function artworkForHour(hour: number) {
       src2x: '/images/sunAndCloudsHR_2880x266px.png',
       tabletSrc: '/images/sunAndCloudsHR_mobile_768x60px.png',
       phoneSrc: '/images/sunAndCloudsHR_mobile_375x116px.png',
-    }
+    };
   }
   return {
     src: '/images/crescentMoonHR_1440x133px.png',
     src2x: '/images/crescentMoonHR_2880x266px.png',
     tabletSrc: '/images/crescentMoonHR_mobile_768x60px.png',
     phoneSrc: '/images/crescentMoonHR_mobile_375x116px.png',
-  }
+  };
 }
 
 type Props = {
   /** Page name shown under the site title (e.g. "Challenge Check-In"). The
   only per-page variable in this shared header — every page except the home
   page renders it with its own name. */
-  pageName?: string
+  pageName?: string;
   /** Signed-in member's first name — shown after the page name and
   under the account icon (like the home-page hero header). */
-  firstName?: string | null
+  firstName?: string | null;
   /** Signed-in member's last initial, centered under the first name. */
-  lastInitial?: string | null
-}
+  lastInitial?: string | null;
+};
 
 export function CheckInHeader({
   pageName = 'Challenge Check-In',
   firstName = null,
   lastInitial = null,
 }: Props) {
-  const [now, setNow] = useState<Date | null>(null)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [now, setNow] = useState<Date | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    setNow(new Date())
+    // Intentional: local time is unknown on the server, so `now` must start
+    // as null (SSR-safe) and be set right after mount to avoid hydration
+    // mismatches in the date/time text.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setNow(new Date());
     // Minute-level display; refresh every 30s so the minute never lags.
-    const timer = setInterval(() => setNow(new Date()), 30_000)
-    return () => clearInterval(timer)
-  }, [])
+    const timer = setInterval(() => setNow(new Date()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
 
   // The artwork choice and the clock depend on the viewer's local time, which
   // the server cannot know — render them only after mount (SSR values would
   // hydrate-mismatch). The header keeps its size either way (fixed aspect box).
-  const artwork = now ? artworkForHour(now.getHours()) : null
+  const artwork = now ? artworkForHour(now.getHours()) : null;
   const dateText = now
     ? now.toLocaleDateString(undefined, {
         weekday: 'long',
@@ -86,19 +90,20 @@ export function CheckInHeader({
         day: 'numeric',
         year: 'numeric',
       })
-    : ''
+    : '';
   const timeText = now
     ? now.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
-    : ''
+    : '';
   // "Pacific Standard Time" → "Pacific" — matches the mockup's "(Pacific)".
   const zoneLabel = now
-    ? ((new Intl.DateTimeFormat(undefined, { timeZoneName: 'long' })
-        .formatToParts(now)
-        .find((part) => part.type === 'timeZoneName')?.value ?? '')
-        .split(' ')[0] || '')
-    : ''
+    ? (
+        new Intl.DateTimeFormat(undefined, { timeZoneName: 'long' })
+          .formatToParts(now)
+          .find((part) => part.type === 'timeZoneName')?.value ?? ''
+      ).split(' ')[0] || ''
+    : '';
 
-  const displayName = (firstName ?? '').trim().toUpperCase()
+  const displayName = (firstName ?? '').trim().toUpperCase();
 
   // Desktop subtitle — unchanged from the original desktop composition.
   const subtitle = (
@@ -111,7 +116,7 @@ export function CheckInHeader({
         </>
       ) : null}
     </>
-  )
+  );
   // Mobile subtitle — "{pageName} · {NAME}" per the mobile mockups.
   const mobileSubtitle = (
     <>
@@ -123,20 +128,20 @@ export function CheckInHeader({
         </>
       ) : null}
     </>
-  )
+  );
   const dateLines = now ? (
     <>
       {dateText}
       <br />
       {`${timeText} (${zoneLabel})`}
     </>
-  ) : null
+  ) : null;
   // Mobile date block — three right-aligned lines per the mobile mockups:
   // weekday / date / time (zone).
-  const weekdayText = now ? now.toLocaleDateString(undefined, { weekday: 'long' }) : ''
+  const weekdayText = now ? now.toLocaleDateString(undefined, { weekday: 'long' }) : '';
   const dateShort = now
     ? now.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
-    : ''
+    : '';
   const mobileDateLines = now ? (
     <>
       {weekdayText}
@@ -145,7 +150,7 @@ export function CheckInHeader({
       <br />
       {`${timeText} (${zoneLabel})`}
     </>
-  ) : null
+  ) : null;
 
   // Member name under the account icon — same composition as the home-page
   // hero header: first name, last initial centered below it. Light color here
@@ -160,7 +165,7 @@ export function CheckInHeader({
       <span className="max-w-full truncate">{(firstName ?? '').trim()}</span>
       {lastInitial ? <span>{lastInitial}</span> : null}
     </span>
-  )
+  );
 
   // Mobile hamburger — the mockups replace the nav-links row with a hamburger
   // icon below the subtitle; clicking toggles a simple dropdown of the nav
@@ -178,7 +183,7 @@ export function CheckInHeader({
       <span className="h-[2px] w-full rounded bg-[#c5d7e2]" />
       <span className="h-[2px] w-full rounded bg-[#c5d7e2]" />
     </button>
-  )
+  );
   const hamburgerMenu = (posClass: string) =>
     menuOpen ? (
       <div className={`absolute z-20 rounded-md bg-[#16273d] py-1 shadow-lg ${posClass}`}>
@@ -196,11 +201,11 @@ export function CheckInHeader({
           ))}
         </ul>
       </div>
-    ) : null
+    ) : null;
 
   return (
     <header>
-{/* Desktop — absolute composition on the 1440x215 design canvas (the
+      {/* Desktop — absolute composition on the 1440x215 design canvas (the
       check-in mockups measure 1440x215: the 1440x133 artwork top-aligns inside
       it, its baked-in divider lands at y≈115–121, and the menu row sits below).
       Every offset below is a mockup-measured percentage of the canvas and every
@@ -460,5 +465,5 @@ export function CheckInHeader({
         </div>
       </div>
     </header>
-  )
+  );
 }
