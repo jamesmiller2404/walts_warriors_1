@@ -1,0 +1,22 @@
+# dependencies & build output (also covered by .gitignore)
+node_modules/
+.next/
+out/
+build/
+coverage/
+
+# uploads & local assets
+media/
+design/
+public/
+
+# generated files (Payload / Next)
+src/payload-types.ts
+src/payload-generated-schema.ts
+src/app/(payload)/admin/importMap.js
+
+# generated migration snapshots
+src/migrations/*.json
+
+# lockfiles
+package-lock.json

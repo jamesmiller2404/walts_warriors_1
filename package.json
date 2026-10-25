@@ -11,9 +11,13 @@
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
+    "lint:fix": "cross-env NODE_OPTIONS=--no-deprecation eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
-    "test": "cross-env NODE_OPTIONS=--no-deprecation vitest run"
+    "test": "cross-env NODE_OPTIONS=--no-deprecation vitest run",
+    "prepare": "husky"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.91.0",
@@ -42,6 +46,10 @@
     "@types/react-dom": "19.2.3",
     "eslint": "^9.16.0",
     "eslint-config-next": "16.4.2",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
     "supabase": "^2.121.0",
     "tailwindcss": "^4.1.11",
     "typescript": "5.7.3",
@@ -58,5 +66,14 @@
     "sharp@0.34.5": true,
     "sharp@0.34.2": true,
     "unrs-resolver@1.12.2": true
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,json,md}": [
+      "prettier --write"
+    ]
   }
 }
