@@ -1,0 +1,19 @@
+Mobile images for 768px cutoff (public/images/):
+crescentMoonHR_mobile_768x60px.png
+sunAndCloudsHR_mobile_768x60px.png
+sunriseHR_mobile_768x60px.png
+
+Mobile images for 375 cutoff (public/images/):
+crescentMoonHR_mobile_375x116px.png
+sunAndCloudsHR_mobile_375x116px.png
+sunriseHR_mobile_375x116px.png
+
+Mockup images for the header at 375px cutoff zoomed 3x (design/screens/)
+mockup-header-moon-375px-3x.png
+mockup-header-sunAndclouds-375px-3x.png
+mockup-header-sunrise-375px-3x.png
+
+Mockup images for the header at 768px cutoff zoomed 3x (design/screens/)
+mockup-header-moon-768px-3x.png
+mockup-header-sunAndclouds-768px-3x.png
+mockup-header-sunrise-768px-3x.png

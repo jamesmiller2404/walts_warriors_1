@@ -27,7 +27,7 @@ export default async function CheckInPage() {
       className="flex min-h-full flex-col"
       style={{ backgroundImage: 'linear-gradient(45deg, #0f1d2e, #182e49)' }}
     >
-      <CheckInHeader firstName={firstName} lastInitial={lastInitial} />
+      <CheckInHeader pageName="Challenge Check-In" firstName={firstName} lastInitial={lastInitial} />
 
       {/* Check-in sections will be added between the header and the footer
       (the footer renders globally from the (frontend) layout). */}
