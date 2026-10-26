@@ -89,6 +89,56 @@ Copy `.env.example` to `.env`:
 3. Self-hosted (e.g. Render): external Postgres + Cloudflare R2 (`R2_*` env vars, see File storage above).
 4. Create an **editor** account for the business owner; keep admin credentials private.
 
+## Deploying to Render (Supabase Postgres)
+
+The app uses Supabase only as a **hosted Postgres server** (`DATABASE_URL`) — no
+Supabase SDK/Auth/keys are involved. Schema changes in production come from
+Payload migrations (dev uses `db.push`; prod does not).
+
+### One-time setup
+
+1. **Supabase project** — copy the **session-mode pooler** connection string
+   (Dashboard → Connect → port **5432** on `aws-<region>.pooler.supabase.com`).
+   Do **not** use port 6543 (transaction mode — breaks prepared statements and
+   migrations) or the IPv6-only `db.<ref>.supabase.co` host (unreachable from Render).
+2. **Migrations** — the schema is applied via `npx payload migrate` (see
+   `src/migrations/`). On a fresh database just run it; it creates every table.
+3. **Render → New → Web Service** — connect the GitHub repo (branch `new-ui`).
+   - Runtime: Node — set env var `NODE_VERSION=22`
+   - Build command: `npm ci && npm run build`
+   - Start command: `npx payload migrate && npm run start`
+   - Environment variables (set **before** the first build — `NEXT_PUBLIC_*`
+     values are inlined at build time):
+     - `DATABASE_URL` — session-mode Supabase string (above)
+     - `PAYLOAD_SECRET` — long random string (keep stable across deploys)
+     - `NEXT_PUBLIC_SERVER_URL` — `https://<your-app>.onrender.com` (update +
+       redeploy if you later attach a custom domain)
+     - `R2_BUCKET`, `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` —
+       **required on Render** (its disk is ephemeral; local `/media` won't survive)
+     - `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`,
+       `SMTP_FROM_ADDRESS`, `SMTP_FROM_NAME` — for member verification and
+       password-reset emails
+4. After the first deploy, open `https://<your-app>.onrender.com/admin` and create
+   the first **Administrator** user.
+
+### Day-to-day workflow
+
+- **Code changes**: commit → push to GitHub → Render auto-builds and deploys.
+- **Schema changes** (new collection/field/global): develop locally (dev mode
+  auto-pushes the schema), then run `npx payload migrate:create`, commit the
+  generated migration **and** the code, and push. Render's start command applies
+  the migration automatically before the server boots.
+- **Env var changes**: edit in the Render dashboard, then trigger a redeploy.
+
+### Gotchas
+
+- Render's **free tier (512 MB) usually OOMs** during `next build` — use at least
+  the Starter instance.
+- Keep local dev pointed at a **separate Supabase project** (free tier allows two)
+  so test data/schema experiments never touch the live database. `.env` is
+  gitignored; Render gets its vars from its dashboard.
+- Never change `PAYLOAD_SECRET` casually — it invalidates existing admin sessions.
+
 ## Switching to PostgreSQL later
 
 1. Install `@payloadcms/db-postgres`.

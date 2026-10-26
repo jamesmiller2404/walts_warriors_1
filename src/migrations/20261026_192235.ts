@@ -1,11 +1,5 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres';
 
-// Full-schema baseline — intended for FRESH databases only. For the existing
-// push-managed Supabase DB, mark this migration as applied (insert a row into
-// `payload_migrations`) and apply the incremental migration instead:
-// `20260829_*_phase0_existing_db.ts`. `payload_migrations` is intentionally NOT
-// dropped by down() so `migrate:down`/`migrate:reset` keep the tracking table.
-
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
    CREATE TYPE "public"."enum_users_role" AS ENUM('admin', 'editor');
@@ -45,6 +39,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_home_page_blocks_image_block_row_span" AS ENUM('auto', '1', '2', '3', '4', '5', '6');
   CREATE TYPE "public"."enum_home_page_blocks_image_block_object_fit" AS ENUM('cover', 'contain', 'fill', 'none', 'scale-down');
   CREATE TYPE "public"."enum_quote_settings_rotation_mode" AS ENUM('page-load', 'session', 'day', 'week');
+  CREATE TYPE "public"."enum_page_sections_home_sections_section" AS ENUM('checkInStrip', 'challengeGroupToday', 'groupFeed', 'thisWeekInLibrary', 'comingUp', 'askWalt', 'nextChallenge');
+  CREATE TYPE "public"."enum_page_sections_home_sections_column" AS ENUM('full', 'wide', 'narrow');
+  CREATE TYPE "public"."enum_page_sections_check_in_sections_section" AS ENUM('todaysChallengeCheckIn', 'badgeProgress', 'todaysThoughts', 'noteFromWalt');
   CREATE TABLE "users_sessions" (
   	"_order" integer NOT NULL,
   	"_parent_id" integer NOT NULL,
@@ -64,6 +61,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"reset_password_expiration" timestamp(3) with time zone,
   	"salt" varchar,
   	"hash" varchar,
+  	"reset_password_requested_at" timestamp(3) with time zone,
   	"login_attempts" numeric DEFAULT 0,
   	"lock_until" timestamp(3) with time zone
   );
@@ -71,6 +69,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE "media" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"alt" varchar NOT NULL,
+  	"_objectkey" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"url" varchar,
@@ -221,6 +220,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"reset_password_expiration" timestamp(3) with time zone,
   	"salt" varchar,
   	"hash" varchar,
+  	"reset_password_requested_at" timestamp(3) with time zone,
+  	"_verified" boolean,
+  	"_verificationtoken" varchar,
   	"login_attempts" numeric DEFAULT 0,
   	"lock_until" timestamp(3) with time zone
   );
@@ -421,7 +423,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "home_page" (
   	"id" serial PRIMARY KEY NOT NULL,
-  	"hero_image_id" integer,
   	"background_image_id" integer,
   	"background_opacity" numeric DEFAULT 100,
   	"headline" varchar DEFAULT 'Welcome to Walt''s Warriors' NOT NULL,
@@ -490,6 +491,36 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone
   );
   
+  CREATE TABLE "page_sections_home_sections" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"section" "enum_page_sections_home_sections_section" NOT NULL,
+  	"enabled" boolean DEFAULT true,
+  	"column" "enum_page_sections_home_sections_column" DEFAULT 'narrow'
+  );
+  
+  CREATE TABLE "page_sections_check_in_sections" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"section" "enum_page_sections_check_in_sections_section" NOT NULL,
+  	"enabled" boolean DEFAULT true
+  );
+  
+  CREATE TABLE "page_sections" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"updated_at" timestamp(3) with time zone,
+  	"created_at" timestamp(3) with time zone
+  );
+  
+  CREATE TABLE "walts_note" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"note" varchar DEFAULT 'Day 16 is where a lot of people hit the middle slump. You don''t need a big day today. You need a show-up day. Ten minutes counts.' NOT NULL,
+  	"updated_at" timestamp(3) with time zone,
+  	"created_at" timestamp(3) with time zone
+  );
+  
   ALTER TABLE "users_sessions" ADD CONSTRAINT "users_sessions_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "programs" ADD CONSTRAINT "programs_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "resources" ADD CONSTRAINT "resources_featured_image_id_media_id_fk" FOREIGN KEY ("featured_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
@@ -529,13 +560,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "home_page_blocks_dynamic_quote" ADD CONSTRAINT "home_page_blocks_dynamic_quote_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home_page"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "home_page_blocks_image_block" ADD CONSTRAINT "home_page_blocks_image_block_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "home_page_blocks_image_block" ADD CONSTRAINT "home_page_blocks_image_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home_page"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "home_page" ADD CONSTRAINT "home_page_hero_image_id_media_id_fk" FOREIGN KEY ("hero_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "home_page" ADD CONSTRAINT "home_page_background_image_id_media_id_fk" FOREIGN KEY ("background_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "home_page_rels" ADD CONSTRAINT "home_page_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."home_page"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "home_page_rels" ADD CONSTRAINT "home_page_rels_programs_fk" FOREIGN KEY ("programs_id") REFERENCES "public"."programs"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "about_walt_focus_areas" ADD CONSTRAINT "about_walt_focus_areas_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."about_walt"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "about_walt" ADD CONSTRAINT "about_walt_hero_image_id_media_id_fk" FOREIGN KEY ("hero_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "about_walt" ADD CONSTRAINT "about_walt_portrait_id_media_id_fk" FOREIGN KEY ("portrait_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "page_sections_home_sections" ADD CONSTRAINT "page_sections_home_sections_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."page_sections"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "page_sections_check_in_sections" ADD CONSTRAINT "page_sections_check_in_sections_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."page_sections"("id") ON DELETE cascade ON UPDATE no action;
   CREATE INDEX "users_sessions_order_idx" ON "users_sessions" USING btree ("_order");
   CREATE INDEX "users_sessions_parent_id_idx" ON "users_sessions" USING btree ("_parent_id");
   CREATE INDEX "users_updated_at_idx" ON "users" USING btree ("updated_at");
@@ -640,7 +672,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "home_page_blocks_image_block_parent_id_idx" ON "home_page_blocks_image_block" USING btree ("_parent_id");
   CREATE INDEX "home_page_blocks_image_block_path_idx" ON "home_page_blocks_image_block" USING btree ("_path");
   CREATE INDEX "home_page_blocks_image_block_image_idx" ON "home_page_blocks_image_block" USING btree ("image_id");
-  CREATE INDEX "home_page_hero_image_idx" ON "home_page" USING btree ("hero_image_id");
   CREATE INDEX "home_page_background_image_idx" ON "home_page" USING btree ("background_image_id");
   CREATE INDEX "home_page_rels_order_idx" ON "home_page_rels" USING btree ("order");
   CREATE INDEX "home_page_rels_parent_idx" ON "home_page_rels" USING btree ("parent_id");
@@ -649,7 +680,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "about_walt_focus_areas_order_idx" ON "about_walt_focus_areas" USING btree ("_order");
   CREATE INDEX "about_walt_focus_areas_parent_id_idx" ON "about_walt_focus_areas" USING btree ("_parent_id");
   CREATE INDEX "about_walt_hero_image_idx" ON "about_walt" USING btree ("hero_image_id");
-  CREATE INDEX "about_walt_portrait_idx" ON "about_walt" USING btree ("portrait_id");`);
+  CREATE INDEX "about_walt_portrait_idx" ON "about_walt" USING btree ("portrait_id");
+  CREATE INDEX "page_sections_home_sections_order_idx" ON "page_sections_home_sections" USING btree ("_order");
+  CREATE INDEX "page_sections_home_sections_parent_id_idx" ON "page_sections_home_sections" USING btree ("_parent_id");
+  CREATE INDEX "page_sections_check_in_sections_order_idx" ON "page_sections_check_in_sections" USING btree ("_order");
+  CREATE INDEX "page_sections_check_in_sections_parent_id_idx" ON "page_sections_check_in_sections" USING btree ("_parent_id");`);
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
@@ -674,6 +709,7 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "payload_locked_documents_rels" CASCADE;
   DROP TABLE "payload_preferences" CASCADE;
   DROP TABLE "payload_preferences_rels" CASCADE;
+  DROP TABLE "payload_migrations" CASCADE;
   DROP TABLE "site_settings_social_links" CASCADE;
   DROP TABLE "site_settings_hours" CASCADE;
   DROP TABLE "site_settings" CASCADE;
@@ -688,6 +724,10 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "contact_page" CASCADE;
   DROP TABLE "community_stats" CASCADE;
   DROP TABLE "quote_settings" CASCADE;
+  DROP TABLE "page_sections_home_sections" CASCADE;
+  DROP TABLE "page_sections_check_in_sections" CASCADE;
+  DROP TABLE "page_sections" CASCADE;
+  DROP TABLE "walts_note" CASCADE;
   DROP TYPE "public"."enum_users_role";
   DROP TYPE "public"."enum_programs_category";
   DROP TYPE "public"."enum_resources_category";
@@ -724,5 +764,8 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_home_page_blocks_image_block_row_start";
   DROP TYPE "public"."enum_home_page_blocks_image_block_row_span";
   DROP TYPE "public"."enum_home_page_blocks_image_block_object_fit";
-  DROP TYPE "public"."enum_quote_settings_rotation_mode";`);
+  DROP TYPE "public"."enum_quote_settings_rotation_mode";
+  DROP TYPE "public"."enum_page_sections_home_sections_section";
+  DROP TYPE "public"."enum_page_sections_home_sections_column";
+  DROP TYPE "public"."enum_page_sections_check_in_sections_section";`);
 }

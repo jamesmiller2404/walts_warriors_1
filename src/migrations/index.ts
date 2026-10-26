@@ -1,15 +1,9 @@
-import * as migration_20260827_054735_phase0_member_hardening from './20260827_054735_phase0_member_hardening';
-import * as migration_20260829_120000_phase0_existing_db from './20260829_120000_phase0_existing_db';
+import * as migration_20261026_192235 from './20261026_192235';
 
 export const migrations = [
   {
-    up: migration_20260827_054735_phase0_member_hardening.up,
-    down: migration_20260827_054735_phase0_member_hardening.down,
-    name: '20260827_054735_phase0_member_hardening',
-  },
-  {
-    up: migration_20260829_120000_phase0_existing_db.up,
-    down: migration_20260829_120000_phase0_existing_db.down,
-    name: '20260829_120000_phase0_existing_db',
+    up: migration_20261026_192235.up,
+    down: migration_20261026_192235.down,
+    name: '20261026_192235',
   },
 ];
