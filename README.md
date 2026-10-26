@@ -107,7 +107,10 @@ Payload migrations (dev uses `db.push`; prod does not).
    - Runtime: Node — set env var `NODE_VERSION=24` (matches the version the
      build was verified on locally; `engines` allows `>=20.9.0`)
    - Build command: `npm ci && npm run build`
-   - Start command: `npx payload migrate && npm run start`
+   - Start command: `npm run start`
+     (self-contained pipeline: checks required env vars, removes Payload's
+     dev-mode marker that would hang migrations non-interactively, runs
+     `payload migrate`, then starts Next.js on Render's `PORT`)
    - Environment variables (set **before** the first build — `NEXT_PUBLIC_*`
      values are inlined at build time):
      - `DATABASE_URL` — session-mode Supabase string (above)
@@ -136,8 +139,14 @@ Payload migrations (dev uses `db.push`; prod does not).
 - Render's **free tier (512 MB) usually OOMs** during `next build` — use at least
   the Starter instance.
 - Keep local dev pointed at a **separate Supabase project** (free tier allows two)
-  so test data/schema experiments never touch the live database. `.env` is
-  gitignored; Render gets its vars from its dashboard.
+  or a local Postgres server, never the production database. Beyond test data
+  appearing on the live site: every local dev-server startup writes Payload's
+  "dev mode" marker into `payload_migrations`, which makes `payload migrate`
+  pause for an interactive confirmation that never arrives on Render
+  (deploy hangs on "No open ports detected"). `npm run start` now removes the
+  marker automatically before migrating, but keeping dev/prod databases
+  separate is still strongly recommended. `.env` is gitignored; Render gets its
+  vars from its dashboard.
 - Never change `PAYLOAD_SECRET` casually — it invalidates existing admin sessions.
 
 ## Switching to PostgreSQL later
