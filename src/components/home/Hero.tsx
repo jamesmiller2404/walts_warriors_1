@@ -100,7 +100,14 @@ export function Hero({ home, settings, displayName = null }: Props) {
   const memberName = displayName ? splitMemberName(displayName) : null;
 
   return (
-    <section className="relative flex aspect-square min-h-[390px] w-full flex-col overflow-hidden md:aspect-[1440/377] md:min-h-[300px] md:max-h-[715px]">
+    <section className="relative flex min-h-[max(390px,100vw)] w-full flex-col overflow-hidden md:min-h-[max(300px,calc(100vw*377/1440))] md:max-h-[715px]">
+      {/* Height: the old hard aspect locks (aspect-square mobile / aspect-1440/377
+      desktop) starved the content — the header + menu + headline + 4-line
+      subheadline need up to ~552px, more than the locked height at every width,
+      so overflow-hidden clipped the bottom-pinned subheadline. The locks are now
+      min-height floors (same design proportions), so the hero grows with its
+      content and never clips it; the background image is object-cover and
+      simply crops to whatever height results. */}
       {/* Static hero background image — art-directed: 1:1 composition on mobile,
       panoramic on desktop. Plain <img> inside <picture> (not next/image) so the
       hand-optimized WebP variants are served byte-for-byte with no re-encoding.
@@ -141,7 +148,11 @@ export function Hero({ home, settings, displayName = null }: Props) {
                 className="h-5 w-5 shrink-0 rounded-full object-cover sm:h-9 sm:w-9"
               />
             ) : null}
-            <span className="-ml-4">
+            {/* Negative margin tucks the title text left against the logo — only
+              apply it when the logo actually renders. Without a logo it exactly
+              cancels the mobile paddings (px-2 row + pl-2 link = 16px) and pushes
+              the title flush against the screen edge. */}
+            <span className={logoSrc ? '-ml-4' : undefined}>
               {/* Site title — shared component (also used by the check-in page
             header). Same fluid size the hero has always used: 54px at the
             1440px design width, 20px mobile floor. */}
@@ -155,7 +166,14 @@ export function Hero({ home, settings, displayName = null }: Props) {
           {/* Right cluster — Sign Up / Login pills + gear, bell, account icons
         (per design/screens/login-icons-x3.png). Dummy links for now. Visible on
         all screen sizes; the hamburger menu joins it on mobile. */}
-          <div className="flex items-start gap-1 pt-1 sm:gap-4">
+          {/* Pulled left of the right edge on phones (mr-3) — the header row's
+         px-2 leaves only ~8px there, so the account icon/username otherwise
+         sits flush against the screen edge. shrink-0 keeps the row from
+         squeezing this cluster's box when space runs out (its shrink-0
+         children would then spill past the box, and past the screen edge);
+         the wrappable site title absorbs the tight space instead. Exact
+         original position from sm: up. */}
+          <div className="mr-3 flex shrink-0 items-start gap-1 pt-1 sm:mr-0 sm:gap-4">
             <MobileMenu />
 
             <div className="flex items-start gap-1 sm:gap-5">

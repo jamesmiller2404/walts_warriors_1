@@ -36,8 +36,14 @@ export function SiteTitleText({
         textShadow: titleShadowCss,
       }}
     >
+      {/* "Walt's" in light blue, "WARRIORS" in charcoal with a bright silver
+          outline (text-stroke) so the dark fill stays readable against the
+          hero's photo background. */}
       <span className="text-[#c5d7e2]">Walt&apos;s</span>{' '}
-      <span className="text-black" style={{ WebkitTextStroke: '0.5px rgba(190,190,190,0.7)' }}>
+      <span
+        className="text-[#2c353b]"
+        style={{ WebkitTextStroke: '0.5px rgba(225, 225, 225, 0.9)' }}
+      >
         WARRIORS
       </span>
     </span>

@@ -5,13 +5,13 @@ import Link from 'next/link';
 type CheckInStatus = 'not-checked-in' | 'partial' | 'complete';
 
 // Hard-coded for now — wire up real check-in state later.
-// 'not-checked-in' → CHECK IN button (gold)
-// 'partial'        → CONTINUE CHECK IN button (gold)
+// 'not-checked-in' → CHECK-IN button (gold)
+// 'partial'        → CHECK-IN button (gold)
 // 'complete'       → CHECK-IN COMPLETE button (green)
 const CHECK_IN_STATUS: CheckInStatus = 'partial';
 
 // Placeholder values — wire up real data later.
-const CURRENT_DAY = 4;
+const CURRENT_DAY = 16;
 const COMPLETED_DAY = 5;
 const CHALLENGE_LENGTH = 30;
 const STREAK_DAYS = 4;
@@ -25,8 +25,8 @@ const statusConfig: Record<
   CheckInStatus,
   { label: string; buttonColor: string; interactive: boolean }
 > = {
-  'not-checked-in': { label: 'Check In', buttonColor: '#e3a64e', interactive: true },
-  partial: { label: 'Continue Check In', buttonColor: '#e3a64e', interactive: true },
+  'not-checked-in': { label: 'Check-In', buttonColor: '#e3a64e', interactive: true },
+  partial: { label: 'Check-In', buttonColor: '#e3a64e', interactive: true },
   complete: { label: 'Check-In Complete', buttonColor: '#8dbf21', interactive: false },
 };
 
@@ -36,7 +36,7 @@ function StreakLabel({ day }: { day: number }) {
       className="text-2xl font-semibold tracking-[0.08em] text-[#c5d7e2] uppercase"
       style={fontSans3}
     >
-      Today, Day {day} of {CHALLENGE_LENGTH}
+      October Challenge, Day {day} of {CHALLENGE_LENGTH}
     </p>
   );
 }
