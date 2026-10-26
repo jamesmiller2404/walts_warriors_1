@@ -9,17 +9,38 @@ import { WinsFromChallengeGroup } from '@/components/home/WinsFromChallengeGroup
 import { getPayloadClient } from '@/lib/payload';
 import { getCurrentMember } from '@/lib/auth';
 import { mediaUrl } from '@/lib/utils';
+import { resolveHomeSections, type HomeSectionKey, type SectionRow } from '@/lib/pageSections';
 import Image from 'next/image';
 import type { HomePage, Media, Program, SiteSetting } from '@/payload-types';
+
+// Registry mapping each admin-selectable home section key to its component.
+// New self-contained sections join by building the component and adding one
+// entry here plus one option in src/globals/PageSections.ts.
+const HOME_SECTION_COMPONENTS: Record<HomeSectionKey, React.ComponentType> = {
+  checkInStrip: CheckInStrip,
+  challengeGroupToday: ChallengeGroupToday,
+  groupFeed: WinsFromChallengeGroup,
+  thisWeekInLibrary: ThisWeekInLibrary,
+  comingUp: ComingUp,
+  askWalt: AskWalt,
+  nextChallenge: NextChallenge,
+};
 
 export default async function Home() {
   const payload = await getPayloadClient();
 
-  const [home, settings, member] = await Promise.all([
+  const [home, settings, pageSections, member] = await Promise.all([
     payload.findGlobal({ slug: 'home-page', depth: 2 }) as Promise<HomePage>,
     payload.findGlobal({ slug: 'site-settings', depth: 1 }) as Promise<SiteSetting>,
+    // Section order/on-off config — falls back to the built-in defaults until
+    // the admin has saved rows in the `page-sections` global.
+    payload.findGlobal({ slug: 'page-sections', depth: 0 }) as Promise<{
+      homeSections?: Array<SectionRow<HomeSectionKey>> | null;
+    }>,
     getCurrentMember(),
   ]);
+
+  const sections = resolveHomeSections(pageSections?.homeSections);
 
   let programs: Program[] = [];
 
@@ -65,7 +86,16 @@ export default async function Home() {
       />
       <Hero home={home} settings={settings} member={member} />
 
-      <CheckInStrip />
+      {/* Admin-managed sections (src/globals/PageSections.ts). Full-width
+      sections stack here, then the wide/narrow columns below each render their
+      own sections in the admin-chosen order. Disabled rows are filtered out by
+      resolveHomeSections, so an empty column simply renders nothing. */}
+      {sections
+        .filter((s) => s.column === 'full')
+        .map((s) => {
+          const Component = HOME_SECTION_COMPONENTS[s.key];
+          return Component ? <Component key={s.key} /> : null;
+        })}
 
       <div
         className="relative pb-10"
@@ -79,16 +109,22 @@ export default async function Home() {
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-end lg:gap-7">
               {/* Left column — challenge group cards (wide) */}
               <div className="flex w-full flex-col gap-6 lg:max-w-[1020px]">
-                <ChallengeGroupToday />
-                <WinsFromChallengeGroup />
+                {sections
+                  .filter((s) => s.column === 'wide')
+                  .map((s) => {
+                    const Component = HOME_SECTION_COMPONENTS[s.key];
+                    return Component ? <Component key={s.key} /> : null;
+                  })}
               </div>
 
               {/* Right column — smaller cards (narrow) */}
               <div className="flex w-full flex-col gap-6 lg:w-[340px] lg:shrink-0">
-                <ThisWeekInLibrary />
-                <ComingUp />
-                <AskWalt />
-                <NextChallenge />
+                {sections
+                  .filter((s) => s.column === 'narrow')
+                  .map((s) => {
+                    const Component = HOME_SECTION_COMPONENTS[s.key];
+                    return Component ? <Component key={s.key} /> : null;
+                  })}
               </div>
             </div>
           </div>

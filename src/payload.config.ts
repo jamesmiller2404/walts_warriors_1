@@ -27,6 +27,7 @@ import { Badges } from './collections/Badges';
 import { MemberBadges } from './collections/MemberBadges';
 import { CommunityStats } from './globals/CommunityStats';
 import { QuoteSettings } from './globals/QuoteSettings';
+import { PageSections } from './globals/PageSections';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -102,7 +103,15 @@ export default buildConfig({
     Badges,
     MemberBadges,
   ],
-  globals: [SiteSettings, HomePage, AboutWalt, ContactPage, CommunityStats, QuoteSettings],
+  globals: [
+    SiteSettings,
+    HomePage,
+    AboutWalt,
+    ContactPage,
+    CommunityStats,
+    QuoteSettings,
+    PageSections,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   email: emailAdapter,

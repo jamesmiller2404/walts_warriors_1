@@ -25,6 +25,7 @@ import { ContactPage } from './globals/ContactPage';
 import { HomePage } from './globals/HomePage';
 import { QuoteSettings } from './globals/QuoteSettings';
 import { SiteSettings } from './globals/SiteSettings';
+import { PageSections } from './globals/PageSections';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -59,7 +60,15 @@ export default buildConfig({
     Badges,
     MemberBadges,
   ],
-  globals: [SiteSettings, HomePage, AboutWalt, ContactPage, CommunityStats, QuoteSettings],
+  globals: [
+    SiteSettings,
+    HomePage,
+    AboutWalt,
+    ContactPage,
+    CommunityStats,
+    QuoteSettings,
+    PageSections,
+  ],
   editor: lexicalEditor(),
   secret: 'ww-member-hardening-test-secret',
   db: sqliteAdapter({

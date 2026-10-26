@@ -117,6 +117,7 @@ export interface Config {
     'contact-page': ContactPage;
     'community-stats': CommunityStat;
     'quote-settings': QuoteSetting;
+    'page-sections': PageSection;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
@@ -125,6 +126,7 @@ export interface Config {
     'contact-page': ContactPageSelect<false> | ContactPageSelect<true>;
     'community-stats': CommunityStatsSelect<false> | CommunityStatsSelect<true>;
     'quote-settings': QuoteSettingsSelect<false> | QuoteSettingsSelect<true>;
+    'page-sections': PageSectionsSelect<false> | PageSectionsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1572,6 +1574,54 @@ export interface QuoteSetting {
   createdAt?: string | null;
 }
 /**
+ * Controls which self-contained sections appear on the home and check-in pages, their order (drag rows to reorder), and which column they sit in. Until rows are saved here the pages fall back to the built-in default order.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-sections".
+ */
+export interface PageSection {
+  id: number;
+  /**
+   * Sections on the home page. Drag rows to reorder; untick "Enabled" to hide a section.
+   */
+  homeSections?:
+    | {
+        section:
+          | 'checkInStrip'
+          | 'challengeGroupToday'
+          | 'groupFeed'
+          | 'thisWeekInLibrary'
+          | 'comingUp'
+          | 'askWalt'
+          | 'nextChallenge';
+        /**
+         * Untick to hide this section from the page.
+         */
+        enabled?: boolean | null;
+        /**
+         * Which area of the home page the section renders in. Sections stay in their chosen area and are ordered top-to-bottom within it.
+         */
+        column?: ('full' | 'wide' | 'narrow') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Sections on the member check-in page. Drag rows to reorder; untick "Enabled" to hide a section.
+   */
+  checkInSections?:
+    | {
+        section: 'todaysChallengeCheckIn';
+        /**
+         * Untick to hide this section from the page.
+         */
+        enabled?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -1752,6 +1802,30 @@ export interface CommunityStatsSelect<T extends boolean = true> {
  */
 export interface QuoteSettingsSelect<T extends boolean = true> {
   rotationMode?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-sections_select".
+ */
+export interface PageSectionsSelect<T extends boolean = true> {
+  homeSections?:
+    | T
+    | {
+        section?: T;
+        enabled?: T;
+        column?: T;
+        id?: T;
+      };
+  checkInSections?:
+    | T
+    | {
+        section?: T;
+        enabled?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -4,15 +4,36 @@ import { redirect } from 'next/navigation';
 import { ActionsCheckOff } from '@/components/checkin/ActionsCheckOff';
 import { CheckInHeader } from '@/components/checkin/CheckInHeader';
 import { getCurrentMember } from '@/lib/auth';
+import { getPayloadClient } from '@/lib/payload';
+import {
+  resolveCheckInSections,
+  type CheckInSectionKey,
+  type SectionRow,
+} from '@/lib/pageSections';
 
 export const metadata: Metadata = {
   title: 'Challenge Check-In',
+};
+
+// Registry mapping each admin-selectable check-in section key to its component.
+// New self-contained check-in sections join by building the component and
+// adding one entry here plus one option in src/globals/PageSections.ts.
+const CHECKIN_SECTION_COMPONENTS: Record<CheckInSectionKey, React.ComponentType> = {
+  todaysChallengeCheckIn: ActionsCheckOff,
 };
 
 export default async function CheckInPage() {
   // The check-in page is member-only; unsigned-in visitors go to the login page.
   const member = await getCurrentMember();
   if (!member) redirect('/login');
+
+  // Section order/on-off config — falls back to the built-in defaults until
+  // the admin has saved rows in the `page-sections` global.
+  const payload = await getPayloadClient();
+  const pageSections = (await payload.findGlobal({ slug: 'page-sections', depth: 0 })) as {
+    checkInSections?: Array<SectionRow<CheckInSectionKey>> | null;
+  };
+  const sections = resolveCheckInSections(pageSections?.checkInSections);
 
   // "Maria Kozlowski" → first: "Maria", lastInitial: "K". Falls back to the
   // whole displayName as the first part when there is only one word.
@@ -34,10 +55,14 @@ export default async function CheckInPage() {
         lastInitial={lastInitial}
       />
 
-      {/* Check-in sections — first is the actions check-off (dummy UI for now;
-      the user's ticks will be recorded in the DB for their day once wired up). */}
+      {/* Admin-managed check-in sections (src/globals/PageSections.ts) — each
+      renders in the admin-chosen order; disabled rows are filtered out by
+      resolveCheckInSections. */}
       <main className="flex-1">
-        <ActionsCheckOff />
+        {sections.map((s) => {
+          const Component = CHECKIN_SECTION_COMPONENTS[s.key];
+          return Component ? <Component key={s.key} /> : null;
+        })}
       </main>
     </div>
   );
