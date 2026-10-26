@@ -7,7 +7,7 @@ import { AskWalt } from '@/components/home/AskWalt';
 import { NextChallenge } from '@/components/home/NextChallenge';
 import { WinsFromChallengeGroup } from '@/components/home/WinsFromChallengeGroup';
 import { getPayloadClient } from '@/lib/payload';
-import { getCurrentMember } from '@/lib/auth';
+import { getCurrentAccount } from '@/lib/auth';
 import { mediaUrl } from '@/lib/utils';
 import { resolveHomeSections, type HomeSectionKey, type SectionRow } from '@/lib/pageSections';
 import Image from 'next/image';
@@ -29,7 +29,7 @@ const HOME_SECTION_COMPONENTS: Record<HomeSectionKey, React.ComponentType> = {
 export default async function Home() {
   const payload = await getPayloadClient();
 
-  const [home, settings, pageSections, member] = await Promise.all([
+  const [home, settings, pageSections, account] = await Promise.all([
     payload.findGlobal({ slug: 'home-page', depth: 2 }) as Promise<HomePage>,
     payload.findGlobal({ slug: 'site-settings', depth: 1 }) as Promise<SiteSetting>,
     // Section order/on-off config — falls back to the built-in defaults until
@@ -37,7 +37,9 @@ export default async function Home() {
     payload.findGlobal({ slug: 'page-sections', depth: 0 }) as Promise<{
       homeSections?: Array<SectionRow<HomeSectionKey>> | null;
     }>,
-    getCurrentMember(),
+    // Any signed-in account (member or staff/administrator) personalizes the
+    // hero greeting; staff are never gated by member-only requirements.
+    getCurrentAccount(),
   ]);
 
   const sections = resolveHomeSections(pageSections?.homeSections);
@@ -84,7 +86,7 @@ export default async function Home() {
         imageSrcSet="/images/hero/hero_1x.webp 1x, /images/hero/hero_2x.webp 2x"
         imageSizes="100vw"
       />
-      <Hero home={home} settings={settings} member={member} />
+      <Hero home={home} settings={settings} displayName={account?.displayName ?? null} />
 
       {/* Admin-managed sections (src/globals/PageSections.ts). Full-width
       sections stack here, then the wide/narrow columns below each render their

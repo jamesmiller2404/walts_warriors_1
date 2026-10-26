@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import type { HomePage, Member, SiteSetting } from '@/payload-types';
+import type { HomePage, SiteSetting } from '@/payload-types';
 import { mediaUrl } from '@/lib/utils';
 import { LogoutButton } from '@/components/auth/LogoutButton';
 import { SiteTitleText } from '@/components/layout/SiteTitle';
@@ -12,7 +12,10 @@ import { SiteTitleText } from '@/components/layout/SiteTitle';
 type Props = {
   home: HomePage;
   settings: SiteSetting;
-  member?: Member | null;
+  // Display name of the signed-in account (member or staff/administrator) —
+  // null/empty when signed out. Any signed-in account personalizes the hero;
+  // staff are never gated by member-only requirements.
+  displayName?: string | null;
 };
 
 // Placeholder header-menu links (wire real routes later).
@@ -90,10 +93,10 @@ function MobileMenu() {
   );
 }
 
-export function Hero({ home, settings, member = null }: Props) {
+export function Hero({ home, settings, displayName = null }: Props) {
   const logoSrc = mediaUrl(settings.logo);
   const name = settings.businessName || "Walt's Warriors";
-  const memberName = member ? splitMemberName(member.displayName) : null;
+  const memberName = displayName ? splitMemberName(displayName) : null;
 
   return (
     <section className="relative flex aspect-square min-h-[390px] w-full flex-col overflow-hidden md:aspect-[1440/377] md:min-h-[300px] md:max-h-[715px]">
@@ -158,7 +161,7 @@ export function Hero({ home, settings, member = null }: Props) {
               {/* Signed out — Sign Up / Login pills linking to the real auth pages.
             Signed in — a logout pill here, plus the member's short name directly
             under the account icon. On mobile the pills shrink and never wrap. */}
-              {member ? (
+              {displayName ? (
                 <LogoutButton className="shrink-0 whitespace-nowrap self-center rounded-full bg-[#808080]/70 px-2 py-1 text-center text-[12px] font-semibold leading-normal text-[#c5d7e2] transition hover:opacity-90 sm:px-4 sm:py-1.5 sm:text-[15px]" />
               ) : (
                 <div className="flex shrink-0 flex-col gap-1">

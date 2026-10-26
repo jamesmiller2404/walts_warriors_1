@@ -66,11 +66,30 @@ export async function loginAction(
 
   try {
     const payload = await getPayloadClient();
-    const { token, user, exp } = await payload.login({
-      collection: 'members',
-      data: { email, password },
-    });
-    if (!token || !user) return { error: 'Invalid email or password.' };
+    let token: string | undefined;
+    let exp: number | undefined;
+    try {
+      const res = await payload.login({
+        collection: 'members',
+        data: { email, password },
+      });
+      token = res.token;
+      exp = res.exp;
+    } catch (err) {
+      // Member-specific account states are conclusive — the email belongs to a
+      // member account, so don't fall through to the staff collection.
+      if (err instanceof UnverifiedEmail || err instanceof LockedAuth) throw err;
+      // Staff fallback: administrators/editors live in the `users` collection.
+      // They can sign in on the public site too and are never gated by
+      // member-only requirements (challenge registration, etc.).
+      const res = await payload.login({
+        collection: 'users',
+        data: { email, password },
+      });
+      token = res.token;
+      exp = res.exp;
+    }
+    if (!token) return { error: 'Invalid email or password.' };
 
     const cookieStore = await cookies();
     cookieStore.set('payload-token', token, {

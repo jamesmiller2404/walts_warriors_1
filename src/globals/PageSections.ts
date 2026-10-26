@@ -93,7 +93,11 @@ export const PageSections: GlobalConfig = {
           type: 'select',
           required: true,
           label: 'Section',
-          options: [{ label: "Today's challenge check-in", value: 'todaysChallengeCheckIn' }],
+          options: [
+            { label: "Today's challenge check-in", value: 'todaysChallengeCheckIn' },
+            { label: 'Your badge progress', value: 'badgeProgress' },
+            { label: "Today's thoughts", value: 'todaysThoughts' },
+          ],
         },
         {
           name: 'enabled',

@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { ActionsCheckOff } from '@/components/checkin/ActionsCheckOff';
+import { BadgeProgress } from '@/components/checkin/BadgeProgress';
+import { TodaysThoughts } from '@/components/checkin/TodaysThoughts';
 import { CheckInHeader } from '@/components/checkin/CheckInHeader';
-import { getCurrentMember } from '@/lib/auth';
+import { getCurrentAccount } from '@/lib/auth';
 import { getPayloadClient } from '@/lib/payload';
 import {
   resolveCheckInSections,
@@ -20,12 +22,16 @@ export const metadata: Metadata = {
 // adding one entry here plus one option in src/globals/PageSections.ts.
 const CHECKIN_SECTION_COMPONENTS: Record<CheckInSectionKey, React.ComponentType> = {
   todaysChallengeCheckIn: ActionsCheckOff,
+  badgeProgress: BadgeProgress,
+  todaysThoughts: TodaysThoughts,
 };
 
 export default async function CheckInPage() {
-  // The check-in page is member-only; unsigned-in visitors go to the login page.
-  const member = await getCurrentMember();
-  if (!member) redirect('/login');
+  // Any signed-in account can view this page. Members get the full check-in
+  // flow; staff/administrators are never blocked by challenge registration or
+  // other member-only requirements. Unsigned-in visitors go to the login page.
+  const account = await getCurrentAccount();
+  if (!account) redirect('/login');
 
   // Section order/on-off config — falls back to the built-in defaults until
   // the admin has saved rows in the `page-sections` global.
@@ -38,7 +44,7 @@ export default async function CheckInPage() {
   // "Maria Kozlowski" → first: "Maria", lastInitial: "K". Falls back to the
   // whole displayName as the first part when there is only one word.
   // (Same split logic as splitMemberName in Hero.tsx.)
-  const parts = (member.displayName ?? '').trim().split(/\s+/);
+  const parts = (account.displayName ?? '').trim().split(/\s+/);
   const firstName = parts[0] || '';
   const lastInitial = parts.length >= 2 && parts[1] ? parts[1].charAt(0).toUpperCase() : '';
 

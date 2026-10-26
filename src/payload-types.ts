@@ -1610,7 +1610,7 @@ export interface PageSection {
    */
   checkInSections?:
     | {
-        section: 'todaysChallengeCheckIn';
+        section: 'todaysChallengeCheckIn' | 'badgeProgress' | 'todaysThoughts';
         /**
          * Untick to hide this section from the page.
          */
