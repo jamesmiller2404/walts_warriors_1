@@ -51,7 +51,10 @@ function SmileyIcon() {
 
 export function WinsFromChallengeGroup() {
   return (
-    <div className="w-full rounded-lg bg-[#3a3c4e] px-8 py-8" aria-label="Group feed">
+    <div
+      className="w-full rounded-lg bg-[#3a3c4e] px-4 py-6 sm:px-8 sm:py-8"
+      aria-label="Group feed"
+    >
       <h2
         className="text-xl font-semibold uppercase tracking-[0.08em] text-[#c5d7e2]"
         style={fontSans3}
@@ -59,7 +62,7 @@ export function WinsFromChallengeGroup() {
         Group feed
       </h2>
 
-      <p className="mt-3 text-3xl text-[#c5d7e2]" style={fontSans3}>
+      <p className="mt-3 text-2xl text-[#c5d7e2] sm:text-3xl" style={fontSans3}>
         Wins and shout-outs for your challenge group
       </p>
 
@@ -67,11 +70,14 @@ export function WinsFromChallengeGroup() {
         {GROUP_FEED.map((item) => (
           <li
             key={`${item.name}-${item.accomplishment}`}
-            className="flex items-center justify-between gap-6 border-t border-[#c5d7e2]/40 py-5"
+            className="flex flex-col gap-3 border-t border-[#c5d7e2]/40 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
           >
             <div className="flex min-w-0 items-center gap-4">
               <Image src={item.icon} alt="" width={24} height={24} className="h-6 w-6 shrink-0" />
-              <p className="text-2xl text-[#c5d7e2]" style={fontSans3}>
+              <p
+                className="min-w-0 break-words text-lg leading-snug text-[#c5d7e2] sm:text-2xl sm:leading-normal"
+                style={fontSans3}
+              >
                 {item.name} · {item.accomplishment}
               </p>
             </div>
@@ -81,7 +87,7 @@ export function WinsFromChallengeGroup() {
               type="button"
               title="Emoji encouragement coming soon"
               aria-label={`Send emoji encouragement to ${item.name}`}
-              className="inline-flex shrink-0 items-center gap-3 rounded-lg border border-[#c5d7e2]/80 px-5 py-1.5 text-2xl text-[#c5d7e2] transition hover:bg-white/10"
+              className="inline-flex shrink-0 items-center gap-3 self-start rounded-lg border border-[#c5d7e2]/80 px-5 py-1.5 text-lg text-[#c5d7e2] transition hover:bg-white/10 sm:self-center sm:text-2xl"
               style={fontSans3}
             >
               Encourage
@@ -94,7 +100,7 @@ export function WinsFromChallengeGroup() {
       {/* Dummy link for now — point at the community page once it exists */}
       <a
         href="#"
-        className="mt-6 inline-block text-3xl font-bold text-[#2489f2] transition hover:underline"
+        className="mt-6 inline-block text-2xl font-bold text-[#2489f2] transition hover:underline sm:text-3xl"
         style={fontSans3}
       >
         See all in Community

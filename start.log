@@ -1,0 +1,9 @@
+
+> walts-warriors@1.0.0 start
+> cross-env NODE_OPTIONS=--no-deprecation next start
+
+▲ Next.js 16.4.2
+- Local:         http://localhost:3000
+- Network:       http://10.116.108.251:3000
+✓ Ready in 613ms
+✓ Running next.config.ts took 199ms
