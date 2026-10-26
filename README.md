@@ -104,7 +104,8 @@ Payload migrations (dev uses `db.push`; prod does not).
 2. **Migrations** — the schema is applied via `npx payload migrate` (see
    `src/migrations/`). On a fresh database just run it; it creates every table.
 3. **Render → New → Web Service** — connect the GitHub repo (branch `new-ui`).
-   - Runtime: Node — set env var `NODE_VERSION=22`
+   - Runtime: Node — set env var `NODE_VERSION=24` (matches the version the
+     build was verified on locally; `engines` allows `>=20.9.0`)
    - Build command: `npm ci && npm run build`
    - Start command: `npx payload migrate && npm run start`
    - Environment variables (set **before** the first build — `NEXT_PUBLIC_*`
