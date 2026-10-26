@@ -80,6 +80,18 @@ export function CheckInHeader({
     return () => clearInterval(timer);
   }, []);
 
+  // Close the hamburger dropdown when the user taps/clicks anywhere outside
+  // the hamburger button or the menu itself (both carry data-hamburger).
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target?.closest('[data-hamburger]')) setMenuOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [menuOpen]);
+
   // The artwork choice and the clock depend on the viewer's local time, which
   // the server cannot know — render them only after mount (SSR values would
   // hydrate-mismatch). The header keeps its size either way (fixed aspect box).
@@ -156,6 +168,7 @@ export function CheckInHeader({
   const hamburgerButton = (posClass: string) => (
     <button
       type="button"
+      data-hamburger
       aria-label="Menu"
       aria-expanded={menuOpen}
       onClick={() => setMenuOpen((open) => !open)}
@@ -168,7 +181,10 @@ export function CheckInHeader({
   );
   const hamburgerMenu = (posClass: string) =>
     menuOpen ? (
-      <div className={`absolute z-20 rounded-md bg-[#16273d] py-1 shadow-lg ${posClass}`}>
+      <div
+        data-hamburger
+        className={`absolute z-20 rounded-md bg-[#16273d] py-1 shadow-lg ${posClass}`}
+      >
         <ul style={{ ...fontSans3, fontSize: '14px' }}>
           {nav.map((item) => (
             <li key={item.label}>

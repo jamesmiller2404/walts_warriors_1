@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -51,9 +51,22 @@ function splitMemberName(displayName: string): { first: string; lastInitial: str
 function MobileMenu() {
   const [open, setOpen] = useState(false);
 
+  // Close the dropdown when the user taps/clicks anywhere outside the
+  // hamburger button or the menu itself (both carry data-hamburger).
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target?.closest('[data-hamburger]')) setOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open]);
+
   return (
     <div className="relative md:hidden">
       <button
+        data-hamburger
         className="rounded-md p-1 text-[#c5d7e2] transition hover:bg-white/10 sm:p-2"
         onClick={() => setOpen(!open)}
         aria-label={open ? 'Close menu' : 'Open menu'}
@@ -75,13 +88,19 @@ function MobileMenu() {
       </button>
 
       {open ? (
-        <ul className="absolute top-full right-0 z-30 mt-2 flex w-56 flex-col items-stretch rounded-lg bg-[#13233a]/95 py-2 shadow-xl backdrop-blur-md">
+        /* Dropdown sized to match the hamburger menus on the other pages
+           (CheckInHeader's hamburgerMenu) — 14px items, px-4 py-1.5, auto
+           width — instead of the earlier oversized text-2xl/w-56 version. */
+        <ul
+          data-hamburger
+          className="absolute top-full right-0 z-30 mt-2 rounded-md bg-[#13233a]/95 py-1 shadow-lg backdrop-blur-md"
+          style={{ ...fontSans3, fontSize: '14px' }}
+        >
           {nav.map((item) => (
             <li key={item.label}>
               <Link
                 href={item.href}
-                className="block px-5 py-2 text-2xl font-bold text-[#c5d7e2] transition hover:bg-white/10"
-                style={fontSans3}
+                className="block px-4 py-1.5 font-bold whitespace-nowrap text-[#c5d7e2] transition-colors hover:text-white"
                 onClick={() => setOpen(false)}
               >
                 {item.label}
