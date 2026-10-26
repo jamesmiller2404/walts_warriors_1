@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation';
 import { ActionsCheckOff } from '@/components/checkin/ActionsCheckOff';
 import { BadgeProgress } from '@/components/checkin/BadgeProgress';
 import { TodaysThoughts } from '@/components/checkin/TodaysThoughts';
+import { NoteFromWalt } from '@/components/checkin/NoteFromWalt';
+import { CompleteCheckInButton } from '@/components/checkin/CompleteCheckInButton';
 import { CheckInHeader } from '@/components/checkin/CheckInHeader';
 import { getCurrentAccount } from '@/lib/auth';
 import { getPayloadClient } from '@/lib/payload';
@@ -24,6 +26,7 @@ const CHECKIN_SECTION_COMPONENTS: Record<CheckInSectionKey, React.ComponentType>
   todaysChallengeCheckIn: ActionsCheckOff,
   badgeProgress: BadgeProgress,
   todaysThoughts: TodaysThoughts,
+  noteFromWalt: NoteFromWalt,
 };
 
 export default async function CheckInPage() {
@@ -53,7 +56,7 @@ export default async function CheckInPage() {
     // will be added between the header and the footer.
     <div
       className="flex min-h-full flex-col"
-      style={{ backgroundImage: 'linear-gradient(45deg, #0f1d2e, #182e49)' }}
+      style={{ backgroundImage: 'linear-gradient(45deg, #132640, #183a64)' }}
     >
       <CheckInHeader
         pageName="Challenge Check-In"
@@ -69,6 +72,10 @@ export default async function CheckInPage() {
           const Component = CHECKIN_SECTION_COMPONENTS[s.key];
           return Component ? <Component key={s.key} /> : null;
         })}
+
+        {/* Complete check-in button — lower right below the sections, with a
+        standard gap to the footer. */}
+        <CompleteCheckInButton />
       </main>
     </div>
   );

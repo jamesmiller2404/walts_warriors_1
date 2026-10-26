@@ -1,5 +1,5 @@
 COLOR TOKENS
-site background: Gradient (0f1d2e - 182e49, 45 degrees)
+site background: Gradient (132640 - 183a64, 45 degrees)
 text on dark: c5d7e2
 secondary text on dark: dbe7ee
 text on light: 2c353b

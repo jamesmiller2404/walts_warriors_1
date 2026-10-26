@@ -64,6 +64,10 @@ describe('resolveCheckInSections (pure logic)', () => {
       [],
     );
   });
+
+  it('includes the note-from-Walt section in the defaults', () => {
+    expect(resolveCheckInSections(null).map((s) => s.key)).toContain('noteFromWalt');
+  });
 });
 
 describe('page-sections global (round trip through the test DB)', () => {

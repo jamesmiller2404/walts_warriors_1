@@ -28,6 +28,7 @@ import { MemberBadges } from './collections/MemberBadges';
 import { CommunityStats } from './globals/CommunityStats';
 import { QuoteSettings } from './globals/QuoteSettings';
 import { PageSections } from './globals/PageSections';
+import { WaltsNote } from './globals/WaltsNote';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -111,6 +112,7 @@ export default buildConfig({
     CommunityStats,
     QuoteSettings,
     PageSections,
+    WaltsNote,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

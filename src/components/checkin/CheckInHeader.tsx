@@ -8,10 +8,11 @@ import { SiteTitleText } from '@/components/layout/SiteTitle';
 
 const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
-// Placeholder header-menu links (wire real routes later) — same list as Hero.tsx.
+// Header-menu links — Dashboard points at the member dashboard; the rest are
+// placeholders to wire as those pages land. Same list as Hero.tsx.
 const nav = [
   { href: '/', label: 'Home' },
-  { href: '#', label: 'Dashboard' },
+  { href: '/dashboard', label: 'Dashboard' },
   { href: '#', label: 'Challenges' },
   { href: '#', label: 'Community' },
   { href: '#', label: 'Library' },
@@ -103,32 +104,13 @@ export function CheckInHeader({
       ).split(' ')[0] || ''
     : '';
 
-  const displayName = (firstName ?? '').trim().toUpperCase();
-
-  // Desktop subtitle — unchanged from the original desktop composition.
-  const subtitle = (
-    <>
-      <span className="font-semibold">Challenge Check-In</span>
-      {displayName ? (
-        <>
-          <span className="font-semibold">{' • '}</span>
-          <span className="font-bold">{displayName}</span>
-        </>
-      ) : null}
-    </>
-  );
-  // Mobile subtitle — "{pageName} · {NAME}" per the mobile mockups.
-  const mobileSubtitle = (
-    <>
-      <span className="font-semibold">{pageName}</span>
-      {displayName ? (
-        <>
-          <span className="font-semibold">{' · '}</span>
-          <span className="font-bold">{displayName}</span>
-        </>
-      ) : null}
-    </>
-  );
+  // Desktop subtitle — the page name only: 36px semibold at the 1440px design
+  // width. The member name is not shown next to it (the account icon on the
+  // right side of the header still carries the name).
+  const subtitle = <span className="font-semibold">{pageName}</span>;
+  // Mobile subtitle — the page name only, matching the desktop subtitle (the
+  // member name is not shown next to the page name).
+  const mobileSubtitle = <span className="font-semibold">{pageName}</span>;
   const dateLines = now ? (
     <>
       {dateText}
@@ -227,11 +209,11 @@ export function CheckInHeader({
           <SiteTitleText fontSize="clamp(13px, 2.5vw, 36px)" />
         </div>
 
-        {/* Subtitle — "Challenge Check-In • LISA": 48px light blue (cap top at
-        y≈63). The member name reads slightly bolder, per the mockup. */}
+        {/* Subtitle — the page name ("Dashboard", "Challenge Check-In", ...):
+        36px semibold light blue at the 1440px design width (cap top at y≈63). */}
         <p
           className="absolute left-[1.6%] top-[25.9%] z-10 leading-none text-[#c5d7e2]"
-          style={{ ...fontSans3, fontSize: 'clamp(17px, 3.3333vw, 48px)' }}
+          style={{ ...fontSans3, fontSize: 'clamp(17px, 2.5vw, 36px)' }}
         >
           {subtitle}
         </p>

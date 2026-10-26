@@ -128,6 +128,7 @@ export function ActionsCheckOff() {
                 style={{
                   ...fontSans3,
                   fontSize: 'clamp(13px, 2.0833vw, 30px)',
+                  fontWeight: 600,
                   marginLeft: 'clamp(10px, 1.5vw, 22px)',
                   lineHeight: 1.2,
                 }}

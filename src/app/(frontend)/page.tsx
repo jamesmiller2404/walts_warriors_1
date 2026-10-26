@@ -101,7 +101,7 @@ export default async function Home() {
 
       <div
         className="relative pb-10"
-        style={{ backgroundImage: 'linear-gradient(45deg, #0f1d2e, #182e49)' }}
+        style={{ backgroundImage: 'linear-gradient(45deg, #132640, #183a64)' }}
       >
         <section className="w-full" aria-label="Home updates">
           {/* 1440px design canvas — cards right-aligned, with the challenge-group

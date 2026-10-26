@@ -18,10 +18,11 @@ type Props = {
   displayName?: string | null;
 };
 
-// Placeholder header-menu links (wire real routes later).
+// Header-menu links — Dashboard points at the member dashboard; the rest are
+// placeholders to wire as those pages land.
 const nav = [
   { href: '/', label: 'Home' },
-  { href: '#', label: 'Dashboard' },
+  { href: '/dashboard', label: 'Dashboard' },
   { href: '#', label: 'Challenges' },
   { href: '#', label: 'Community' },
   { href: '#', label: 'Library' },

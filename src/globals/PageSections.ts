@@ -97,6 +97,7 @@ export const PageSections: GlobalConfig = {
             { label: "Today's challenge check-in", value: 'todaysChallengeCheckIn' },
             { label: 'Your badge progress', value: 'badgeProgress' },
             { label: "Today's thoughts", value: 'todaysThoughts' },
+            { label: 'A note from Walt', value: 'noteFromWalt' },
           ],
         },
         {

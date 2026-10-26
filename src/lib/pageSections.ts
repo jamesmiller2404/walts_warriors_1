@@ -15,7 +15,8 @@ export type HomeSectionKey =
   | 'nextChallenge';
 
 // Check-in page section keys — must match the select options in PageSections.ts.
-export type CheckInSectionKey = 'todaysChallengeCheckIn' | 'badgeProgress' | 'todaysThoughts';
+export type CheckInSectionKey =
+  'todaysChallengeCheckIn' | 'badgeProgress' | 'todaysThoughts' | 'noteFromWalt';
 
 // Where a home section renders. `full` sections stack above the two columns;
 // `wide` fills the left (large-card) column; `narrow` the right (small-card)
@@ -48,6 +49,7 @@ export const DEFAULT_CHECKIN_SECTIONS: Array<{ section: CheckInSectionKey }> = [
   { section: 'todaysChallengeCheckIn' },
   { section: 'badgeProgress' },
   { section: 'todaysThoughts' },
+  { section: 'noteFromWalt' },
 ];
 
 // What the page renderers consume: ordered enabled keys, plus the column each

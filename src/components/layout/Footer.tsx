@@ -122,7 +122,7 @@ export function Footer({ settings }: { settings: SiteSetting }) {
       </div>
 
       <div className="bg-[#040912] text-[#606060]">
-        <Container className="max-w-[1440px] py-5 sm:py-6">
+        <Container className="max-w-[1440px] py-3 sm:py-4">
           <div
             className="grid items-center gap-4 text-center md:grid-cols-3 md:text-left"
             style={{ ...fontArial, fontSize: fluidFontSize(13.5) }}
@@ -141,7 +141,9 @@ export function Footer({ settings }: { settings: SiteSetting }) {
             </div>
 
             <div className="flex flex-col items-center gap-1 text-[#c5d7e2] md:items-end">
-              <span>Created by</span>
+              <span className="text-[#606060]" style={{ fontSize: fluidFontSize(12) }}>
+                Created by
+              </span>
               <Image
                 src="/images/offworldcreations_logo_transparent2.png"
                 alt="Offworld Creations"

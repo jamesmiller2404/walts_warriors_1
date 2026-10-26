@@ -26,6 +26,7 @@ import { HomePage } from './globals/HomePage';
 import { QuoteSettings } from './globals/QuoteSettings';
 import { SiteSettings } from './globals/SiteSettings';
 import { PageSections } from './globals/PageSections';
+import { WaltsNote } from './globals/WaltsNote';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -68,6 +69,7 @@ export default buildConfig({
     CommunityStats,
     QuoteSettings,
     PageSections,
+    WaltsNote,
   ],
   editor: lexicalEditor(),
   secret: 'ww-member-hardening-test-secret',

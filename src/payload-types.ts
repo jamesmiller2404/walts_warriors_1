@@ -118,6 +118,7 @@ export interface Config {
     'community-stats': CommunityStat;
     'quote-settings': QuoteSetting;
     'page-sections': PageSection;
+    'walts-note': WaltsNote;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
@@ -127,6 +128,7 @@ export interface Config {
     'community-stats': CommunityStatsSelect<false> | CommunityStatsSelect<true>;
     'quote-settings': QuoteSettingsSelect<false> | QuoteSettingsSelect<true>;
     'page-sections': PageSectionsSelect<false> | PageSectionsSelect<true>;
+    'walts-note': WaltsNoteSelect<false> | WaltsNoteSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1610,7 +1612,7 @@ export interface PageSection {
    */
   checkInSections?:
     | {
-        section: 'todaysChallengeCheckIn' | 'badgeProgress' | 'todaysThoughts';
+        section: 'todaysChallengeCheckIn' | 'badgeProgress' | 'todaysThoughts' | 'noteFromWalt';
         /**
          * Untick to hide this section from the page.
          */
@@ -1618,6 +1620,21 @@ export interface PageSection {
         id?: string | null;
       }[]
     | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Walt's message shown to members in the 'A Note from Walt' card on the check-in page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "walts-note".
+ */
+export interface WaltsNote {
+  id: number;
+  /**
+   * Walt's note to the members. Line breaks are preserved.
+   */
+  note: string;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1826,6 +1843,16 @@ export interface PageSectionsSelect<T extends boolean = true> {
         enabled?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "walts-note_select".
+ */
+export interface WaltsNoteSelect<T extends boolean = true> {
+  note?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

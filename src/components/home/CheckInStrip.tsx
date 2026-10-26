@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+import Link from 'next/link';
+
 type CheckInStatus = 'not-checked-in' | 'partial' | 'complete';
 
 // Hard-coded for now — wire up real check-in state later.
@@ -80,15 +82,15 @@ export function CheckInStrip() {
           )}
         </div>
 
-        {/* Right — check-in button */}
+        {/* Right — check-in button (navigates to the check-in page). */}
         {interactive ? (
-          <button
-            type="button"
+          <Link
+            href="/check-in"
             className="flex h-[76px] items-center justify-center rounded-lg px-8 text-4xl font-bold uppercase text-[#2c353b] transition hover:opacity-90"
             style={{ ...fontSans3, backgroundColor: buttonColor }}
           >
             {label}
-          </button>
+          </Link>
         ) : (
           <span
             className="flex h-[76px] items-center justify-center rounded-lg px-8 text-4xl font-bold uppercase text-[#2c353b]"
