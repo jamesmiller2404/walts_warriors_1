@@ -18,14 +18,14 @@ type FooterLink = {
 const exploreLinks: FooterLink[] = [
   { label: 'Home', href: '/' },
   { label: 'Progress', href: '#' },
-  { label: 'Challenges', href: '/challenges' },
+  { label: 'Challenges', href: '#' },
   { label: 'Library', href: '#' },
   { label: 'Community', href: '#' },
 ];
 
 const supportLinks: FooterLink[] = [
   { label: 'Help center', href: '#' },
-  { label: 'Contact Walt', href: '/contact' },
+  { label: 'Contact Walt', href: '#' },
   { label: 'Frequently asked', href: '#' },
   { label: 'Account settings', href: '#' },
 ];

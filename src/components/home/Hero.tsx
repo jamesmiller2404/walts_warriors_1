@@ -230,7 +230,7 @@ export function Hero({ home, settings, displayName = null }: Props) {
         </div>
 
         {/* Header menu row — its own row below the site title (per the header
-      mockup), horizontally centered on the canvas. Fluid size: 21.3px at the
+      mockup), horizontally centered on the canvas. Fluid size: 30px at the
       1440px design width, scaling down to a 14px floor before the hamburger
       takes over below md. Each entry is an individual placeholder link. */}
         <div className="relative z-10 mt-3 hidden justify-center md:flex">
@@ -238,7 +238,7 @@ export function Hero({ home, settings, displayName = null }: Props) {
             className="flex items-center"
             style={{
               ...fontSans3,
-              fontSize: 'clamp(14px, 1.4792vw, 21.3px)',
+              fontSize: 'clamp(14px, 2.0833vw, 30px)',
               gap: 'clamp(14px, 1.9444vw, 28px)',
             }}
           >
