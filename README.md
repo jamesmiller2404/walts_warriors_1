@@ -75,6 +75,36 @@ Copy `.env.example` to `.env`:
 | `npm run generate:types`     | Regenerate `payload-types.ts` |
 | `npm run generate:importmap` | Regenerate admin import map   |
 
+## Known security advisory — tinypool (critical, dev-only)
+
+`npm audit` currently reports a **critical** severity finding:
+
+- **Package:** `tinypool` ≤ 2.1.1 (installed transitively via `vitest` 3.2.7, a devDependency)
+- **Issue:** Prototype pollution gadgets that can lead to Remote Code Execution —
+  [GHSA-5gmw-xhrv-c9v3](https://github.com/advisories/GHSA-5gmw-xhrv-c9v3) and
+  [GHSA-85c8-ppgw-ccpr](https://github.com/advisories/GHSA-85c8-ppgw-ccpr)
+- **Impact on this app: none in production.** tinypool is a test-runner worker-pool
+  used only by `vitest` (the `npm test` tooling). Production (`npm run start` /
+  Render) never loads it, so the deployed site is not exposed. The finding affects
+  local development/test environments only.
+- **Why it isn't fixed yet:** the patched tinypool (2.1.2) is a different major
+  than the `^1.1.1` range that vitest 3.x declares, so plain `npm audit fix` cannot
+  resolve it. npm's suggested `npm audit fix --force` would jump vitest to 5.x — a
+  major breaking change. Deliberately deferred (2026-10-26) to avoid churn.
+- **Planned remediation (when ready):** upgrade the devDependency to
+  `vitest@^4.1.12` — vitest 4.x drops tinypool from its dependency tree entirely,
+  clearing the tinypool, vitest, and `@vitest/mocker` advisories in one step with
+  the smallest major jump. The app's vitest usage (a minimal `vitest.config.ts` and
+  two standard-API test files) is compatible with v4. After upgrading, verify with
+  `npm audit` and the full test suite (`npm test`, 33 tests) before committing.
+- **Other audit findings (for the same review):** the `undici` HIGH finding (via
+  `payload`) is fixable later by bumping `payload` **and all `@payloadcms/*`
+  packages together** from 3.91.0 → 3.92.0 — Payload requires exact version
+  matching across its packages, so never bump just one. The remaining
+  moderate/high findings (`esbuild`, `drizzle-kit`, `@tailwindcss/typography`,
+  `happy-dom`/`@lexical/headless`) currently have no forward fix — npm only offers
+  downgrades, which are not recommended; revisit when upstream publishes patches.
+
 ## File storage
 
 | Environment    | Behavior                                                                                                                                                                                                                                                                                                                                                                                                        |
