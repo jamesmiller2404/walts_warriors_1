@@ -1,0 +1,10 @@
+// Ask Walt questions arrive through the public home-page card, so the admin
+// panel intentionally has no "Create New" button for this collection. The
+// "List Pinned Questions" button (see AskWaltQuestions.ts →
+// admin.components.beforeListTable) takes its place.
+.collection-list--ask-walt-questions {
+  .list-create-new-doc__create-new-button,
+  .no-results__actions .btn {
+    display: none;
+  }
+}

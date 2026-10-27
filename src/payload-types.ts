@@ -81,6 +81,7 @@ export interface Config {
     'check-ins': CheckIn;
     badges: Badge;
     'member-badges': MemberBadge;
+    'ask-walt-questions': AskWaltQuestion;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -101,6 +102,7 @@ export interface Config {
     'check-ins': CheckInsSelect<false> | CheckInsSelect<true>;
     badges: BadgesSelect<false> | BadgesSelect<true>;
     'member-badges': MemberBadgesSelect<false> | MemberBadgesSelect<true>;
+    'ask-walt-questions': AskWaltQuestionsSelect<false> | AskWaltQuestionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -633,6 +635,33 @@ export interface MemberBadge {
   createdAt: string;
 }
 /**
+ * Questions and comments sent through the 'Ask Walt' card. Tick "Pinned" in the column to build a "questions of interest" list.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ask-walt-questions".
+ */
+export interface AskWaltQuestion {
+  id: number;
+  /**
+   * Copied from the member's display name when the question is submitted. Used for the User column and sorting.
+   */
+  memberName: string;
+  /**
+   * The question or comment as the member wrote it.
+   */
+  question: string;
+  /**
+   * Member who sent this. Set automatically for member submissions.
+   */
+  member?: (number | null) | Member;
+  /**
+   * Pinned questions make up the Questions of interest list for the Q&A. Staff only — members cannot pin their own questions.
+   */
+  pinned?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -707,6 +736,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'member-badges';
         value: number | MemberBadge;
+      } | null)
+    | ({
+        relationTo: 'ask-walt-questions';
+        value: number | AskWaltQuestion;
       } | null);
   globalSlug?: string | null;
   user:
@@ -1019,6 +1052,18 @@ export interface MemberBadgesSelect<T extends boolean = true> {
   badge?: T;
   awardedAt?: T;
   awardKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ask-walt-questions_select".
+ */
+export interface AskWaltQuestionsSelect<T extends boolean = true> {
+  memberName?: T;
+  question?: T;
+  member?: T;
+  pinned?: T;
   updatedAt?: T;
   createdAt?: T;
 }

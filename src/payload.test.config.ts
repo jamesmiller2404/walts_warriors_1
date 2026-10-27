@@ -7,6 +7,7 @@ import { buildConfig } from 'payload';
 import { fileURLToPath } from 'url';
 
 import { Badges } from './collections/Badges';
+import { AskWaltQuestions } from './collections/AskWaltQuestions';
 import { Challenges } from './collections/Challenges';
 import { CheckIns } from './collections/CheckIns';
 import { Events } from './collections/Events';
@@ -60,6 +61,7 @@ export default buildConfig({
     CheckIns,
     Badges,
     MemberBadges,
+    AskWaltQuestions,
   ],
   globals: [
     SiteSettings,

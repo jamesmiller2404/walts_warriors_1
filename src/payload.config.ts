@@ -25,6 +25,7 @@ import { Members } from './collections/Members';
 import { CheckIns } from './collections/CheckIns';
 import { Badges } from './collections/Badges';
 import { MemberBadges } from './collections/MemberBadges';
+import { AskWaltQuestions } from './collections/AskWaltQuestions';
 import { CommunityStats } from './globals/CommunityStats';
 import { QuoteSettings } from './globals/QuoteSettings';
 import { PageSections } from './globals/PageSections';
@@ -103,6 +104,7 @@ export default buildConfig({
     CheckIns,
     Badges,
     MemberBadges,
+    AskWaltQuestions,
   ],
   globals: [
     SiteSettings,

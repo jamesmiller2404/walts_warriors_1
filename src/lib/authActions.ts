@@ -69,25 +69,33 @@ export async function loginAction(
     let token: string | undefined;
     let exp: number | undefined;
     try {
-      const res = await payload.login({
-        collection: 'members',
-        data: { email, password },
-      });
-      token = res.token;
-      exp = res.exp;
-    } catch (err) {
-      // Member-specific account states are conclusive — the email belongs to a
-      // member account, so don't fall through to the staff collection.
-      if (err instanceof UnverifiedEmail || err instanceof LockedAuth) throw err;
-      // Staff fallback: administrators/editors live in the `users` collection.
-      // They can sign in on the public site too and are never gated by
-      // member-only requirements (challenge registration, etc.).
+      // Staff first: administrators/editors live in the `users` collection. If
+      // the same email also exists as a member (dual auth), signing in here must
+      // resolve to the staff account — a member session cannot open /admin.
       const res = await payload.login({
         collection: 'users',
         data: { email, password },
       });
       token = res.token;
       exp = res.exp;
+    } catch (staffErr) {
+      try {
+        // Everyone else is a community member. They can sign in on the public
+        // site and are the only collection gated by member-only requirements
+        // (email verification, suspension, challenge registration, etc.).
+        const res = await payload.login({
+          collection: 'members',
+          data: { email, password },
+        });
+        token = res.token;
+        exp = res.exp;
+      } catch (memberErr) {
+        // Member account states are the most useful message when the email
+        // belongs to a member account; otherwise keep a staff lockout message.
+        if (memberErr instanceof UnverifiedEmail || memberErr instanceof LockedAuth)
+          throw memberErr;
+        throw staffErr instanceof LockedAuth ? staffErr : memberErr;
+      }
     }
     if (!token) return { error: 'Invalid email or password.' };
 
