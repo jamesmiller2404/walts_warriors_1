@@ -11,6 +11,7 @@ import { AskWaltQuestions } from './collections/AskWaltQuestions';
 import { Challenges } from './collections/Challenges';
 import { CheckIns } from './collections/CheckIns';
 import { Events } from './collections/Events';
+import { EventRsvps } from './collections/EventRsvps';
 import { Gallery } from './collections/Gallery';
 import { Media } from './collections/Media';
 import { MemberBadges } from './collections/MemberBadges';
@@ -62,6 +63,7 @@ export default buildConfig({
     Badges,
     MemberBadges,
     AskWaltQuestions,
+    EventRsvps,
   ],
   globals: [
     SiteSettings,

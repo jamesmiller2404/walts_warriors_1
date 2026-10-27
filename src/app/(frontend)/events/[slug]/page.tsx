@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { Container } from '@/components/layout/Container';
+import { RsvpButton } from '@/components/events/RsvpButton';
+import { getCurrentAccount } from '@/lib/auth';
 import { getPayloadClient } from '@/lib/payload';
 import { RichText } from '@/lib/richText';
 import { mediaUrl } from '@/lib/utils';
@@ -40,6 +42,23 @@ export default async function EventDetailPage({ params }: Props) {
 
   const image = event.image as Media | null | undefined;
   const src = mediaUrl(image, 'hero');
+  const account = await getCurrentAccount();
+
+  // Members see "You're in" instead of the RSVP button once they have signed up.
+  let hasRsvped = false;
+  if (event.rsvpEnabled && account?.kind === 'member') {
+    const payload = await getPayloadClient();
+    const existing = await payload.find({
+      collection: 'event-rsvps',
+      where: {
+        and: [{ event: { equals: event.id } }, { member: { equals: account.member.id } }],
+      },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    });
+    hasRsvped = existing.totalDocs > 0;
+  }
   const start = event.startDate
     ? new Date(event.startDate).toLocaleString(undefined, {
         year: 'numeric',
@@ -81,7 +100,16 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
       ) : null}
 
-      {event.registrationUrl ? (
+      {event.rsvpEnabled ? (
+        <div className="mt-10">
+          <RsvpButton
+            eventId={event.id}
+            initialRsvped={hasRsvped}
+            signedIn={Boolean(account)}
+            variant="page"
+          />
+        </div>
+      ) : event.registrationUrl ? (
         <div className="mt-10">
           <a
             href={event.registrationUrl}

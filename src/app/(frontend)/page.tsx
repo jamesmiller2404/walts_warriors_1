@@ -16,7 +16,7 @@ import type { HomePage, Media, Program, SiteSetting } from '@/payload-types';
 // Registry mapping each admin-selectable home section key to its component.
 // New self-contained sections join by building the component and adding one
 // entry here plus one option in src/globals/PageSections.ts.
-const HOME_SECTION_COMPONENTS: Record<HomeSectionKey, React.ComponentType> = {
+const HOME_SECTION_COMPONENTS: Record<HomeSectionKey, React.ComponentType<{ home?: HomePage }>> = {
   checkInStrip: CheckInStrip,
   challengeGroupToday: ChallengeGroupToday,
   groupFeed: WinsFromChallengeGroup,
@@ -96,7 +96,7 @@ export default async function Home() {
         .filter((s) => s.column === 'full')
         .map((s) => {
           const Component = HOME_SECTION_COMPONENTS[s.key];
-          return Component ? <Component key={s.key} /> : null;
+          return Component ? <Component home={home} key={s.key} /> : null;
         })}
 
       <div
@@ -115,7 +115,7 @@ export default async function Home() {
                   .filter((s) => s.column === 'wide')
                   .map((s) => {
                     const Component = HOME_SECTION_COMPONENTS[s.key];
-                    return Component ? <Component key={s.key} /> : null;
+                    return Component ? <Component home={home} key={s.key} /> : null;
                   })}
               </div>
 
@@ -125,7 +125,7 @@ export default async function Home() {
                   .filter((s) => s.column === 'narrow')
                   .map((s) => {
                     const Component = HOME_SECTION_COMPONENTS[s.key];
-                    return Component ? <Component key={s.key} /> : null;
+                    return Component ? <Component home={home} key={s.key} /> : null;
                   })}
               </div>
             </div>

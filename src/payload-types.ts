@@ -82,12 +82,17 @@ export interface Config {
     badges: Badge;
     'member-badges': MemberBadge;
     'ask-walt-questions': AskWaltQuestion;
+    'event-rsvps': EventRsvp;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    events: {
+      rsvps: 'event-rsvps';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -103,6 +108,7 @@ export interface Config {
     badges: BadgesSelect<false> | BadgesSelect<true>;
     'member-badges': MemberBadgesSelect<false> | MemberBadgesSelect<true>;
     'ask-walt-questions': AskWaltQuestionsSelect<false> | AskWaltQuestionsSelect<true>;
+    'event-rsvps': EventRsvpsSelect<false> | EventRsvpsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -453,11 +459,90 @@ export interface Event {
    */
   registrationUrl?: string | null;
   /**
+   * Show an RSVP button for this event and collect RSVPs from logged-in members.
+   */
+  rsvpEnabled?: boolean | null;
+  /**
+   * Members who RSVP’d (read-only).
+   */
+  rsvps?: {
+    docs?: (number | EventRsvp)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  /**
    * Uncheck to hide this event from the public site.
    */
   published?: boolean | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * Members who have RSVP’d to events. Created when a member clicks “RSVP” on the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-rsvps".
+ */
+export interface EventRsvp {
+  id: number;
+  /**
+   * The event being RSVP’d to.
+   */
+  event: number | Event;
+  /**
+   * Member who is coming. Set automatically for member RSVPs.
+   */
+  member: number | Member;
+  /**
+   * `{eventId}:{memberId}` — prevents duplicate RSVPs.
+   */
+  rsvpKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Community members who sign in on the public site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members".
+ */
+export interface Member {
+  id: number;
+  /**
+   * Shown on the community feed, leaderboard, and badges.
+   */
+  displayName: string;
+  avatar?: (number | null) | Media;
+  bio?: string | null;
+  /**
+   * Staff-managed account status. Members cannot change this.
+   */
+  status: 'active' | 'pending' | 'suspended';
+  totalCheckIns?: number | null;
+  currentStreak?: number | null;
+  longestStreak?: number | null;
+  lastCheckInDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'members';
 }
 /**
  * Photos from the community, events, challenges, and everyday wins.
@@ -520,50 +605,6 @@ export interface Challenge {
   featured?: boolean | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * Community members who sign in on the public site.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "members".
- */
-export interface Member {
-  id: number;
-  /**
-   * Shown on the community feed, leaderboard, and badges.
-   */
-  displayName: string;
-  avatar?: (number | null) | Media;
-  bio?: string | null;
-  /**
-   * Staff-managed account status. Members cannot change this.
-   */
-  status: 'active' | 'pending' | 'suspended';
-  totalCheckIns?: number | null;
-  currentStreak?: number | null;
-  longestStreak?: number | null;
-  lastCheckInDate?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  _verified?: boolean | null;
-  _verificationToken?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'members';
 }
 /**
  * Member check-ins. Creating one updates member stats and badge progress automatically.
@@ -740,6 +781,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'ask-walt-questions';
         value: number | AskWaltQuestion;
+      } | null)
+    | ({
+        relationTo: 'event-rsvps';
+        value: number | EventRsvp;
       } | null);
   globalSlug?: string | null;
   user:
@@ -949,6 +994,8 @@ export interface EventsSelect<T extends boolean = true> {
   endDate?: T;
   location?: T;
   registrationUrl?: T;
+  rsvpEnabled?: T;
+  rsvps?: T;
   published?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1064,6 +1111,17 @@ export interface AskWaltQuestionsSelect<T extends boolean = true> {
   question?: T;
   member?: T;
   pinned?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-rsvps_select".
+ */
+export interface EventRsvpsSelect<T extends boolean = true> {
+  event?: T;
+  member?: T;
+  rsvpKey?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1199,6 +1257,15 @@ export interface HomePage {
    * Pick programs to highlight on the homepage. Leave empty to show the first few published programs.
    */
   featuredPrograms?: (number | Program)[] | null;
+  /**
+   * Pick which events appear in the "Coming up" card and drag the rows into the order they should appear. Leave empty to show the next upcoming published events automatically.
+   */
+  comingUpEvents?:
+    | {
+        event: number | Event;
+        id?: string | null;
+      }[]
+    | null;
   cta?: {
     heading?: string | null;
     text?: string | null;
@@ -1731,6 +1798,12 @@ export interface HomePageSelect<T extends boolean = true> {
   subheadline?: T;
   introduction?: T;
   featuredPrograms?: T;
+  comingUpEvents?:
+    | T
+    | {
+        event?: T;
+        id?: T;
+      };
   cta?:
     | T
     | {

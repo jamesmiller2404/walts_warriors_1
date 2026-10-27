@@ -1,7 +1,17 @@
-import type { CollectionConfig } from 'payload';
+import type { CollectionBeforeDeleteHook, CollectionConfig } from 'payload';
 
 import { isAdminOrEditor } from '@/access/isAdminOrEditor';
 import { anyone } from '@/access/anyone';
+
+// RSVPs point at the event through a required relationship, so they have to be
+// removed first — the FK is ON DELETE SET NULL and would violate NOT NULL.
+const beforeEventDelete: CollectionBeforeDeleteHook = async ({ req, id }) => {
+  await req.payload.delete({
+    collection: 'event-rsvps',
+    where: { event: { equals: id } },
+    overrideAccess: true,
+  });
+};
 
 export const Events: CollectionConfig = {
   slug: 'events',
@@ -11,7 +21,7 @@ export const Events: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'startDate', 'published', 'updatedAt'],
+    defaultColumns: ['title', 'startDate', 'rsvpEnabled', 'published', 'updatedAt'],
     description: 'Community gatherings, workshops, challenges kickoffs, and wellness events.',
     group: 'Content',
   },
@@ -20,6 +30,9 @@ export const Events: CollectionConfig = {
     delete: isAdminOrEditor,
     read: anyone,
     update: isAdminOrEditor,
+  },
+  hooks: {
+    beforeDelete: [beforeEventDelete],
   },
   fields: [
     {
@@ -104,6 +117,25 @@ export const Events: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Optional external signup link.',
+      },
+    },
+    {
+      name: 'rsvpEnabled',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Show an RSVP button for this event and collect RSVPs from logged-in members.',
+      },
+    },
+    {
+      name: 'rsvps',
+      type: 'join',
+      collection: 'event-rsvps',
+      on: 'event',
+      admin: {
+        defaultColumns: ['member', 'createdAt'],
+        description: 'Members who RSVP’d (read-only).',
       },
     },
     {

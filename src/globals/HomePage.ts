@@ -69,6 +69,27 @@ export const HomePage: GlobalConfig = {
       },
     },
     {
+      name: 'comingUpEvents',
+      label: 'Coming up card',
+      type: 'array',
+      labels: {
+        singular: 'Event on the card',
+        plural: 'Events on the card',
+      },
+      admin: {
+        description:
+          'Pick which events appear in the "Coming up" card and drag the rows into the order they should appear. Leave empty to show the next upcoming published events automatically.',
+      },
+      fields: [
+        {
+          name: 'event',
+          type: 'relationship',
+          relationTo: 'events',
+          required: true,
+        },
+      ],
+    },
+    {
       name: 'cta',
       type: 'group',
       label: 'Call to Action',

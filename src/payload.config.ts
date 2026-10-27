@@ -15,6 +15,7 @@ import { Resources } from './collections/Resources';
 import { Testimonials } from './collections/Testimonials';
 import { Quotes } from './collections/Quotes';
 import { Events } from './collections/Events';
+import { EventRsvps } from './collections/EventRsvps';
 import { Gallery } from './collections/Gallery';
 import { Challenges } from './collections/Challenges';
 import { SiteSettings } from './globals/SiteSettings';
@@ -105,6 +106,7 @@ export default buildConfig({
     Badges,
     MemberBadges,
     AskWaltQuestions,
+    EventRsvps,
   ],
   globals: [
     SiteSettings,
@@ -123,7 +125,9 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URL },
+    // Keep the pool small: Supabase's session-mode pooler allows 15 clients, and
+    // Render runs the old + new instance side by side during a deploy.
+    pool: { connectionString: process.env.DATABASE_URL, max: 5 },
     push: process.env.NODE_ENV !== 'production',
   }),
   sharp,

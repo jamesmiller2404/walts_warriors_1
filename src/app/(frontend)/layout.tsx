@@ -20,6 +20,14 @@ import type { SiteSetting } from '@/payload-types';
 
 import './globals.css';
 
+// Every frontend page is rendered from the CMS at request time.
+//
+// Without this, `next build` prerenders each page in a separate worker, and each
+// worker opens its own Postgres pool — which blows past Supabase's session-mode
+// connection limit ("EMAXCONNSESSION … pool_size: 15") and fails the deploy. It
+// also keeps admin edits live without waiting for a redeploy.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const payload = await getPayloadClient();

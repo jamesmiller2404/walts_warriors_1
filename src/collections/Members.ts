@@ -60,6 +60,11 @@ const beforeMemberDelete: CollectionBeforeDeleteHook = async ({ req, id }) => {
     where: { member: { equals: id } },
     overrideAccess: true,
   });
+  await req.payload.delete({
+    collection: 'event-rsvps',
+    where: { member: { equals: id } },
+    overrideAccess: true,
+  });
 };
 
 const afterMemberDelete: CollectionAfterDeleteHook = async ({ req }) => {
