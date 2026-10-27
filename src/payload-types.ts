@@ -1258,7 +1258,7 @@ export interface HomePage {
    */
   featuredPrograms?: (number | Program)[] | null;
   /**
-   * Pick which events appear in the "Coming up" card and drag the rows into the order they should appear. Leave empty to show the next upcoming published events automatically.
+   * Pick which events appear in the "Coming up" card. Drag the handle on the left of each row to set their order — the top row shows first. Leave empty to show the next upcoming published events automatically.
    */
   comingUpEvents?:
     | {

@@ -8,8 +8,8 @@ const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 const STATS = [
   'Challenges Completed: 4',
   'Longest streak: 17 days (25.5 extra points)',
-  'Lifetime Points: 723 pts',
-  'Lifetime Checkins: 723 pts',
+  'Lifetime Points: 145 pts',
+  'Lifetime Checkins: 145 pts',
   'Leader Position: 4th',
 ];
 
