@@ -16,6 +16,7 @@ export async function rsvpToEventAction(eventId: number): Promise<RsvpActionResu
   const account = await getCurrentAccount();
   if (!account) return { error: 'Please log in to RSVP for this event.' };
   if (account.kind !== 'member') return { error: 'Only member accounts can RSVP for events.' };
+  if (account.isDemo) return { error: 'Demo mode \u2014 RSVPs are read-only.' };
   if (account.member.status !== 'active') {
     return { error: 'This account is not active. Contact the administrator.' };
   }
@@ -47,6 +48,7 @@ export async function cancelRsvpAction(eventId: number): Promise<RsvpActionResul
   const account = await getCurrentAccount();
   if (!account) return { error: 'Please log in to manage your RSVP.' };
   if (account.kind !== 'member') return { error: 'Only member accounts can RSVP for events.' };
+  if (account.isDemo) return { error: 'Demo mode \u2014 RSVPs are read-only.' };
 
   try {
     const payload = await getPayloadClient();

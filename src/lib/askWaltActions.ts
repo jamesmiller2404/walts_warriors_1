@@ -26,6 +26,7 @@ export async function submitAskWaltQuestionAction(
   // Guests have no account to attach the question to.
   const account = await getCurrentAccount();
   if (!account) return { error: 'Please log in to send Walt a question.' };
+  if (account.isDemo) return { error: 'Demo mode \u2014 questions are read-only.' };
 
   const accountId = account.kind === 'member' ? account.member.id : account.user.id;
   const limit = checkRateLimit(`ask-walt:${accountId}`, 5, 60_000);
