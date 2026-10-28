@@ -5,8 +5,8 @@ import { getCurrentAccount } from '@/lib/auth';
 import {
   MAX_AUTOMATIC_EVENTS,
   eventBlurb,
-  orderSelectedEvents,
   selectedEventIds,
+  sortByCollectionOrder,
 } from '@/lib/comingUp';
 import { getPayloadClient } from '@/lib/payload';
 import type { Event, HomePage } from '@/payload-types';
@@ -39,7 +39,11 @@ export async function ComingUp({ home }: { home?: HomePage }) {
       limit: 0,
       depth: 0,
     });
-    events = orderSelectedEvents(ids, result.docs as Event[]);
+    // The admin picks *which* events appear here; the order always comes from
+    // Content → Events → drag the rows.
+    events = sortByCollectionOrder(
+      (result.docs as Event[]).filter((event) => Boolean(event.published)),
+    );
   } else {
     const result = await payload.find({
       collection: 'events',
@@ -49,11 +53,13 @@ export async function ComingUp({ home }: { home?: HomePage }) {
           { startDate: { greater_than_equal: new Date().toISOString() } },
         ],
       },
-      sort: 'startDate',
-      limit: MAX_AUTOMATIC_EVENTS,
+      limit: 0,
       depth: 0,
     });
-    events = result.docs as Event[];
+
+    // Admin-ordered events first (Content → Events → drag the rows); anything
+    // never dragged keeps its date order after them. Then show the first few.
+    events = sortByCollectionOrder(result.docs as Event[]).slice(0, MAX_AUTOMATIC_EVENTS);
   }
 
   if (events.length === 0) return null;

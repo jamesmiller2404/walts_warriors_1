@@ -423,6 +423,7 @@ export interface Quote {
  */
 export interface Event {
   id: number;
+  _order?: string | null;
   title: string;
   /**
    * URL-friendly name (e.g. spring-wellness-meetup).
@@ -985,6 +986,7 @@ export interface QuotesSelect<T extends boolean = true> {
  * via the `definition` "events_select".
  */
 export interface EventsSelect<T extends boolean = true> {
+  _order?: T;
   title?: T;
   slug?: T;
   summary?: T;
@@ -1258,7 +1260,7 @@ export interface HomePage {
    */
   featuredPrograms?: (number | Program)[] | null;
   /**
-   * Pick which events appear in the "Coming up" card. Drag the handle on the left of each row to set their order — the top row shows first. Leave empty to show the next upcoming published events automatically.
+   * Choose which events appear in the "Coming up" card. Their order is set in Content → Events: open that list and drag the rows into order (or edit the "Order" column). Leave empty to show the next upcoming published events in that same order.
    */
   comingUpEvents?:
     | {

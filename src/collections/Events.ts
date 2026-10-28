@@ -25,6 +25,12 @@ export const Events: CollectionConfig = {
     description: 'Community gatherings, workshops, challenges kickoffs, and wellness events.',
     group: 'Content',
   },
+  // Manual ordering: adds a hidden `_order` field and drag handles in the Events
+  // list (/admin/collections/events), which is the order the "Coming up" card and
+  // every other event list follow.
+  orderable: true,
+  // Sort the list by that manual order so dragging is enabled straight away.
+  defaultSort: '_order',
   access: {
     create: isAdminOrEditor,
     delete: isAdminOrEditor,

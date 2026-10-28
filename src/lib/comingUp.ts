@@ -15,11 +15,21 @@ export function selectedEventIds(home?: HomePage | null): number[] {
     .filter((id): id is number => typeof id === 'number');
 }
 
-// Re-orders freshly fetched events to match the admin's selection and drops
-// anything unpublished (`published` is the site-wide visibility switch).
-export function orderSelectedEvents(ids: number[], events: Event[]): Event[] {
-  const byId = new Map(events.map((event) => [event.id, event]));
-  return ids.map((id) => byId.get(id)).filter((event): event is Event => Boolean(event?.published));
+// Sorts events into the admin's manual order (the "Order" column in
+// Content → Events), which is what the drag handles there write to.
+export function sortByCollectionOrder(events: Event[]): Event[] {
+  return [...events].sort((a, b) => {
+    const orderA = a._order ?? '';
+    const orderB = b._order ?? '';
+    if (orderA !== orderB) {
+      // Empty/NULL order values go last so newly created, unordered rows don't
+      // jump ahead of the curated list.
+      if (!orderA) return 1;
+      if (!orderB) return -1;
+      return orderA < orderB ? -1 : 1;
+    }
+    return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+  });
 }
 
 type LexicalNode = {

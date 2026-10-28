@@ -1,6 +1,7 @@
 import * as migration_20261026_192235 from './20261026_192235';
 import * as migration_20261027_054717_ask_walt_questions from './20261027_054717_ask_walt_questions';
 import * as migration_20261027_074540_event_rsvps_coming_up from './20261027_074540_event_rsvps_coming_up';
+import * as migration_20261027_201730_events_orderable from './20261027_201730_events_orderable';
 
 export const migrations = [
   {
@@ -17,5 +18,10 @@ export const migrations = [
     up: migration_20261027_074540_event_rsvps_coming_up.up,
     down: migration_20261027_074540_event_rsvps_coming_up.down,
     name: '20261027_074540_event_rsvps_coming_up',
+  },
+  {
+    up: migration_20261027_201730_events_orderable.up,
+    down: migration_20261027_201730_events_orderable.down,
+    name: '20261027_201730_events_orderable',
   },
 ];

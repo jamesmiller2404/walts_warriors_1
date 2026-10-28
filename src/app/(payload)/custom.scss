@@ -8,3 +8,24 @@
     display: none;
   }
 }
+
+// Payload's collapsible rows (used by array fields, e.g. Home Page → "Coming up
+// card") put a full-size transparent collapse button *over* the row header, and
+// the drag handle is a static, 50%-opacity element underneath it. The result is
+// that the handle looks faint and every drag lands on the toggle instead of
+// starting a drag. Lift the handle above the toggle and make it look draggable.
+.collapsible__drag {
+  position: relative;
+  z-index: 2;
+  opacity: 1;
+  cursor: grab;
+
+  &:hover {
+    background: var(--theme-elevation-200);
+    border-radius: 3px;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}

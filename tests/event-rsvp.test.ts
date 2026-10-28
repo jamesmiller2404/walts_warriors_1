@@ -3,7 +3,7 @@ import { getPayload } from 'payload';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import config from '../src/payload.test.config';
-import { eventBlurb, orderSelectedEvents, selectedEventIds } from '../src/lib/comingUp';
+import { eventBlurb, selectedEventIds, sortByCollectionOrder } from '../src/lib/comingUp';
 import type { Event, EventRsvp, HomePage, Member, User } from '../src/payload-types';
 
 let payload: Payload;
@@ -209,22 +209,37 @@ describe('coming up card ordering', () => {
     expect(selectedEventIds({ comingUpEvents: null } as unknown as HomePage)).toEqual([]);
   });
 
-  it('shows the selected events in the chosen order and skips unpublished ones', async () => {
-    const first = await createEvent('First');
-    const second = await createEvent('Second');
-    const hidden = await createEvent('Hidden', { published: false });
+  it('sorts events by the manual order set in the Events list', () => {
+    const asEvent = (id: number, order: string | null, startDate = '2026-10-01T12:00:00.000Z') =>
+      ({ id, _order: order, startDate }) as Event;
 
-    const found = await payload.find({
-      collection: 'events',
-      where: { id: { in: [second.id, first.id, hidden.id] } },
-      limit: 0,
-      depth: 0,
-      overrideAccess: true,
-    });
+    // Order column wins over the order the rows happen to be fetched in.
+    expect(
+      sortByCollectionOrder([asEvent(1, 'a2'), asEvent(2, 'a0'), asEvent(3, 'a1')]).map(
+        (event) => event.id,
+      ),
+    ).toEqual([2, 3, 1]);
 
-    const ordered = orderSelectedEvents([second.id, first.id, hidden.id], found.docs as Event[]);
+    // Rows without an order value go last rather than jumping the queue.
+    expect(sortByCollectionOrder([asEvent(1, null), asEvent(2, 'a0')]).map((e) => e.id)).toEqual([
+      2, 1,
+    ]);
 
-    expect(ordered.map((event) => event.title)).toEqual(['Second', 'First']);
+    // Same order value → soonest start date first.
+    expect(
+      sortByCollectionOrder([
+        asEvent(1, 'a0', '2026-02-01T12:00:00.000Z'),
+        asEvent(2, 'a0', '2026-01-01T12:00:00.000Z'),
+      ]).map((event) => event.id),
+    ).toEqual([2, 1]);
+  });
+
+  it('keeps the admin selection in the order it was picked', () => {
+    const home = {
+      comingUpEvents: [{ event: 3 }, { event: 1 }, { event: 2 }],
+    } as unknown as HomePage;
+
+    expect(selectedEventIds(home)).toEqual([3, 1, 2]);
   });
 });
 
