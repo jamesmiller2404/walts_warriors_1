@@ -7,7 +7,9 @@ import Link from 'next/link';
 import type { HomePage, SiteSetting } from '@/payload-types';
 import { mediaUrl } from '@/lib/utils';
 import { LogoutButton } from '@/components/auth/LogoutButton';
+import { DashboardMenu } from '@/components/layout/DashboardMenu';
 import { SiteTitleText } from '@/components/layout/SiteTitle';
+import { SITE_NAV } from '@/components/layout/siteNav';
 
 type Props = {
   home: HomePage;
@@ -18,15 +20,12 @@ type Props = {
   displayName?: string | null;
 };
 
-// Header-menu links — Dashboard points at the member dashboard; the rest are
-// placeholders to wire as those pages land.
-const nav = [
-  { href: '/', label: 'Home' },
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '#', label: 'Challenges' },
-  { href: '#', label: 'Community' },
-  { href: '#', label: 'Library' },
-];
+// Dashboard dropdown panel typography — smaller than the hero's nav row (which
+// scales to 30px at the 1440 design width).
+const dropdownFontStyle = {
+  fontFamily: 'var(--font-source-sans-3), sans-serif',
+  fontSize: 'clamp(13px, 1.1111vw, 16px)',
+};
 
 const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 // Drop shadow cast from a light positioned at a 225° bearing (down-left), so the
@@ -96,7 +95,7 @@ function MobileMenu() {
           className="absolute top-full right-0 z-30 mt-2 rounded-md bg-[#13233a]/95 py-1 shadow-lg backdrop-blur-md"
           style={{ ...fontSans3, fontSize: '14px' }}
         >
-          {nav.map((item) => (
+          {SITE_NAV.map((item) => (
             <li key={item.label}>
               <Link
                 href={item.href}
@@ -105,6 +104,23 @@ function MobileMenu() {
               >
                 {item.label}
               </Link>
+
+              {/* Dashboard sub-links — indented under their parent item. */}
+              {item.children ? (
+                <ul className="pb-1">
+                  {item.children.map((child) => (
+                    <li key={child.label}>
+                      <Link
+                        href={child.href}
+                        className="block px-4 py-1.5 pl-8 font-bold whitespace-nowrap text-[#c5d7e2]/85 transition-colors hover:text-white"
+                        onClick={() => setOpen(false)}
+                      >
+                        {child.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </li>
           ))}
         </ul>
@@ -270,7 +286,7 @@ export function Hero({ home, settings, displayName = null }: Props) {
       mockup), horizontally centered on the canvas. Fluid size: 30px at the
       1440px design width, scaling down to a 14px floor before the hamburger
       takes over below md. Each entry is an individual placeholder link. */}
-        <div className="relative z-10 mt-3 hidden justify-center md:flex">
+        <div className="relative z-30 mt-3 hidden justify-center md:flex">
           <ul
             className="flex items-center"
             style={{
@@ -279,17 +295,26 @@ export function Hero({ home, settings, displayName = null }: Props) {
               gap: 'clamp(14px, 1.9444vw, 28px)',
             }}
           >
-            {nav.map((item) => (
-              <li key={item.label}>
-                <Link
-                  href={item.href}
-                  className="font-bold text-[#c5d7e2] transition hover:opacity-70"
-                  style={fontSans3}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {SITE_NAV.map((item) =>
+              item.children ? (
+                <DashboardMenu
+                  key={item.label}
+                  triggerClassName="font-bold text-[#c5d7e2] transition hover:opacity-70"
+                  menuClassName="bg-[#13233a]/95 backdrop-blur-md"
+                  fontStyle={dropdownFontStyle}
+                />
+              ) : (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    className="font-bold text-[#c5d7e2] transition hover:opacity-70"
+                    style={fontSans3}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ),
+            )}
           </ul>
         </div>
 

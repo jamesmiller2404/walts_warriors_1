@@ -6,6 +6,7 @@ import { ThisWeekInLibrary } from '@/components/home/ThisWeekInLibrary';
 import { AskWalt } from '@/components/home/AskWalt';
 import { NextChallenge } from '@/components/home/NextChallenge';
 import { WinsFromChallengeGroup } from '@/components/home/WinsFromChallengeGroup';
+import { GuestHintModal } from '@/components/home/GuestHintModal';
 import { getPayloadClient } from '@/lib/payload';
 import { getCurrentAccount } from '@/lib/auth';
 import { mediaUrl } from '@/lib/utils';
@@ -176,6 +177,10 @@ export default async function Home() {
         </Container>
         */}
       </div>
+
+      {/* Guest-preview explainer — home page only, and only for the demo
+          identity while the site is opened to guests. */}
+      {account?.isDemo ? <GuestHintModal /> : null}
     </>
   );
 }

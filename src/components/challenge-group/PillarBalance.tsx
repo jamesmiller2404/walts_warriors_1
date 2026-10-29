@@ -16,7 +16,7 @@ type Props = {
   values?: PillarValues;
 };
 
-// Wide challenge-group card: "Your pillar balance for this challenge period" —
+// Wide challenge-group card: "Your Pillar (Move/Fuel/Mind) balance for this challenge period" —
 // the ternary radar triangle (PillarBalanceChart) on the left, coaching
 // summary on the right. Sizing follows the fluid convention (vw at the 1440px
 // design width with clamp() floors).
@@ -45,7 +45,7 @@ export function PillarBalance({ values = DEFAULT_PILLAR_VALUES }: Props) {
 
   return (
     <section
-      aria-label="Your pillar balance for this challenge period"
+      aria-label="Your Pillar (Move/Fuel/Mind) balance for this challenge period"
       className="w-full rounded-lg bg-[#3a3c4e]"
       style={{
         paddingTop: 'clamp(18px, 2.2222vw, 32px)',
@@ -71,10 +71,21 @@ export function PillarBalance({ values = DEFAULT_PILLAR_VALUES }: Props) {
               fontSize: 'clamp(22px, 2.7778vw, 40px)',
               fontWeight: 400,
               lineHeight: 1.2,
-              maxWidth: '20ch',
             }}
           >
-            Your pillar balance for this challenge period
+            {/* Two-line title: the headline, then the pillars the chart covers
+                plus the period, one step smaller in the secondary light tone. */}
+            <span className="block">Your Pillar Balance</span>
+            <span
+              className="mt-1 block text-[#dbe7ee]"
+              style={{
+                fontSize: 'clamp(14px, 1.8056vw, 26px)',
+                fontWeight: 400,
+                lineHeight: 1.25,
+              }}
+            >
+              Move · Fuel · Mind for this challenge period
+            </span>
           </h2>
 
           <ul

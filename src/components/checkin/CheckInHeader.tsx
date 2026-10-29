@@ -4,19 +4,15 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { DashboardMenu } from '@/components/layout/DashboardMenu';
 import { SiteTitleText } from '@/components/layout/SiteTitle';
+import { SITE_NAV } from '@/components/layout/siteNav';
 
 const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 
-// Header-menu links — Dashboard points at the member dashboard; the rest are
-// placeholders to wire as those pages land. Same list as Hero.tsx.
-const nav = [
-  { href: '/', label: 'Home' },
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '#', label: 'Challenges' },
-  { href: '#', label: 'Community' },
-  { href: '#', label: 'Library' },
-];
+// Dashboard dropdown panel typography — deliberately smaller than the nav row
+// (which scales to 31px at the 1440 design width); matches the hamburger menus.
+const dropdownFontStyle = { ...fontSans3, fontSize: 'clamp(12px, 1.1111vw, 16px)' };
 
 // Time-of-day header artwork, per the check-in-page design: sunrise 4am–12pm,
 // sun and clouds 12pm–8pm, crescent moon 8pm–4am (viewer's local time). Each
@@ -186,7 +182,7 @@ export function CheckInHeader({
         className={`absolute z-20 rounded-md bg-[#16273d] py-1 shadow-lg ${posClass}`}
       >
         <ul style={{ ...fontSans3, fontSize: '14px' }}>
-          {nav.map((item) => (
+          {SITE_NAV.map((item) => (
             <li key={item.label}>
               <Link
                 href={item.href}
@@ -195,6 +191,24 @@ export function CheckInHeader({
               >
                 {item.label}
               </Link>
+
+              {/* Dashboard sub-links — indented under their parent item so the
+                  hamburger stays a single tap away from both dashboards. */}
+              {item.children ? (
+                <ul className="pb-1">
+                  {item.children.map((child) => (
+                    <li key={child.label}>
+                      <Link
+                        href={child.href}
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-4 py-1.5 pl-8 font-bold whitespace-nowrap text-[#c5d7e2]/85 transition-colors hover:text-white"
+                      >
+                        {child.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </li>
           ))}
         </ul>
@@ -294,23 +308,32 @@ export function CheckInHeader({
         {/* Menu row — centered below the artwork's baked-in divider. Dummy
         links; hover darkens to the spec color. */}
         <ul
-          className="absolute inset-x-0 top-[64.8%] z-10 flex items-center justify-center"
+          className="absolute inset-x-0 top-[64.8%] z-30 flex items-center justify-center"
           style={{
             ...fontSans3,
             fontSize: 'clamp(11px, 2.1528vw, 31px)',
             gap: 'clamp(14px, 2.5vw, 36px)',
           }}
         >
-          {nav.map((item) => (
-            <li key={item.label}>
-              <Link
-                href={item.href}
-                className="font-bold text-[#c5d7e2] transition-colors hover:text-[#2c353b]"
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {SITE_NAV.map((item) =>
+            item.children ? (
+              <DashboardMenu
+                key={item.label}
+                triggerClassName="font-bold text-[#c5d7e2] transition-colors hover:text-[#2c353b]"
+                menuClassName="bg-[#16273d]"
+                fontStyle={dropdownFontStyle}
+              />
+            ) : (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className="font-bold text-[#c5d7e2] transition-colors hover:text-[#2c353b]"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ),
+          )}
         </ul>
       </div>
 
