@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import React from 'react';
 
 import { Footer } from '@/components/layout/Footer';
+import { GuestLinkHint } from '@/components/layout/GuestLinkHint';
+import { getCurrentAccount } from '@/lib/auth';
 import {
   archivoBlack,
   ebGaramondItalic,
@@ -70,8 +72,15 @@ export default async function FrontendLayout({ children }: { children: React.Rea
     // DB may not be ready on first boot
   }
 
+  // Guest-preview hints: only the hard-coded demo identity (site opened to
+  // guests via OPEN_SITE_TO_GUESTS) gets the green "this link/button is live"
+  // flicker defined in globals.css. Real members/staff and a gated site never
+  // set the attribute, so nothing is highlighted for them.
+  const account = await getCurrentAccount();
+  const guestPreview = account?.isDemo === true;
+
   return (
-    <html lang="en">
+    <html lang="en" data-guest-hint={guestPreview ? 'true' : undefined}>
       <body
         className={`
           ${archivoBlack.variable}
@@ -90,6 +99,9 @@ export default async function FrontendLayout({ children }: { children: React.Rea
       >
         <main className="flex-1">{children}</main>
         <Footer settings={settings} />
+        {/* Client-side flash driver for the guest link hints. Mounted only for
+            the demo identity, so real sessions never run it. */}
+        {guestPreview ? <GuestLinkHint /> : null}
       </body>
     </html>
   );

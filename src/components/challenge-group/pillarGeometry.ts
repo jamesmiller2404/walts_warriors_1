@@ -25,19 +25,21 @@ export const DEFAULT_PILLAR_VALUES: PillarValues = { move: 100, mind: 45, fuel: 
 
 export type Point = { x: number; y: number };
 
-// Chart geometry in SVG user units. The triangle follows the mockup's
-// proportions (base slightly wider than tall, apex top-center) with side
-// padding left for the MIND / FUEL labels outside the bottom corners.
+// Chart geometry in SVG user units. The triangle keeps the mockup's
+// proportions (base slightly wider than tall, apex top-center) but now sits
+// close to the viewBox edges — the only side space is a standard margin around
+// the outer vertices. MIND / FUEL are drawn under the base inside the
+// triangle's horizontal span, so they no longer need side gutters.
 export const PILLAR_AXES: Record<keyof PillarValues, Point> = {
-  move: { x: 280, y: 40 },
-  mind: { x: 80, y: 330 },
-  fuel: { x: 480, y: 330 },
+  move: { x: 212, y: 32 },
+  mind: { x: 12, y: 332 },
+  fuel: { x: 412, y: 332 },
 };
 
 // Centroid of the outer triangle — every pillar value scales its axis vertex
 // toward this point along that pillar's center→corner line, so 0% sits at the
 // center and 100% sits MAX_SPOKE_RATIO of the way to the corner.
-const CENTROID: Point = { x: 280, y: 233.33 };
+const CENTROID: Point = { x: 212, y: 232 };
 
 // Furthest a vertex may travel along its spoke (90% of the full radius). 100%
 // therefore draws just short of the gold frame instead of touching the outer

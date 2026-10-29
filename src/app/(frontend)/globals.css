@@ -33,3 +33,67 @@ body {
 a {
   @apply transition-colors;
 }
+
+/* ── Guest-preview hints (demo mode only) ──────────────────────────────────
+   When the site is opened to guests (src/lib/siteAccess.ts) the layout stamps
+   data-guest-hint="true" on <html>, and GuestLinkHint adds .guest-hint-flash
+   to each live link/button as it scrolls into view: a slow green pulse — glow,
+   outline and a translucent fill — that fades out completely, so the client
+   can spot the working controls without a permanently decorated page.
+   Placeholder links (href="#") and disabled or "coming soon" controls are
+   filtered out before the class is applied.
+   Keep the 3.6s duration in sync with FLASH_DURATION_MS in GuestLinkHint.tsx.
+   ────────────────────────────────────────────────────────────────────────── */
+html[data-guest-hint='true'] .guest-hint-flash {
+  border-radius: 6px;
+  outline: 2px solid rgb(0 216 10 / 0.85);
+  outline-offset: 3px;
+  background-color: rgb(0 216 10 / 0.12);
+  box-shadow: 0 0 18px 3px rgb(0 216 10 / 0.35);
+  animation: guest-hint-flicker 3.6s ease-in-out 1 both;
+}
+
+@keyframes guest-hint-flicker {
+  0%,
+  100% {
+    outline-color: rgb(0 216 10 / 0);
+    background-color: rgb(0 216 10 / 0);
+    box-shadow: 0 0 0 0 rgb(0 216 10 / 0);
+  }
+
+  10% {
+    outline-color: rgb(0 216 10 / 1);
+    background-color: rgb(0 216 10 / 0.18);
+    box-shadow: 0 0 26px 5px rgb(0 216 10 / 0.5);
+  }
+
+  28% {
+    outline-color: rgb(0 216 10 / 0.2);
+    background-color: rgb(0 216 10 / 0.02);
+    box-shadow: 0 0 7px 1px rgb(0 216 10 / 0.1);
+  }
+
+  46% {
+    outline-color: rgb(0 216 10 / 1);
+    background-color: rgb(0 216 10 / 0.2);
+    box-shadow: 0 0 30px 6px rgb(0 216 10 / 0.55);
+  }
+
+  64% {
+    outline-color: rgb(0 216 10 / 0.24);
+    background-color: rgb(0 216 10 / 0.03);
+    box-shadow: 0 0 8px 1px rgb(0 216 10 / 0.12);
+  }
+
+  82% {
+    outline-color: rgb(0 216 10 / 0.95);
+    background-color: rgb(0 216 10 / 0.15);
+    box-shadow: 0 0 22px 4px rgb(0 216 10 / 0.42);
+  }
+}
+
+/* Note: no prefers-reduced-motion override on purpose. This hint only exists
+   while the site is open for client review, and the pulse runs at roughly
+   0.8 cycles/second — well under the WCAG 2.3.1 three-flashes-per-second
+   threshold — so the strobe stays visible even on machines where OS animation
+   effects are turned off (which had been masking the effect entirely). */

@@ -57,7 +57,7 @@ export function PillarBalanceChart({ values = DEFAULT_PILLAR_VALUES, className }
 
   return (
     <svg
-      viewBox="0 0 560 380"
+      viewBox="0 0 424 372"
       role="img"
       aria-label={`Pillar balance: Move ${valueLabel('move')}, Mind ${valueLabel(
         'mind',
@@ -81,19 +81,9 @@ export function PillarBalanceChart({ values = DEFAULT_PILLAR_VALUES, className }
         </linearGradient>
       </defs>
 
-      {/* Outer triangle — the gold frame every pillar axis runs along. */}
-      <polygon
-        points={OUTER_TRIANGLE_POINTS}
-        fill="none"
-        stroke={COLOR_GOLD}
-        strokeWidth={2}
-        strokeLinejoin="round"
-        vectorEffect="non-scaling-stroke"
-      />
-
       {/* Spider lines — each pillar axis drawn from the outer triangle's
-          corner in to its inner vertex. Rendered before the inner triangle so
-          the filled shape and its outline sit on top. */}
+          corner in to its inner vertex. Rendered first so the gold frame and
+          the inner triangle's outline both sit on top of the spoke ends. */}
       {PILLAR_KEYS.map((pillar) => {
         const inner = pillarPoint(pillar, values[pillar]);
         const outer = PILLAR_AXES[pillar];
@@ -110,6 +100,17 @@ export function PillarBalanceChart({ values = DEFAULT_PILLAR_VALUES, className }
           />
         );
       })}
+
+      {/* Outer triangle — the gold frame every pillar axis runs along. Drawn on
+          top of the spokes so the frame stays unbroken at its corners. */}
+      <polygon
+        points={OUTER_TRIANGLE_POINTS}
+        fill="none"
+        stroke={COLOR_GOLD}
+        strokeWidth={2}
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      />
 
       {/* Inner triangle — one vertex per pillar, scaled by its percentage. */}
       <polygon
@@ -149,8 +150,8 @@ export function PillarBalanceChart({ values = DEFAULT_PILLAR_VALUES, className }
 
       {/* Pillar names outside the triangle. */}
       <text
-        x={280}
-        y={26}
+        x={212}
+        y={24}
         textAnchor="middle"
         fill={COLOR_SECONDARY_TEXT}
         fontSize={20}
@@ -161,9 +162,9 @@ export function PillarBalanceChart({ values = DEFAULT_PILLAR_VALUES, className }
         MOVE
       </text>
       <text
-        x={72}
-        y={346}
-        textAnchor="end"
+        x={12}
+        y={356}
+        textAnchor="start"
         fill={COLOR_SECONDARY_TEXT}
         fontSize={20}
         fontWeight={600}
@@ -173,9 +174,9 @@ export function PillarBalanceChart({ values = DEFAULT_PILLAR_VALUES, className }
         MIND
       </text>
       <text
-        x={488}
-        y={346}
-        textAnchor="start"
+        x={412}
+        y={356}
+        textAnchor="end"
         fill={COLOR_SECONDARY_TEXT}
         fontSize={20}
         fontWeight={600}
