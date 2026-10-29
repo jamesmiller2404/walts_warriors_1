@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { PillarBalance } from '@/components/challenge-group/PillarBalance';
 import { CheckInHeader } from '@/components/checkin/CheckInHeader';
 
 export const metadata: Metadata = {
@@ -20,7 +21,11 @@ export default function ChallengeGroupPage() {
 
       {/* Challenge-group sections are built out here. The site footer is
       rendered by the frontend layout below this page. */}
-      <main className="flex-1" />
+      <main className="flex-1">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-10 pt-3 sm:px-8 lg:px-10">
+          <PillarBalance />
+        </div>
+      </main>
     </div>
   );
 }
