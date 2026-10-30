@@ -24,7 +24,8 @@ type Props = {
  * Challenge-group points summary card: a "Challenge Totals" heading over the
  * points and streak stats (stacked, so the composition holds up at one third of
  * the row) with the streak-bonus caption underneath. Charcoal card (#3a3c4e)
- * with black text.
+ * with light text (#c5d7e2) for everything except the two stat values (points
+ * and streak days), which stay black.
  */
 export function PointsSummary({
   points = POINTS,
@@ -62,7 +63,7 @@ export function PointsSummary({
       }}
     >
       <h2
-        className="text-[#000000] uppercase"
+        className="text-[#c5d7e2] uppercase"
         style={{
           ...fontSans3,
           fontSize: 'clamp(12px, 1.5278vw, 22px)',
@@ -79,7 +80,7 @@ export function PointsSummary({
         style={{ gap: 'clamp(6px, 0.8333vw, 12px)', marginTop: 'clamp(8px, 1.1111vw, 16px)' }}
       >
         <div>
-          <p className="text-[#000000]" style={labelStyle}>
+          <p className="text-[#c5d7e2]" style={labelStyle}>
             Points
           </p>
           <p className="text-[#000000]" style={valueStyle}>
@@ -88,7 +89,7 @@ export function PointsSummary({
         </div>
 
         <div>
-          <p className="text-[#000000]" style={labelStyle}>
+          <p className="text-[#c5d7e2]" style={labelStyle}>
             Streak
           </p>
           <p className="text-[#000000]" style={valueStyle}>
@@ -98,7 +99,7 @@ export function PointsSummary({
       </div>
 
       <p
-        className="text-[#000000]"
+        className="text-[#c5d7e2]"
         style={{
           ...fontSans3,
           fontSize: 'clamp(13px, 1.3889vw, 20px)',

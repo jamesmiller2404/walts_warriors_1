@@ -36,13 +36,15 @@ a {
 
 /* ── Guest-preview hints (demo mode only) ──────────────────────────────────
    When the site is opened to guests (src/lib/siteAccess.ts) the layout stamps
-   data-guest-hint="true" on <html>, and GuestLinkHint adds .guest-hint-flash
-   to each live link/button as it scrolls into view: a slow green pulse — glow,
-   outline and a translucent fill — that fades out completely, so the client
-   can spot the working controls without a permanently decorated page.
+   data-guest-hint="true" on <html>, and GuestLinkHint queues each live
+   link/button as it scrolls into view: one quick green glow — glow, outline and
+   a translucent fill — that blooms and fades away completely, then hands over to
+   the next control down the page. Every control glows exactly once, and only one
+   is lit at a time, so the client's eye is walked through the working controls
+   without a permanently decorated page.
    Placeholder links (href="#") and disabled or "coming soon" controls are
    filtered out before the class is applied.
-   Keep the 3.6s duration in sync with FLASH_DURATION_MS in GuestLinkHint.tsx.
+   Keep the 0.8s duration in sync with FLASH_DURATION_MS in GuestLinkHint.tsx.
    ────────────────────────────────────────────────────────────────────────── */
 html[data-guest-hint='true'] .guest-hint-flash {
   border-radius: 6px;
@@ -50,50 +52,38 @@ html[data-guest-hint='true'] .guest-hint-flash {
   outline-offset: 3px;
   background-color: rgb(0 216 10 / 0.12);
   box-shadow: 0 0 18px 3px rgb(0 216 10 / 0.35);
-  animation: guest-hint-flicker 3.6s ease-in-out 1 both;
+  animation: guest-hint-glow 0.8s ease-out 1 both;
 }
 
-@keyframes guest-hint-flicker {
-  0%,
-  100% {
+@keyframes guest-hint-glow {
+  0% {
     outline-color: rgb(0 216 10 / 0);
     background-color: rgb(0 216 10 / 0);
     box-shadow: 0 0 0 0 rgb(0 216 10 / 0);
   }
 
-  10% {
-    outline-color: rgb(0 216 10 / 1);
-    background-color: rgb(0 216 10 / 0.18);
-    box-shadow: 0 0 26px 5px rgb(0 216 10 / 0.5);
-  }
-
-  28% {
-    outline-color: rgb(0 216 10 / 0.2);
-    background-color: rgb(0 216 10 / 0.02);
-    box-shadow: 0 0 7px 1px rgb(0 216 10 / 0.1);
-  }
-
-  46% {
+  16% {
     outline-color: rgb(0 216 10 / 1);
     background-color: rgb(0 216 10 / 0.2);
     box-shadow: 0 0 30px 6px rgb(0 216 10 / 0.55);
   }
 
-  64% {
-    outline-color: rgb(0 216 10 / 0.24);
-    background-color: rgb(0 216 10 / 0.03);
-    box-shadow: 0 0 8px 1px rgb(0 216 10 / 0.12);
+  40% {
+    outline-color: rgb(0 216 10 / 0.8);
+    background-color: rgb(0 216 10 / 0.14);
+    box-shadow: 0 0 20px 4px rgb(0 216 10 / 0.4);
   }
 
-  82% {
-    outline-color: rgb(0 216 10 / 0.95);
-    background-color: rgb(0 216 10 / 0.15);
-    box-shadow: 0 0 22px 4px rgb(0 216 10 / 0.42);
+  100% {
+    outline-color: rgb(0 216 10 / 0);
+    background-color: rgb(0 216 10 / 0);
+    box-shadow: 0 0 0 0 rgb(0 216 10 / 0);
   }
 }
 
 /* Note: no prefers-reduced-motion override on purpose. This hint only exists
-   while the site is open for client review, and the pulse runs at roughly
-   0.8 cycles/second — well under the WCAG 2.3.1 three-flashes-per-second
-   threshold — so the strobe stays visible even on machines where OS animation
-   effects are turned off (which had been masking the effect entirely). */
+   while the site is open for client review, and each control blooms exactly
+   once (no repeating strobe), so it stays well under the WCAG 2.3.1
+   three-flashes-per-second threshold — and stays visible even on machines where
+   OS animation effects are turned off (which had been masking the effect
+   entirely). */

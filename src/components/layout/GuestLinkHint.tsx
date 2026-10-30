@@ -18,16 +18,22 @@ const LIVE_CONTROL_SELECTOR = [
   "input[type='submit']:not([disabled]):not([data-guest-hint-skip])",
 ].join(', ');
 
-// Must match the guest-hint-flicker animation duration in globals.css.
-const FLASH_DURATION_MS = 3600;
+// Must match the guest-hint-glow animation duration in globals.css.
+const FLASH_DURATION_MS = 800;
+// Beat between one control going dark and the next lighting up, so the glow
+// reads as a hand-over rather than one sweep of half the page.
+const FLASH_GAP_MS = 140;
 
 /**
  * Guest-preview affordance. While the site is opened to guests (demo identity,
- * src/lib/siteAccess.ts) every live link/button flickers once with a green
- * outline as it scrolls into view, then the highlight clears itself. Scroll a
- * control out and back and it flashes again. Rendered only for the demo
- * identity; the frontend layout also stamps data-guest-hint on <html> to scope
- * the CSS.
+ * src/lib/siteAccess.ts) every live link/button glows once with a green outline
+ * and then fades away. Each control glows exactly once — never again, even if
+ * it scrolls out and back — and they light up one at a time, in document order,
+ * so the glow walks the visitor's eye down the page instead of flashing the
+ * whole viewport at once. Controls are only queued once they are on screen, so
+ * scrolling hands the glow on to the next part of the page. Rendered only for
+ * the demo identity; the frontend layout also stamps data-guest-hint on <html>
+ * to scope the CSS.
  *
  * On the home page the explainer modal (GuestHintModal) shows first: the hints
  * wait until it has been dismissed (GUEST_HINT_RELEASE_EVENT) so the client
@@ -38,28 +44,66 @@ export function GuestLinkHint() {
   useEffect(() => {
     if (!('IntersectionObserver' in window)) return;
 
-    const timers = new WeakMap<Element, number>();
-    let flashing = new WeakSet<Element>();
+    // Controls that have had their one glow (Weak, so removed nodes are GC'd).
+    const flashed = new WeakSet<Element>();
+    // Controls waiting their turn. Exactly one is lit at any moment.
+    const queued = new Set<Element>();
+
     let started = false;
+    let pumping = false;
+    let timer: number | undefined;
     let intersectionObserver: IntersectionObserver | null = null;
     let mutationObserver: MutationObserver | null = null;
 
-    const clearFlash = (element: Element) => {
-      const timer = timers.get(element);
-      if (timer !== undefined) window.clearTimeout(timer);
-      timers.delete(element);
-      element.classList.remove('guest-hint-flash');
-      flashing.delete(element);
+    const isOnScreen = (element: Element) => {
+      const rect = element.getBoundingClientRect();
+      return rect.bottom > 0 && rect.top < window.innerHeight;
     };
 
-    const flash = (element: Element) => {
-      if (flashing.has(element)) return;
-      flashing.add(element);
-      element.classList.add('guest-hint-flash');
-      timers.set(
-        element,
-        window.setTimeout(() => clearFlash(element), FLASH_DURATION_MS),
+    // Nearest queued control to the top of the document, so the glow keeps
+    // travelling down the page instead of jumping back up.
+    const nextInLine = (): Element | null => {
+      const candidates = Array.from(queued).filter((element) => element.isConnected);
+      candidates.sort((a, b) =>
+        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
       );
+      return candidates[0] ?? null;
+    };
+
+    // Skip anything that has been scrolled out of sight while it waited. It is
+    // dropped, not burned: coming back into view queues it again.
+    const takeNext = (): Element | null => {
+      let element = nextInLine();
+      while (element && !isOnScreen(element)) {
+        queued.delete(element);
+        element = nextInLine();
+      }
+      return element;
+    };
+
+    // Lights up one control, lets the glow fade, pauses, then hands over to the
+    // next in line. Anything already lit is never lit again.
+    const pump = () => {
+      if (!started || pumping) return;
+      const element = takeNext();
+      if (!element) return; // idle — the next enqueue calls pump() again
+      pumping = true;
+      queued.delete(element);
+      flashed.add(element);
+      element.classList.add('guest-hint-flash');
+      timer = window.setTimeout(() => {
+        element.classList.remove('guest-hint-flash');
+        timer = window.setTimeout(() => {
+          pumping = false;
+          pump();
+        }, FLASH_GAP_MS);
+      }, FLASH_DURATION_MS);
+    };
+
+    const enqueue = (element: Element) => {
+      if (flashed.has(element) || queued.has(element)) return;
+      queued.add(element);
+      pump();
     };
 
     const observeAll = (root: ParentNode) => {
@@ -75,11 +119,12 @@ export function GuestLinkHint() {
       intersectionObserver = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
-            if (entry.isIntersecting) flash(entry.target);
+            if (entry.isIntersecting) enqueue(entry.target);
           }
         },
-        // A quarter of the control counts as "in view". Leaving the viewport
-        // and coming back crosses the threshold again, so it re-flashes.
+        // A quarter of the control counts as "in view" — enough to join the
+        // queue. Each control only ever glows once, so re-entering the viewport
+        // does not repeat it.
         { threshold: 0.25 },
       );
 
@@ -101,17 +146,20 @@ export function GuestLinkHint() {
 
     const stop = () => {
       started = false;
+      pumping = false;
+      if (timer !== undefined) window.clearTimeout(timer);
+      timer = undefined;
+
       intersectionObserver?.disconnect();
       mutationObserver?.disconnect();
       intersectionObserver = null;
       mutationObserver = null;
 
-      document.querySelectorAll('.guest-hint-flash').forEach((element) => {
-        const timer = timers.get(element);
-        if (timer !== undefined) window.clearTimeout(timer);
-        element.classList.remove('guest-hint-flash');
-      });
-      flashing = new WeakSet<Element>();
+      queued.clear();
+      // `flashed` is deliberately kept: a control that already glowed stays dark.
+      document
+        .querySelectorAll('.guest-hint-flash')
+        .forEach((element) => element.classList.remove('guest-hint-flash'));
     };
 
     const onHold = () => stop();
