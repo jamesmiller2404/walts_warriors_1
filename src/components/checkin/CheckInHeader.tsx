@@ -17,31 +17,29 @@ const dropdownFontStyle = { ...fontSans3, fontSize: 'clamp(12px, 1.1111vw, 16px)
 // Time-of-day header artwork, per the check-in-page design: sunrise 4am–12pm,
 // sun and clouds 12pm–8pm, crescent moon 8pm–4am (viewer's local time). Each
 // composition uses its own purpose-built strip with the divider baked in
-// (gold by day, silver at night), so no CSS divider is drawn: desktop
-// 1440x133, tablet-mobile (530–767px) 768x60, phone-mobile (<530px) 375x116.
-// The desktop strip has a 1x/2x pair; the mobile strips are 1x only.
+// (gold by day, silver at night), so no CSS divider is drawn. Every crop ships
+// a single high-resolution master and next/image downscales it: desktop
+// 2880x266 (1440x133 design), tablet (530–767px) 2880x225 (768x60 design),
+// phone (<530px) 859x266 (375x116 design).
 function artworkForHour(hour: number) {
   if (hour >= 4 && hour < 12) {
     return {
-      src: '/images/sunriseHR_1440x133px.png',
-      src2x: '/images/sunriseHR_2880x266px.png',
-      tabletSrc: '/images/sunriseHR_mobile_768x60px.png',
-      phoneSrc: '/images/sunriseHR_mobile_375x116px.png',
+      src: '/images/sunriseHR_2880x266px.png',
+      tabletSrc: '/images/sunriseHR_mobile_2880x225px.png',
+      phoneSrc: '/images/sunriseHR_mobile_859x266px.png',
     };
   }
   if (hour >= 12 && hour < 20) {
     return {
-      src: '/images/sunAndCloudsHR_1440x133px.png',
-      src2x: '/images/sunAndCloudsHR_2880x266px.png',
-      tabletSrc: '/images/sunAndCloudsHR_mobile_768x60px.png',
-      phoneSrc: '/images/sunAndCloudsHR_mobile_375x116px.png',
+      src: '/images/sunAndCloudsHR_2880x266px.png',
+      tabletSrc: '/images/sunAndCloudsHR_mobile_2880x225px.png',
+      phoneSrc: '/images/sunAndCloudsHR_mobile_859x266px.png',
     };
   }
   return {
-    src: '/images/crescentMoonHR_1440x133px.png',
-    src2x: '/images/crescentMoonHR_2880x266px.png',
-    tabletSrc: '/images/crescentMoonHR_mobile_768x60px.png',
-    phoneSrc: '/images/crescentMoonHR_mobile_375x116px.png',
+    src: '/images/crescentMoonHR_2880x266px.png',
+    tabletSrc: '/images/crescentMoonHR_mobile_2880x225px.png',
+    phoneSrc: '/images/crescentMoonHR_mobile_859x266px.png',
   };
 }
 
@@ -224,12 +222,13 @@ export function CheckInHeader({
       font size is vw-proportional, so the composition scales as one piece. */}
       <div className="relative mx-auto hidden w-full max-w-[1440px] aspect-[1440/215] md:block">
         {artwork ? (
-          <img
+          <Image
             src={artwork.src}
-            srcSet={`${artwork.src} 1x, ${artwork.src2x} 2x`}
             alt=""
-            decoding="async"
-            className="pointer-events-none absolute left-0 top-0 z-0 w-full"
+            width={2880}
+            height={266}
+            sizes="(min-width: 1440px) 1440px, 100vw"
+            className="pointer-events-none absolute left-0 top-0 z-0 h-auto w-full"
           />
         ) : null}
 
@@ -350,10 +349,12 @@ export function CheckInHeader({
         object-right, so the sun/moon and the divider always survive. */}
         <div className="relative hidden h-[174px] min-[530px]:block">
           {artwork ? (
-            <img
+            <Image
               src={artwork.tabletSrc}
               alt=""
-              decoding="async"
+              width={2880}
+              height={225}
+              sizes="100vw"
               className="pointer-events-none absolute inset-x-0 bottom-[9px] h-[60px] w-full object-cover object-right-bottom"
             />
           ) : null}
@@ -421,11 +422,13 @@ export function CheckInHeader({
         the viewport (exact mockup at 375px, stretched above it). */}
         <div className="relative min-[530px]:hidden pt-[24px]">
           {artwork ? (
-            <img
+            <Image
               src={artwork.phoneSrc}
               alt=""
-              decoding="async"
-              className="pointer-events-none block w-full"
+              width={859}
+              height={266}
+              sizes="(max-width: 529px) 100vw, 375px"
+              className="pointer-events-none block h-auto w-full"
             />
           ) : null}
 

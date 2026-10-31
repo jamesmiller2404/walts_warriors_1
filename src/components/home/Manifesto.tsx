@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 type ManifestoProps = {
   quote?: string;
   imageUrl?: string;
@@ -10,11 +12,9 @@ export function Manifesto({
   return (
     <section className="relative mx-auto max-w-6xl overflow-hidden rounded-2xl bg-stone-50">
       {imageUrl && (
-        <img
-          src={imageUrl}
-          alt=""
-          className="absolute inset-y-0 right-0 z-0 hidden h-full w-1/2 object-cover md:block"
-        />
+        <div className="absolute inset-y-0 right-0 z-0 hidden w-1/2 md:block">
+          <Image src={imageUrl} alt="" fill sizes="50vw" className="object-cover" />
+        </div>
       )}
 
       <div className="relative z-10 flex min-h-[280px] w-full items-center px-6 sm:px-12">

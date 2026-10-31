@@ -145,20 +145,17 @@ export function Hero({ home, settings, displayName = null }: Props) {
       simply crops to whatever height results. */}
       {/* Static hero background image — art-directed: 1:1 composition on mobile,
       panoramic on desktop. Plain <img> inside <picture> (not next/image) so the
-      hand-optimized WebP variants are served byte-for-byte with no re-encoding.
-      The media query matches Tailwind's md: breakpoint (768px), so the browser
-      downloads only the correct crop, and the 1x/2x descriptors let it pick the
-      right resolution by device pixel ratio. Preload hints mirror this markup
+      hand-optimized WebP masters are served byte-for-byte with no re-encoding.
+      Each crop ships a single 2x master (~33K desktop, ~15K mobile); the browser
+      downscales it, so retina screens stay sharp and 1x screens pay only a few
+      extra KB. The media query matches Tailwind's md: breakpoint (768px), so the
+      browser downloads only the correct crop. Preload hints mirror this markup
       in src/app/(frontend)/page.tsx. */}
       <div className="absolute inset-0">
         <picture>
-          <source
-            media="(max-width: 767px)"
-            srcSet="/images/hero/hero-mobile_1x.webp 1x, /images/hero/hero-mobile_2x.webp 2x"
-          />
+          <source media="(max-width: 767px)" srcSet="/images/hero/hero-mobile_2x.webp" />
           <img
-            src="/images/hero/hero_1x.webp"
-            srcSet="/images/hero/hero_1x.webp 1x, /images/hero/hero_2x.webp 2x"
+            src="/images/hero/hero_2x.webp"
             alt=""
             fetchPriority="high"
             decoding="async"

@@ -71,22 +71,16 @@ export default async function Home() {
   return (
     <>
       {/* Preload the LCP hero image so the browser starts fetching before the
-      Hero component renders. The media queries mirror the <picture> markup in
-      Hero.tsx, so only the correct crop + resolution variant is fetched. */}
+      Hero component renders. Each crop ships a single 2x master, so the media
+      queries mirror the <picture> markup in Hero.tsx exactly — one URL per
+      breakpoint, no srcset/sizes matching to keep in sync. */}
       <link
         rel="preload"
         as="image"
         media="(max-width: 767px)"
-        imageSrcSet="/images/hero/hero-mobile_1x.webp 1x, /images/hero/hero-mobile_2x.webp 2x"
-        imageSizes="100vw"
+        href="/images/hero/hero-mobile_2x.webp"
       />
-      <link
-        rel="preload"
-        as="image"
-        media="(min-width: 768px)"
-        imageSrcSet="/images/hero/hero_1x.webp 1x, /images/hero/hero_2x.webp 2x"
-        imageSizes="100vw"
-      />
+      <link rel="preload" as="image" media="(min-width: 768px)" href="/images/hero/hero_2x.webp" />
       <Hero home={home} settings={settings} displayName={account?.displayName ?? null} />
 
       {/* Admin-managed sections (src/globals/PageSections.ts). Full-width

@@ -3,13 +3,15 @@ const fontSans3 = { fontFamily: 'var(--font-source-sans-3), sans-serif' };
 // Dummy wins — the real entries will come from the member's check-ins for the
 // current challenge group, newest first, once that is wired to the backend.
 const WINS = [
-  'Walked past the snack aisle without stopping',
-  'Took the stairs at work all week',
-  'Slept seven hours three nights in a row',
+  { text: 'Walked past the snack aisle without stopping', date: 'Aug 18' },
+  { text: 'Took the stairs at work all week', date: 'Sep 22' },
+  { text: 'Slept seven hours three nights in a row', date: 'Aug 15' },
+  { text: 'Completed the 30-day challenge', date: 'Sep 10' }, // added win
+  { text: 'Drank 8 glasses of water daily', date: 'Sep 5' }, // added win
 ];
 
 type Props = {
-  wins?: string[];
+  wins?: { text: string; date: string }[];
 };
 
 /** Gold sparkle shown at the start of each win row. */
@@ -28,30 +30,8 @@ function SparkleIcon() {
   );
 }
 
-/** Decorative scroll rail from the mockup (track, thumb and arrow ends). */
-function ScrollRail() {
-  return (
-    <div
-      aria-hidden="true"
-      className="flex shrink-0 flex-col items-center justify-between rounded-full bg-[#c5d7e2]"
-      style={{ width: 'clamp(10px, 1.1806vw, 17px)', padding: 'clamp(3px, 0.4167vw, 6px) 0' }}
-    >
-      <svg viewBox="0 0 10 8" style={{ width: '70%', height: 'auto' }}>
-        <path d="M5 0l5 8H0z" fill="#13233a" />
-      </svg>
-      <div
-        className="rounded-[1px] bg-[#13233a]"
-        style={{ width: '70%', height: 'clamp(8px, 1.0417vw, 15px)' }}
-      />
-      <svg viewBox="0 0 10 8" style={{ width: '70%', height: 'auto' }}>
-        <path d="M0 0h10L5 8z" fill="#13233a" />
-      </svg>
-    </div>
-  );
-}
-
 /**
- * "Your Recent Wins" card: the member's latest challenge-group wins, each with
+ * \"Your Recent Wins\" card: the member's latest challenge-group wins, each with
  * a gold sparkle and hairline separator, plus a link through to the full list.
  * Palette colors; charcoal card like the other sections.
  */
@@ -84,32 +64,32 @@ export function YourWins({ wins = WINS }: Props) {
         className="flex"
         style={{ gap: 'clamp(8px, 1.1111vw, 16px)', marginTop: 'clamp(8px, 1.1111vw, 16px)' }}
       >
-        <ScrollRail />
-
         <div className="min-w-0 flex-1">
-          <ul>
-            {wins.map((win, index) => (
-              <li
-                key={win}
-                className={index > 0 ? 'border-t border-[#c5d7e2]/25' : undefined}
-                style={{ paddingBlock: 'clamp(5px, 0.8333vw, 12px)' }}
-              >
-                <div className="flex items-center" style={{ gap: 'clamp(8px, 1.1111vw, 16px)' }}>
-                  <SparkleIcon />
-                  <p
-                    className="text-[#dbe7ee]"
-                    style={{
-                      ...fontSans3,
-                      fontSize: 'clamp(14px, 1.875vw, 27px)',
-                      lineHeight: 1.25,
-                    }}
-                  >
-                    {win}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div className="h-64 overflow-y-auto">
+            <ul>
+              {wins.map((win, index) => (
+                <li
+                  key={win.text}
+                  className={index > 0 ? 'border-t border-[#c5d7e2]/25' : undefined}
+                  style={{ paddingBlock: 'clamp(5px, 0.8333vw, 12px)' }}
+                >
+                  <div className="flex items-center" style={{ gap: 'clamp(8px, 1.1111vw, 16px)' }}>
+                    <SparkleIcon />
+                    <p
+                      className="text-[#dbe7ee]"
+                      style={{
+                        ...fontSans3,
+                        fontSize: 'clamp(14px, 1.875vw, 27px)',
+                        lineHeight: 1.25,
+                      }}
+                    >
+                      {win.text} <span className="text-sm text-[#8892a5] ml-auto">{win.date}</span>
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <a
             href="#"
